@@ -1,5 +1,15 @@
-import SahiChayanQuiz from "./SahiChayanQuiz";
+import { Routes, Route } from "react-router-dom";
 
-export default function App() {
-  return <SahiChayanQuiz />;
+import Login from "./pages/login";
+import Register from "./pages/register";
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
+  );
 }
+
+export default App;
