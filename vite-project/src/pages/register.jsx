@@ -1,6 +1,7 @@
 ﻿import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { apiUrl } from "../config";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
+      await axios.post(apiUrl("/api/auth/register"), formData);
       alert("Registration successful. Please log in.");
       navigate("/");
     } catch (error) {
@@ -71,7 +72,7 @@ export default function Register() {
 
           <button
             type="submit"
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-bold hover:scale-[1.02] transition-all duration-300"
+            className="w-full py-4 rounded-2xl bg-linear-to-r from-cyan-500 to-purple-500 text-white font-bold hover:scale-[1.02] transition-all duration-300"
           >
             Register
           </button>

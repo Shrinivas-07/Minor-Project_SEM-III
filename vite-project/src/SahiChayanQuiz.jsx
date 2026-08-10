@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import careers from './assets/careers.js';
+import { apiUrl } from './config';
 
 export default function SahiChayanQuiz() {
+  const navigate = useNavigate();
   const questions = [
     { label: "Creativity", icon: "🎨", key: "creativity" },
     { label: "Logic & Problem Solving", icon: "🧠", key: "logic" },
@@ -52,6 +56,10 @@ export default function SahiChayanQuiz() {
   const [selectedCareers, setSelectedCareers] = useState([]);
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [videoModal, setVideoModal] = useState({ isOpen: false, career: null, currentVideoIndex: 0 });
+  const [profileInfo, setProfileInfo] = useState(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [historyEntries, setHistoryEntries] = useState([]);
+  const [profileDropdown, setProfileDropdown] = useState(false);
   const recommendationsRef = useRef(null);
   const resourcesRef = useRef(null);
 
@@ -65,6 +73,52 @@ export default function SahiChayanQuiz() {
       resourcesRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [quizCompleted, showRecommendations]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const storedHistory = localStorage.getItem('sahichayan_history');
+    if (storedHistory) {
+      try {
+        setHistoryEntries(dedupeHistoryEntries(JSON.parse(storedHistory)));
+      } catch {
+        setHistoryEntries([]);
+      }
+    }
+    if (!token) return;
+    axios
+      .get(apiUrl('/api/auth/me'), { headers: { Authorization: token } })
+      .then((res) => setProfileInfo(res.data))
+      .catch(() => setProfileInfo(null));
+  }, []);
+
+  const dedupeHistoryEntries = (entries) => {
+    const seen = new Set();
+    return entries.filter((entry) => {
+      const key = `${entry.careerName}|${entry.resourceType}|${entry.url}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  };
+
+  const saveHistoryEntry = (careerName, resourceType, url) => {
+    const newEntry = {
+      careerName,
+      resourceType,
+      url,
+      visitedAt: new Date().toISOString(),
+    };
+    const existing = JSON.parse(localStorage.getItem('sahichayan_history') || '[]');
+    const filtered = existing.filter((entry) => !(entry.careerName === careerName && entry.resourceType === resourceType && entry.url === url));
+    const next = dedupeHistoryEntries([newEntry, ...filtered]).slice(0, 15);
+    localStorage.setItem('sahichayan_history', JSON.stringify(next));
+    setHistoryEntries(next);
+  };
+
+  const clearHistory = () => {
+    localStorage.removeItem('sahichayan_history');
+    setHistoryEntries([]);
+  };
   const answeredQuestions = questions.filter(q => typeof scores[q.key] === 'number').length;
   const quizProgress = Math.round((answeredQuestions / totalQuestions) * 100);
   const averageScore = Math.round(
@@ -110,6 +164,10 @@ export default function SahiChayanQuiz() {
     );
   };
 
+  const handleCareerCardToggle = (careerName) => {
+    toggleCareerSelection(careerName);
+  };
+
   const confirmSelections = () => {
     const orderedSelected = [...selectedCareers].sort((a, b) => {
       const aIndex = recommendedCareers.findIndex(career => career.name === a);
@@ -120,6 +178,9 @@ export default function SahiChayanQuiz() {
     });
     setSelectedCareers(orderedSelected);
     setShowRecommendations(true);
+    orderedSelected.forEach((careerName) => {
+      saveHistoryEntry(careerName, 'Career Selected', window.location.href + '#resources');
+    });
   };
 
   const sortedSelectedCareers = selectedCareers.slice().sort((a, b) => {
@@ -162,6 +223,9 @@ export default function SahiChayanQuiz() {
 
   const openVideoModal = (career, videoIndex) => {
     setVideoModal({ isOpen: true, career, currentVideoIndex: videoIndex });
+    const resourceType = videoIndex === 0 ? 'Video Learning' : videoIndex === 1 ? 'Course Path' : 'Study Guide';
+    const resourceLink = career.resources[videoIndex];
+    saveHistoryEntry(career.name, resourceType, resourceLink);
   };
 
   const closeVideoModal = () => {
@@ -190,14 +254,111 @@ export default function SahiChayanQuiz() {
             SahiChayan.Com
           </h1>
           <p className="text-sm text-slate-400">
-           Career Path Finder for Inclusive Growth
+            Career Path Finder for Inclusive Growth
           </p>
         </div>
 
-        <button className="px-5 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:scale-105 transition-all duration-300 shadow-lg shadow-cyan-500/30 font-medium">
-          Explore Careers
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => setHistoryOpen((prev) => !prev)}
+            className="px-4 py-2 rounded-full bg-white/10 border border-white/10 text-white text-sm hover:bg-white/15 transition-all duration-300"
+          >
+            History
+          </button>
+
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setProfileDropdown((prev) => !prev)}
+              className="flex items-center gap-3 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 hover:bg-slate-900/90 transition-all duration-300"
+            >
+              <img
+                src={profileInfo?.avatarUrl || 'https://www.gravatar.com/avatar/?d=mp&s=80'}
+                alt="Profile"
+                className="w-10 h-10 rounded-full object-cover border border-white/10"
+              />
+              <div className="text-left hidden sm:block">
+                <p className="text-sm font-semibold text-white">{profileInfo?.name || 'Guest'}</p>
+                <p className="text-xs text-slate-400">Profile</p>
+              </div>
+            </button>
+
+            {profileDropdown && (
+              <div className="absolute right-0 mt-3 w-56 rounded-3xl border border-white/10 bg-slate-950/95 p-4 shadow-2xl shadow-black/40">
+                <div className="mb-4">
+                  <p className="text-sm text-slate-400">Logged in as</p>
+                  <p className="font-semibold text-white truncate">{profileInfo?.email || 'guest@example.com'}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => navigate('/profile')}
+                  className="w-full rounded-2xl bg-cyan-500/15 px-4 py-2 text-sm text-cyan-200 hover:bg-cyan-500/25 transition-all duration-300"
+                >
+                  Edit Profile
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.removeItem('token');
+                    navigate('/');
+                  }}
+                  className="mt-3 w-full rounded-2xl bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10 transition-all duration-300"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </nav>
+
+      {historyOpen && (
+        <div className="fixed top-24 right-8 z-50 w-[360px] rounded-3xl border border-white/10 bg-slate-950/95 p-5 shadow-2xl shadow-black/50 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-bold text-white">Course History</h3>
+              <p className="text-slate-400 text-sm">Recent visited courses and resources.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setHistoryOpen(false)}
+              className="text-slate-400 hover:text-white"
+            >
+              ✕
+            </button>
+          </div>
+          {historyEntries.length === 0 ? (
+            <p className="text-slate-500 text-sm">No history yet. Start exploring courses to build history.</p>
+          ) : (
+            <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
+              {historyEntries.map((entry, index) => (
+                <div key={`${entry.careerName}-${index}`} className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                  <p className="text-sm font-semibold text-white">{entry.careerName}</p>
+                  <p className="text-xs text-slate-400">{entry.resourceType}</p>
+                  <p className="text-xs text-slate-400">{new Date(entry.visitedAt).toLocaleString()}</p>
+                  <button
+                    type="button"
+                    onClick={() => window.open(entry.url, '_blank')}
+                    className="mt-2 inline-flex items-center gap-2 rounded-full bg-cyan-500/15 px-3 py-2 text-xs text-cyan-200 hover:bg-cyan-500/25 transition-all duration-300"
+                  >
+                    Open Resource
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          {historyEntries.length > 0 && (
+            <button
+              type="button"
+              onClick={clearHistory}
+              className="mt-4 w-full rounded-2xl bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10 transition-all duration-300"
+            >
+              Clear history
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 pt-16 pb-10 relative z-10">
@@ -444,7 +605,7 @@ export default function SahiChayanQuiz() {
                         ? 'border-cyan-400 bg-cyan-500/15'
                         : 'border-white/10 bg-gradient-to-br from-slate-900/80 via-cyan-500/10 to-purple-500/10 hover:from-cyan-500/20 hover:via-purple-500/15 hover:to-pink-500/15'
                     }`}
-                    onClick={() => toggleCareerSelection(career.name)}
+                    onClick={() => handleCareerCardToggle(career.name)}
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <div className="flex items-center justify-between mb-4">
@@ -452,7 +613,11 @@ export default function SahiChayanQuiz() {
                       <input
                         type="checkbox"
                         checked={selectedCareers.includes(career.name)}
-                        onChange={() => toggleCareerSelection(career.name)}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          handleCareerCardToggle(career.name);
+                        }}
                         className="w-5 h-5 text-cyan-500 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500"
                       />
                     </div>
@@ -614,6 +779,7 @@ export default function SahiChayanQuiz() {
                           <button
                             onClick={() => {
                               const resourceLink = career.resources[i];
+                              saveHistoryEntry(career.name, resourceType, resourceLink);
                               window.open(resourceLink, '_blank');
                             }}
                             className="inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-purple-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-all duration-300 hover:scale-[1.02]"
@@ -776,18 +942,89 @@ export default function SahiChayanQuiz() {
             </ul>
           </div>
 
-          <div className="relative overflow-hidden rounded-3xl border border-red-400/20 bg-red-500/10 p-6 shadow-lg shadow-red-500/10 transition-all duration-300 hover:bg-red-500/15">
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3 bg-linear-to-r from-red-400/50 via-transparent to-transparent wave-animation opacity-75"></div>
-            <h4 className="text-xl font-semibold text-red-100">Contact & Support</h4>
-            <h2 className="text-sm font-semibold text-white">Email</h2>
-            <p className="text-red-200 text-sm">support@sahichayan.com</p>
-            <h4 className="text-sm font-semibold text-white">Phone</h4>
-            <p className="text-red-200 text-sm">+91 94110 68398</p>
-            <div className="flex items-center gap-3 text-red-200 text-sm">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-red-500/20 text-red-100">✉️</span>
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-red-500/20 text-red-100">📞</span>
-            </div>
-          </div>
+         <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-2xl p-6 shadow-[0_8px_32px_rgba(255,0,0,0.12)] transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-[0_8px_40px_rgba(255,0,0,0.22)] group">
+
+  {/* Background Glow */}
+  <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-pink-500/10 opacity-70"></div>
+
+  {/* Top Glow */}
+  <div className="absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-red-400/10 blur-3xl"></div>
+
+  {/* Bottom Animated Line */}
+  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-red-400 via-pink-400 to-transparent opacity-80 group-hover:animate-pulse"></div>
+
+  {/* Content */}
+  <div className="relative z-10">
+
+    {/* Header */}
+    <div className="mb-5 flex items-center gap-4">
+
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-2xl backdrop-blur-xl shadow-lg">
+        📞
+      </div>
+
+      <div>
+        <h4 className="text-2xl font-black text-white">
+          Contact & Support
+        </h4>
+
+        <p className="text-sm text-red-200/80">
+          Need help? Reach out anytime.
+        </p>
+      </div>
+
+    </div>
+
+    {/* Contact Row */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      {/* Email */}
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:bg-white/10">
+
+        <div className="mb-2 flex items-center gap-2">
+
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-500/20 text-lg">
+            ✉️
+          </span>
+
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-red-100">
+            Email
+          </h2>
+
+        </div>
+
+        <p className="text-white text-sm break-all">
+          support@sahichayan.com
+        </p>
+
+      </div>
+
+      {/* Phone */}
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:bg-white/10">
+
+        <div className="mb-2 flex items-center gap-2">
+
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-500/20 text-lg">
+            📞
+          </span>
+
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-red-100">
+            Phone
+          </h2>
+
+        </div>
+
+        <p className="text-white text-sm">
+          +91 94110 68398
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 
           <div className="space-y-4">
             <h4 className="text-xl font-semibold text-white">Stay Updated</h4>

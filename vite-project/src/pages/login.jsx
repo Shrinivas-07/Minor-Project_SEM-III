@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { apiUrl } from "../config";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,12 +22,13 @@ export default function Login() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        apiUrl("/api/auth/login"),
         formData
       );
 
       localStorage.setItem("token", res.data.token);
       alert("Login Successful");
+      navigate("/quiz");
     } catch (error) {
       const message =
         error?.response?.data?.message || error.message || "Login failed";
@@ -63,7 +66,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-bold hover:scale-[1.02] transition-all duration-300"
+            className="w-full py-4 rounded-2xl bg-linear-to-r from-cyan-500 to-purple-500 text-white font-bold hover:scale-[1.02] transition-all duration-300"
           >
             Login
           </button>
