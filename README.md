@@ -256,3 +256,4 @@ git push -u origin main --force
 * **Academic Semester**: Semester III
 * **Student Author**: Shrinivas
 * **Technologies Used**: React 18, Vite, Tailwind CSS, Supabase (PostgreSQL), Google Gemini AI, Node.js, Express.js.
+

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { AssessmentProvider } from './context/AssessmentContext';
 
+import ScrollToTop from './components/common/ScrollToTop';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import VideoModal from './components/inApp/VideoModal';
@@ -24,6 +25,9 @@ export default function App() {
     <AuthProvider>
       <AssessmentProvider>
         <BrowserRouter>
+          {/* Automatically scrolls to top on any route navigation */}
+          <ScrollToTop />
+
           <div className="flex flex-col min-h-screen bg-slate-50 text-slate-800">
             {/* Sticky Navigation */}
             <Navbar />

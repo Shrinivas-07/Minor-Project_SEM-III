@@ -17,3 +17,4 @@ if (GEMINI_API_KEY) {
 }
 
 module.exports = { genAI, model };
+

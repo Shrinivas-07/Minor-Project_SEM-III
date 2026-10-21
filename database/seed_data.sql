@@ -120,3 +120,4 @@ VALUES
 ('UPSC Civil Services Exam Roadmap & Syllabus', 'Government & Public Policy', 'guide', 'https://upsc.gov.in', null, 'Official syllabus and stage breakdown for Prelims, Mains, and Interview examinations.', 'Guide', 'intermediate', true),
 ('How to Become a Commercial Airline Pilot', 'Aviation & Aerospace', 'video', 'https://www.youtube.com/watch?v=Zf5rG6y1k8Y', 'Zf5rG6y1k8Y', 'Complete step by step guide on DGCA medicals, ground school, flying club hours, and CPL issuance.', '30 mins', 'beginner', true)
 ON CONFLICT DO NOTHING;
+

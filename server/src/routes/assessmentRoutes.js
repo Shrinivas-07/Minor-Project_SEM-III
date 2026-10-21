@@ -6,3 +6,4 @@ router.post('/calculate', assessmentController.calculateAssessment);
 router.get('/history/:userId', assessmentController.getUserAssessments);
 
 module.exports = router;
+

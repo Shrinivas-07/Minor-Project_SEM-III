@@ -8,3 +8,4 @@ router.post('/save-career', userController.toggleSaveCareer);
 router.get('/saved-careers/:userId', userController.getSavedCareers);
 
 module.exports = router;
+

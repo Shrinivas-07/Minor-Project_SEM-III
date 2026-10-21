@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   BookOpen, Play, MapPin, Search, ExternalLink, Sparkles, Filter, 
-  Layers, CheckCircle, Clock
+  Layers, CheckCircle, Clock, Film, Globe, GraduationCap
 } from 'lucide-react';
 import { resourcesData } from '../data/resourcesData';
 import { useAssessment } from '../context/AssessmentContext';
@@ -34,10 +34,10 @@ export default function ResourcesPage() {
             Curated Knowledge Hub
           </span>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-2">
-            Learning Resources & Video Masterclasses
+            Learning Resources, Video Hub & Guides
           </h1>
           <p className="text-slate-600 text-sm mt-2 leading-relaxed">
-            Carefully curated roadmaps, video lessons, and interactive learning guides with built-in app playback.
+            Carefully curated roadmaps, YouTube search video playlists, and multi-platform courses playable directly in the app.
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export default function ResourcesPage() {
               <button
                 key={type}
                 onClick={() => setSelectedType(type)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all cursor-pointer ${
                   selectedType === type
                     ? 'bg-brand-600 text-white shadow-xs'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200/70'
@@ -104,8 +104,14 @@ export default function ResourcesPage() {
 
                 {item.type === 'video' ? (
                   <button
-                    onClick={() => openInAppVideo(item.title, item.embedId, item.url, item.provider)}
-                    className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
+                    onClick={() => openInAppVideo(
+                      item.title,
+                      null, // Use dynamic search to prevent expired ID error
+                      item.url,
+                      'YouTube',
+                      `${item.title} complete tutorial course`
+                    )}
+                    className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
                   >
                     <Play className="w-3.5 h-3.5 fill-white" />
                     <span>Watch in App</span>
@@ -115,7 +121,7 @@ export default function ResourcesPage() {
                     href={item.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="px-4 py-2 bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-600 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                    className="px-4 py-2 bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-600 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <span>Open Guide</span>
                     <ExternalLink className="w-3.5 h-3.5" />

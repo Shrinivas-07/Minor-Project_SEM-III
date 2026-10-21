@@ -164,3 +164,4 @@ function calculateLocalAssessment(scores) {
     }
   };
 }
+

@@ -7,3 +7,4 @@ router.get('/categories', careerController.getCategories);
 router.get('/:id', careerController.getCareerById);
 
 module.exports = router;
+

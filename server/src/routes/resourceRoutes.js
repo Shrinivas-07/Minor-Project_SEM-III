@@ -5,3 +5,4 @@ const resourceController = require('../controllers/resourceController');
 router.get('/', resourceController.getResources);
 
 module.exports = router;
+

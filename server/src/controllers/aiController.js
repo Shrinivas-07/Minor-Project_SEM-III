@@ -136,3 +136,4 @@ function generateIntelligentFallback(query, career) {
 
   return `Great question! The most sustainable career path aligns your innate cognitive strengths (logic, creativity, leadership) with high-demand market skills. I recommend taking the **SahiChayan 18-Trait Assessment** to pinpoint your closest matching career tracks, and then exploring their dedicated skill roadmaps!`;
 }
+

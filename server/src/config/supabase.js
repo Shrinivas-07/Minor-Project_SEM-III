@@ -20,3 +20,4 @@ if (SUPABASE_URL && SUPABASE_KEY) {
 }
 
 module.exports = supabase;
+

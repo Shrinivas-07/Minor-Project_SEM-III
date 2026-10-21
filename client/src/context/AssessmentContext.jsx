@@ -124,10 +124,27 @@ export function AssessmentProvider({ children }) {
     return savedCareers.some(c => c.id === careerId);
   };
 
-  const openInAppVideo = (title, embedId, url, provider = 'YouTube') => {
+  // Open the unified 3-tier in-app resource hub (YouTube Search in-app, Course Sites, Wikipedia/Govt)
+  const openInAppVideo = (
+    title,
+    embedId = null,
+    url = null,
+    provider = 'YouTube',
+    query = null,
+    careerData = null,
+    defaultTab = 'youtube'
+  ) => {
     setActiveVideoModal({
       isOpen: true,
-      video: { title, embedId, url, provider }
+      video: {
+        title,
+        embedId,
+        url,
+        provider,
+        query: query || (careerData ? careerData.youtubeSearchQuery : `${title} complete course roadmap tutorial`),
+        careerData,
+        defaultTab
+      }
     });
   };
 
@@ -144,7 +161,9 @@ export function AssessmentProvider({ children }) {
   };
 
   const openAiMentor = (career = null) => {
-    setMentorCareerContext(career);
+    if (career) {
+      setMentorCareerContext(career);
+    }
     setIsAiMentorOpen(true);
   };
 

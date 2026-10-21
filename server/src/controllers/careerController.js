@@ -81,3 +81,4 @@ exports.getCategories = (req, res) => {
   const categories = Array.from(new Set(defaultCareers.map((c) => c.category)));
   res.json({ success: true, data: ['All', ...categories] });
 };
+

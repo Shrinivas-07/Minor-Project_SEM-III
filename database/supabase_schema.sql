@@ -176,3 +176,4 @@ CREATE INDEX IF NOT EXISTS idx_saved_careers_user ON public.saved_careers(user_i
 CREATE INDEX IF NOT EXISTS idx_career_catalog_cat ON public.career_catalog(category);
 CREATE INDEX IF NOT EXISTS idx_resource_hub_type ON public.resource_hub(type);
 CREATE INDEX IF NOT EXISTS idx_ai_conversations_user ON public.ai_conversations(user_id);
+
