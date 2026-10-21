@@ -1,0 +1,15 @@
+const dotenv = require('dotenv');
+const path = require('path');
+
+// Load environment variables from .env
+dotenv.config();
+
+module.exports = {
+  PORT: process.env.PORT || 5000,
+  NODE_ENV: process.env.NODE_ENV || 'development',
+  CLIENT_URL: process.env.CLIENT_URL || '*',
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+  GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
+  SUPABASE_URL: process.env.SUPABASE_URL || '',
+  SUPABASE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '',
+};
