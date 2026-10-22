@@ -704,6 +704,1154 @@ export const careersData = [
     ],
     weights: { technology: 9, building: 10, logic: 8, nature: 8, creativity: 6 }
   }
+,
+{
+  "id": "biotech_genetic_engineer",
+  "name": "Biotechnologist & CRISPR Genetic Engineer",
+  "category": "Healthcare & Life Sciences",
+  "icon": "Dna",
+  "tagline": "Engineer gene therapies, mRNA vaccines, and synthetic biology breakthroughs",
+  "description": "Applies molecular biology, computational genomics, and CRISPR gene-editing tools to develop therapeutics for rare diseases, engineered crops, and novel biomanufacturing solutions.",
+  "averageSalaryInr": "₹9 - ₹28 LPA",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "22% (Biotech Revolution)",
+  "topEmployers": [
+    "Biocon",
+    "Serum Institute of India",
+    "Moderna",
+    "Novartis",
+    "AstraZeneca",
+    "Genentech"
+  ],
+  "skills": [
+    "CRISPR-Cas9 Protocols",
+    "Bioinformatics & Python (Biopython)",
+    "Cell Culture",
+    "PCR & Next-Gen Sequencing",
+    "Molecular Cloning",
+    "FDA/CDSCO Regulations"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: Molecular Foundations",
+      "duration": "3-4 Years",
+      "topics": [
+        "B.Tech / B.Sc in Biotechnology / Biochemistry",
+        "Organic Chemistry & Microbiology",
+        "Genetics & Cell Biology"
+      ]
+    },
+    {
+      "phase": "Phase 2: Bioinformatics & Genomics",
+      "duration": "1-2 Years",
+      "topics": [
+        "Next-Gen Sequencing (NGS) Analysis",
+        "Python for Bioinformatics",
+        "Structural Biology & BLAST"
+      ]
+    },
+    {
+      "phase": "Phase 3: Gene Editing & Wet Lab",
+      "duration": "2 Years",
+      "topics": [
+        "CRISPR Design Tools",
+        "Mammalian Cell Culture",
+        "Therapeutic Protein Expression"
+      ]
+    },
+    {
+      "phase": "Phase 4: Clinical Translation & Ph.D.",
+      "duration": "Ongoing",
+      "topics": [
+        "Clinical Trial Design",
+        "GMP Biomanufacturing",
+        "Synthetic Biology Systems"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "biotechnology genetic engineering crispr career roadmap guide",
+  "featuredVideos": [
+    {
+      "title": "Biotechnology Career Roadmap & Future",
+      "query": "biotechnology genetic engineering career",
+      "embedId": "1O0A5T_Xj6c"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Genomic Data Science Specialization",
+      "platform": "Coursera",
+      "url": "https://www.coursera.org/specializations/genomic-data-science",
+      "provider": "Johns Hopkins University",
+      "freeOption": true
+    },
+    {
+      "name": "Introduction to Bioengineering",
+      "platform": "edX",
+      "url": "https://www.edx.org/learn/bioengineering",
+      "provider": "MIT / edX",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Genetic Engineering",
+      "url": "https://en.wikipedia.org/wiki/Genetic_engineering",
+      "type": "Encyclopedia",
+      "desc": "Direct manipulation of an organism genes using biotechnology."
+    },
+    {
+      "title": "Department of Biotechnology (Govt. of India)",
+      "url": "https://dbtindia.gov.in/",
+      "type": "Government Council",
+      "desc": "Apex nodal agency promoting modern biotechnology research and commercialization."
+    }
+  ],
+  "weights": {
+    "medical": 9,
+    "logic": 9,
+    "nature": 8,
+    "technology": 8,
+    "building": 7
+  }
+},
+{
+  "id": "product_manager_tech",
+  "name": "Product Manager (AI & Digital Platforms)",
+  "category": "Technology & AI",
+  "icon": "Briefcase",
+  "tagline": "Define product vision, lead cross-functional squads, and drive user growth",
+  "description": "Serves as the strategic intersection of engineering, design, and business. Owns feature roadmaps, conducts customer discovery, and scales metrics from 0 to 1 and beyond.",
+  "averageSalaryInr": "₹15 - ₹45 LPA",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "25% (High Demand Leadership)",
+  "topEmployers": [
+    "Google",
+    "Microsoft",
+    "Flipkart",
+    "Swiggy",
+    "Razorpay",
+    "Atlassian",
+    "Uber"
+  ],
+  "skills": [
+    "Product Discovery & User Interviews",
+    "PRD Writing",
+    "A/B Testing & Mixpanel",
+    "Agile/Scrum Leadership",
+    "Go-To-Market (GTM) Strategy",
+    "SQL & Telemetry"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: Foundations of Product",
+      "duration": "2-3 Months",
+      "topics": [
+        "User Research & Jobs To Be Done (JTBD)",
+        "Product Metrics (DAU, CAC, LTV, Retention)",
+        "Writing Spec PRDs"
+      ]
+    },
+    {
+      "phase": "Phase 2: Tech & Data for PMs",
+      "duration": "3 Months",
+      "topics": [
+        "SQL & Funnel Analytics",
+        "API & Architecture Literacy",
+        "Wireframing in Figma"
+      ]
+    },
+    {
+      "phase": "Phase 3: Execution & Strategy",
+      "duration": "4 Months",
+      "topics": [
+        "Prioritization Frameworks (RICE, MoSCoW)",
+        "A/B Experimentation Design",
+        "Sprint Ceremonies"
+      ]
+    },
+    {
+      "phase": "Phase 4: Leadership & Portfolio",
+      "duration": "Ongoing",
+      "topics": [
+        "Tear-downs of Popular Apps",
+        "GTM Launches",
+        "Executive Stakeholder Management"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "product manager roadmap beginner to senior pm interview guide",
+  "featuredVideos": [
+    {
+      "title": "How to Become a Product Manager",
+      "query": "product manager complete roadmap guide",
+      "embedId": "m40L_eC7kQo"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Digital Product Management: Modern Fundamentals",
+      "platform": "Coursera",
+      "url": "https://www.coursera.org/learn/uva-darden-digital-product-management",
+      "provider": "University of Virginia",
+      "freeOption": true
+    },
+    {
+      "name": "Product School Free Micro-Certifications",
+      "platform": "ProductSchool",
+      "url": "https://productschool.com/",
+      "provider": "Product School",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Product Management",
+      "url": "https://en.wikipedia.org/wiki/Product_management",
+      "type": "Encyclopedia",
+      "desc": "Organizational function that guides every step of a product life cycle."
+    },
+    {
+      "title": "Lenny Newsletter & Podcast",
+      "url": "https://www.lennysnewsletter.com/",
+      "type": "Industry Benchmark",
+      "desc": "The gold standard publication for product, growth, and company building."
+    }
+  ],
+  "weights": {
+    "leadership": 10,
+    "communication": 9,
+    "logic": 8,
+    "technology": 7,
+    "creativity": 7
+  }
+},
+{
+  "id": "digital_growth_marketer",
+  "name": "Growth Marketer & Digital Performance Strategist",
+  "category": "Finance & Business",
+  "icon": "TrendingUp",
+  "tagline": "Engineer viral acquisition loops, SEO authority, and high-ROI ad spend",
+  "description": "Blends data analytics, psychological persuasion, and digital ad networks to optimize user acquisition, conversion funnels, and viral expansion across global channels.",
+  "averageSalaryInr": "₹7 - ₹24 LPA",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "21% (Digital First Economy)",
+  "topEmployers": [
+    "Nykaa",
+    "Meesho",
+    "Zomato",
+    "Publicis Groupe",
+    "Ogilvy",
+    "ByteDance"
+  ],
+  "skills": [
+    "Google & Meta Ads Manager",
+    "Technical SEO & Programmatic Pages",
+    "CRO & Funnel Optimization",
+    "Copywriting & Creative Strategy",
+    "HubSpot & Klaviyo Marketing Automation"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: Marketing Fundamentals",
+      "duration": "2 Months",
+      "topics": [
+        "Brand Positioning & Personas",
+        "Copywriting Psychology",
+        "Content Distribution Channels"
+      ]
+    },
+    {
+      "phase": "Phase 2: Paid Ads & Performance",
+      "duration": "3 Months",
+      "topics": [
+        "Meta Ads CBO / ASC",
+        "Google Search & PMax Ads",
+        "Attribution & ROAS Tracking"
+      ]
+    },
+    {
+      "phase": "Phase 3: SEO & Lifecycle",
+      "duration": "3 Months",
+      "topics": [
+        "Technical SEO & Keyword Research",
+        "Email Automation & Drip Campaigns",
+        "Retention & Churn Reduction"
+      ]
+    },
+    {
+      "phase": "Phase 4: Scaling Growth Loops",
+      "duration": "Ongoing",
+      "topics": [
+        "Referral Engine Design",
+        "Product-Led Growth (PLG)",
+        "Multi-Touch Attribution Modeling"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "performance marketing digital marketing full course complete roadmap",
+  "featuredVideos": [
+    {
+      "title": "Digital Marketing Complete Course",
+      "query": "performance marketing full course",
+      "embedId": "nU-IIXBWlS4"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Google Digital Marketing & E-commerce Professional Certificate",
+      "platform": "Coursera",
+      "url": "https://www.coursera.org/professional-certificates/google-digital-marketing-ecommerce",
+      "provider": "Google",
+      "freeOption": true
+    },
+    {
+      "name": "HubSpot Inbound Marketing Certification",
+      "platform": "HubSpot Academy",
+      "url": "https://academy.hubspot.com/courses/inbound-marketing",
+      "provider": "HubSpot",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Digital Marketing",
+      "url": "https://en.wikipedia.org/wiki/Digital_marketing",
+      "type": "Encyclopedia",
+      "desc": "Component of marketing that uses internet and online-based digital technologies."
+    },
+    {
+      "title": "Google Search Central Documentation",
+      "url": "https://developers.google.com/search",
+      "type": "Official Guidelines",
+      "desc": "Google official search engine ranking and discovery standards."
+    }
+  ],
+  "weights": {
+    "communication": 9,
+    "creativity": 8,
+    "logic": 8,
+    "leadership": 7,
+    "finance": 7
+  }
+},
+{
+  "id": "film_director_cinematographer",
+  "name": "Film Director & Visual Storyteller (Cinematographer)",
+  "category": "Design & Creative",
+  "icon": "Video",
+  "tagline": "Direct cinematic visions, visual pacing, lighting, and evocative camera movements",
+  "description": "Shapes narrative fiction, documentaries, and commercials by orchestrating camera angles, lighting aesthetics, actor performances, and post-production color science.",
+  "averageSalaryInr": "₹8 - ₹35 LPA (Royalties/Project Dependent)",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "18% (OTT & Global Streaming Surge)",
+  "topEmployers": [
+    "Netflix Originals",
+    "Amazon Studios",
+    "Dharma Productions",
+    "Yash Raj Films",
+    "Red Chillies VFX",
+    "A24"
+  ],
+  "skills": [
+    "Screenplay Analysis & Storyboarding",
+    "Camera Optics & Lens Selection",
+    "Three-Point & Practical Lighting",
+    "Directing Actors",
+    "DaVinci Resolve Color Grading",
+    "Audio Pacing"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: Visual Language",
+      "duration": "3 Months",
+      "topics": [
+        "Framing, Rule of Thirds & Depth",
+        "Lenses (Focal Length & Compression)",
+        "Screenwriting Fundamentals"
+      ]
+    },
+    {
+      "phase": "Phase 2: Camera & Lighting",
+      "duration": "4 Months",
+      "topics": [
+        "Cinema Cameras (RED, ARRI, Blackmagic)",
+        "Lighting Rigs & Diffusers",
+        "Gimbal & Dolly Movement"
+      ]
+    },
+    {
+      "phase": "Phase 3: Post-Production",
+      "duration": "4 Months",
+      "topics": [
+        "DaVinci Resolve Node Grading",
+        "Sound Design & Foley",
+        "Editorial Rhythms in Premiere/FCP"
+      ]
+    },
+    {
+      "phase": "Phase 4: Directing & Pitching",
+      "duration": "Ongoing",
+      "topics": [
+        "Directing Short Films & Festivals",
+        "Pitch Decks for Producers",
+        "OTT Distribution Deals"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "cinematography film directing masterclass camera lighting tutorial",
+  "featuredVideos": [
+    {
+      "title": "Cinematography & Directing Masterclass",
+      "query": "cinematography visual storytelling course",
+      "embedId": "p3EaY53_9g8"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Filmmaking & Storytelling Specialization",
+      "platform": "Coursera / MasterClass",
+      "url": "https://www.coursera.org/learn/film-images",
+      "provider": "Wesleyan University",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Filmmaking & Cinematography",
+      "url": "https://en.wikipedia.org/wiki/Cinematography",
+      "type": "Encyclopedia",
+      "desc": "The art or science of motion-picture photography and visual narrative direction."
+    },
+    {
+      "title": "American Society of Cinematographers (ASC)",
+      "url": "https://theasc.com/",
+      "type": "Guild Standard",
+      "desc": "The historic professional guild advancing the art and craft of motion picture imaging."
+    }
+  ],
+  "weights": {
+    "creativity": 10,
+    "communication": 9,
+    "leadership": 8,
+    "building": 7,
+    "technology": 6
+  }
+},
+{
+  "id": "sustainable_architect",
+  "name": "Sustainable Architect & Urban Infrastructure Planner",
+  "category": "Design & Creative",
+  "icon": "Building2",
+  "tagline": "Design carbon-neutral buildings, iconic skylines, and green resilient cities",
+  "description": "Designs residential, commercial, and urban spaces that balance aesthetic grandeur, structural integrity, and net-zero ecological footprints using modern BIM software.",
+  "averageSalaryInr": "₹7 - ₹25 LPA",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "15% (Smart Cities & Climate Resilience)",
+  "topEmployers": [
+    "Foster + Partners",
+    "Gensler",
+    "Hafeez Contractor Architects",
+    "L&T Construction",
+    "HOK",
+    "CPWD"
+  ],
+  "skills": [
+    "Revit & BIM Modeling",
+    "AutoCAD & Rhino 3D",
+    "LEED / GRIHA Green Building Certification",
+    "Structural Feasibility",
+    "Passive Solar Design",
+    "Urban Zoning Laws"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: B.Arch Degree",
+      "duration": "5 Years",
+      "topics": [
+        "NATA Examination & Council of Architecture (CoA)",
+        "Architectural History & Theory",
+        "Structural Mechanics"
+      ]
+    },
+    {
+      "phase": "Phase 2: Digital Drafting & BIM",
+      "duration": "1 Year",
+      "topics": [
+        "Autodesk Revit & BIM Execution Plans",
+        "Parametric Design in Rhino / Grasshopper",
+        "Enscape & V-Ray Rendering"
+      ]
+    },
+    {
+      "phase": "Phase 3: Green Certification",
+      "duration": "6 Months",
+      "topics": [
+        "LEED Green Associate",
+        "GRIHA India Standards",
+        "Thermal Modeling & Daylight Analysis"
+      ]
+    },
+    {
+      "phase": "Phase 4: Site Execution & Studio",
+      "duration": "Ongoing",
+      "topics": [
+        "Contractor Management",
+        "Building Bylaws & Fire Safety Approval",
+        "Founding Architectural Firm"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "architecture design urban planning revit bim sustainable building guide",
+  "featuredVideos": [
+    {
+      "title": "Architect Career Guide & Sustainable Building",
+      "query": "architecture career guide bim sustainable design",
+      "embedId": "qB26U78VdE4"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Sustainable Architecture & Cities",
+      "platform": "Coursera / edX",
+      "url": "https://www.coursera.org/learn/sustainable-cities",
+      "provider": "Lund University",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Sustainable Architecture",
+      "url": "https://en.wikipedia.org/wiki/Sustainable_architecture",
+      "type": "Encyclopedia",
+      "desc": "Architecture that seeks to minimize the negative environmental impact of buildings."
+    },
+    {
+      "title": "Council of Architecture India (CoA)",
+      "url": "https://www.coa.gov.in/",
+      "type": "Regulatory Council",
+      "desc": "Statutory body established by the Government of India under the Architects Act."
+    }
+  ],
+  "weights": {
+    "building": 10,
+    "creativity": 9,
+    "nature": 8,
+    "logic": 8,
+    "technology": 7
+  }
+},
+{
+  "id": "fashion_designer_apparel",
+  "name": "Fashion Designer & Haute Couture Stylist",
+  "category": "Design & Creative",
+  "icon": "Scissors",
+  "tagline": "Create trendsetting apparel, textile drape collections, and runway aesthetics",
+  "description": "Conceptualizes seasonal garment lines, selects fabrics, directs pattern making, and showcases collections for luxury fashion houses and contemporary retail brands.",
+  "averageSalaryInr": "₹6 - ₹22 LPA (High Independent Upside)",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "16% (Global Fashion & E-Commerce Growth)",
+  "topEmployers": [
+    "Sabyasachi Mukherjee Studio",
+    "Manish Malhotra",
+    "Zara / Inditex",
+    "Aditya Birla Fashion",
+    "H&M Group"
+  ],
+  "skills": [
+    "Fashion Illustration & CLO 3D",
+    "Textile Science & Fiber Properties",
+    "Pattern Making & Draping",
+    "Color Forecasting",
+    "Garment Construction",
+    "Sustainable Fashion Upcycling"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: NIFT / Design School",
+      "duration": "3-4 Years",
+      "topics": [
+        "NIFT Entrance Exam",
+        "Elements of Design & Garment Construction",
+        "Textile Testing & Weaving"
+      ]
+    },
+    {
+      "phase": "Phase 2: Digital Fashion & 3D",
+      "duration": "1 Year",
+      "topics": [
+        "CLO 3D Virtual Fitting",
+        "Adobe Illustrator for Technical Flats",
+        "Trend Forecasting with WGSN"
+      ]
+    },
+    {
+      "phase": "Phase 3: Apprenticeship & Studio",
+      "duration": "2 Years",
+      "topics": [
+        "Working under Head Designers",
+        "Vendor Sourcing in Fabric Hubs (Surat, Milan)",
+        "Runway Production"
+      ]
+    },
+    {
+      "phase": "Phase 4: Label Launch",
+      "duration": "Ongoing",
+      "topics": [
+        "Lookbook Photography",
+        "B2B Retail Buyers Pitching",
+        "E-commerce Brand Launch"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "fashion design career roadmap pattern making clo 3d sketching tutorial",
+  "featuredVideos": [
+    {
+      "title": "Fashion Design Roadmap & Career Essentials",
+      "query": "fashion design roadmap nift tutorial",
+      "embedId": "L8E_6GjYFqg"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Fashion Design: From Concept to Runway",
+      "platform": "Coursera",
+      "url": "https://www.coursera.org/specializations/fashion-design",
+      "provider": "Politecnico di Milano",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Fashion Design",
+      "url": "https://en.wikipedia.org/wiki/Fashion_design",
+      "type": "Encyclopedia",
+      "desc": "The art of applying design, aesthetics, and natural beauty to clothing and its accessories."
+    },
+    {
+      "title": "National Institute of Fashion Technology (NIFT)",
+      "url": "https://www.nift.ac.in/",
+      "type": "Apex Fashion Institute",
+      "desc": "India premier institute in fashion education and textile research."
+    }
+  ],
+  "weights": {
+    "creativity": 10,
+    "communication": 8,
+    "building": 7,
+    "leadership": 6,
+    "nature": 5
+  }
+},
+{
+  "id": "marine_biologist_oceanographer",
+  "name": "Marine Biologist & Oceanographic Scientist",
+  "category": "Healthcare & Life Sciences",
+  "icon": "Waves",
+  "tagline": "Explore abyssal marine ecosystems, coral restoration, and ocean climate health",
+  "description": "Investigates marine organisms, pelagic food webs, coral reef restoration, and deep-sea benthic environments aboard scientific expedition vessels and marine research stations.",
+  "averageSalaryInr": "₹6 - ₹20 LPA",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "14% (Ocean Climate & Conservation Grants)",
+  "topEmployers": [
+    "National Institute of Oceanography (NIO)",
+    "NOAA",
+    "Woods Hole Oceanographic Institution",
+    "WWF Marine",
+    "Scripps Oceanography"
+  ],
+  "skills": [
+    "SCUBA Scientific Diving",
+    "Marine Taxonomy & Ecology",
+    "GIS Ocean Mapping",
+    "Water Chemistry & Salinity Profiling",
+    "Hydroacoustic Sonar Data",
+    "R for Ecological Statistics"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: B.Sc Marine Biology / Zoology",
+      "duration": "3 Years",
+      "topics": [
+        "Ichthyology & Invertebrate Zoology",
+        "Marine Chemistry & Physical Oceanography",
+        "Limnology"
+      ]
+    },
+    {
+      "phase": "Phase 2: SCUBA & Field Skills",
+      "duration": "1 Year",
+      "topics": [
+        "PADI Rescue & Scientific Diver Certification",
+        "Transect Coral Sampling",
+        "Plankton Net Trawls"
+      ]
+    },
+    {
+      "phase": "Phase 3: M.Sc & Expedition Research",
+      "duration": "2 Years",
+      "topics": [
+        "Oceanographic Cruises",
+        "Spatial GIS Mapping with QGIS",
+        "Remote Sensing of Chlorophyll"
+      ]
+    },
+    {
+      "phase": "Phase 4: Ph.D. & Conservation Policy",
+      "duration": "Ongoing",
+      "topics": [
+        "Marine Protected Areas (MPA) Policy",
+        "Abyssal Exploration",
+        "Coral Restoration Projects"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "marine biology career roadmap oceanography deep sea expedition guide",
+  "featuredVideos": [
+    {
+      "title": "How to Become a Marine Biologist",
+      "query": "marine biologist career roadmap guide",
+      "embedId": "xO2tY5j9KzA"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Oceanography: A Key to Better Understand Our World",
+      "platform": "Coursera",
+      "url": "https://www.coursera.org/learn/oceanography",
+      "provider": "University of Barcelona",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Marine Biology",
+      "url": "https://en.wikipedia.org/wiki/Marine_biology",
+      "type": "Encyclopedia",
+      "desc": "The scientific study of marine life, organisms in the sea."
+    },
+    {
+      "title": "CSIR National Institute of Oceanography",
+      "url": "https://www.nio.res.in/",
+      "type": "Government Research Body",
+      "desc": "India premier oceanographic research institute under CSIR."
+    }
+  ],
+  "weights": {
+    "nature": 10,
+    "medical": 8,
+    "logic": 8,
+    "technology": 6,
+    "creativity": 5
+  }
+},
+{
+  "id": "wildlife_forest_conservationist",
+  "name": "Wildlife Biologist & Indian Forest Service Officer (IFS)",
+  "category": "Government & Public Service",
+  "icon": "Trees",
+  "tagline": "Protect megafauna biodiversity, manage national parks, and combat wildlife poaching",
+  "description": "Guards primary forests, tracks endangered tigers and elephants, leads anti-poaching squads, and conducts community forest restoration across national parks and biosphere reserves.",
+  "averageSalaryInr": "₹8 - ₹24 LPA + Gazetted Quarters & Security",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "12% (Prestigious Gazetted Service)",
+  "topEmployers": [
+    "Indian Forest Service (UPSC IFS)",
+    "Wildlife Institute of India (WII)",
+    "WWF India",
+    "National Tiger Conservation Authority (NTCA)"
+  ],
+  "skills": [
+    "Forest Ecology & Silviculture",
+    "Wildlife Radio-Telemetry & Camera Traps",
+    "Wildlife Protection Act (1972)",
+    "Anti-Poaching Patrol Leadership",
+    "Fire Line Management"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: Graduation in Sciences",
+      "duration": "3-4 Years",
+      "topics": [
+        "Forestry / Zoology / Botany / Agriculture / Engineering",
+        "Environmental Science Basics"
+      ]
+    },
+    {
+      "phase": "Phase 2: UPSC IFS Examination",
+      "duration": "1-2 Years",
+      "topics": [
+        "UPSC Prelims (Joint with IAS)",
+        "IFS Mains (Forestry / Geology / Agriculture Options)",
+        "Interview at Dholpur House"
+      ]
+    },
+    {
+      "phase": "Phase 3: IGNFA Training Dehradun",
+      "duration": "2 Years",
+      "topics": [
+        "Indira Gandhi National Forest Academy Training",
+        "Weapons & Physical Fitness Training",
+        "Wildlife Forensics & Law"
+      ]
+    },
+    {
+      "phase": "Phase 4: DFO & Wildlife Warden",
+      "duration": "Ongoing",
+      "topics": [
+        "Managing Tiger Reserves",
+        "Mitigating Human-Wildlife Conflicts",
+        "Directing Reforestation Projects"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "indian forest service ifs officer upsc preparation wildlife career guide",
+  "featuredVideos": [
+    {
+      "title": "Indian Forest Service (IFS) Complete Guide",
+      "query": "upsc ifs indian forest service preparation",
+      "embedId": "N6K12x9aOpU"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Ecology: Ecosystem Dynamics and Conservation",
+      "platform": "Coursera",
+      "url": "https://www.coursera.org/learn/ecology-conservation",
+      "provider": "American Museum of Natural History",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Indian Forest Service",
+      "url": "https://en.wikipedia.org/wiki/Indian_Forest_Service",
+      "type": "Encyclopedia",
+      "desc": "One of the three All India Services of the Government of India."
+    },
+    {
+      "title": "Wildlife Institute of India (WII)",
+      "url": "https://wii.gov.in/",
+      "type": "Autonomous Institute",
+      "desc": "Apex government institute conducting research on wildlife ecology and park management."
+    }
+  ],
+  "weights": {
+    "nature": 10,
+    "leadership": 9,
+    "helping": 8,
+    "logic": 7,
+    "building": 6
+  }
+},
+{
+  "id": "sports_performance_scientist",
+  "name": "Sports Scientist & High-Performance Athletic Coach",
+  "category": "Healthcare & Life Sciences",
+  "icon": "Activity",
+  "tagline": "Optimize Olympic athlete biomechanics, VO2 max, recovery, and peak human stamina",
+  "description": "Uses force plates, GPS telemetry vests, and metabolic carts to maximize athletic endurance, prevent injury, and engineer nutrition protocols for national teams and sports franchises.",
+  "averageSalaryInr": "₹7 - ₹25 LPA",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "23% (IPL, ISL & Global Athletics Expansion)",
+  "topEmployers": [
+    "Sports Authority of India (SAI)",
+    "BCCI / National Cricket Academy",
+    "IPL Franchises (MI, CSK, RCB)",
+    "Olympic Gold Quest (OGQ)",
+    "Red Bull High Performance"
+  ],
+  "skills": [
+    "Biomechanical Motion Analysis",
+    "VO2 Max & Lactate Threshold Testing",
+    "Periodization & Strength Programming",
+    "Sports Nutrition & Hydration",
+    "Catapult GPS Telemetry",
+    "Injury Rehabilitation"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: B.Sc Sports Science / Kinesiology",
+      "duration": "3-4 Years",
+      "topics": [
+        "Exercise Physiology & Muscle Anatomy",
+        "Biomechanics & Physics of Movement",
+        "Sports Nutrition"
+      ]
+    },
+    {
+      "phase": "Phase 2: CSCS Certification",
+      "duration": "6-12 Months",
+      "topics": [
+        "Certified Strength and Conditioning Specialist (NSCA CSCS)",
+        "Olympic Lifting Mechanics",
+        "Plyometrics"
+      ]
+    },
+    {
+      "phase": "Phase 3: Telemetry & Lab Testing",
+      "duration": "1 Year",
+      "topics": [
+        "Catapult GPS Data Analysis",
+        "Vald Force Decks & NordBord",
+        "Blood Lactate Monitoring"
+      ]
+    },
+    {
+      "phase": "Phase 4: Elite Franchise Head Coach",
+      "duration": "Ongoing",
+      "topics": [
+        "Managing National Squad Periodization",
+        "Peaking for World Championships",
+        "Injury Prevention Protocols"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "sports science career guide strength conditioning cscs exercise physiology",
+  "featuredVideos": [
+    {
+      "title": "How to Become a Sports Scientist",
+      "query": "sports scientist strength and conditioning career",
+      "embedId": "L8E_6GjYFqg"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Science of Exercise",
+      "platform": "Coursera",
+      "url": "https://www.coursera.org/learn/exercise-science",
+      "provider": "University of Colorado Boulder",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Sports Science",
+      "url": "https://en.wikipedia.org/wiki/Sports_science",
+      "type": "Encyclopedia",
+      "desc": "Discipline that studies how the healthy human body works during exercise."
+    },
+    {
+      "title": "Sports Authority of India (SAI)",
+      "url": "https://sportsauthorityofindia.nic.in/",
+      "type": "Apex Sports Body",
+      "desc": "Nodal body under the Ministry of Youth Affairs and Sports developing Olympic athletes."
+    }
+  ],
+  "weights": {
+    "medical": 8,
+    "helping": 8,
+    "logic": 7,
+    "leadership": 8,
+    "building": 6
+  }
+},
+{
+  "id": "sound_engineer_music_producer",
+  "name": "Sound Engineer & Acoustic Audio Producer",
+  "category": "Design & Creative",
+  "icon": "Radio",
+  "tagline": "Shape acoustic resonance, Dolby Atmos spatial audio, and chart-topping mixdowns",
+  "description": "Records, mixes, and masters audio for commercial albums, blockbuster film sound design, AAA video games, and immersive Dolby Atmos spatial formats.",
+  "averageSalaryInr": "₹6 - ₹24 LPA",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "17% (Spatial Audio & Streaming Dominance)",
+  "topEmployers": [
+    "YRF Studios",
+    "Abbey Road Studios",
+    "Spotify Audio Labs",
+    "Sony Music",
+    "Electronic Arts Audio",
+    "Dolby Laboratories"
+  ],
+  "skills": [
+    "Pro Tools & Ableton Live",
+    "Dolby Atmos Spatial Mixing",
+    "Parametric EQ & Multiband Compression",
+    "Microphone Placement & Acoustics",
+    "Analogue Outboard Gear",
+    "Mastering LUFS Loudness"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: Audio Physics & Acoustics",
+      "duration": "3 Months",
+      "topics": [
+        "Frequency Spectrum (20Hz - 20kHz)",
+        "Room Treatment & Acoustic Standing Waves",
+        "Microphone Types (Condenser, Ribbon, Dynamic)"
+      ]
+    },
+    {
+      "phase": "Phase 2: DAW Mastery",
+      "duration": "4 Months",
+      "topics": [
+        "Avid Pro Tools Workflow",
+        "Subtractive & Additive Synthesis",
+        "Gain Staging & Bussing"
+      ]
+    },
+    {
+      "phase": "Phase 3: Mixing & Spatial Audio",
+      "duration": "6 Months",
+      "topics": [
+        "Dynamic EQ & Saturation",
+        "Reverb & Stereo Imaging",
+        "Dolby Atmos 7.1.4 Bed & Object Panning"
+      ]
+    },
+    {
+      "phase": "Phase 4: Commercial Mastering",
+      "duration": "Ongoing",
+      "topics": [
+        "LUFS Metering for Streaming",
+        "Vinyl & Film Stem Deliverables",
+        "Studio Client Management"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "audio engineering music production pro tools mixing mastering course",
+  "featuredVideos": [
+    {
+      "title": "Audio Engineering & Mixing Complete Course",
+      "query": "audio engineering mixing pro tools tutorial",
+      "embedId": "L8E_6GjYFqg"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Music Production Specialization",
+      "platform": "Coursera",
+      "url": "https://www.coursera.org/specializations/music-production",
+      "provider": "Berklee College of Music",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Audio Engineer",
+      "url": "https://en.wikipedia.org/wiki/Audio_engineer",
+      "type": "Encyclopedia",
+      "desc": "Professional concerned with the recording, manipulation, mixing and reproduction of sound."
+    },
+    {
+      "title": "Audio Engineering Society (AES)",
+      "url": "https://www.aes.org/",
+      "type": "Global Authority",
+      "desc": "The international professional society devoted exclusively to audio technology."
+    }
+  ],
+  "weights": {
+    "creativity": 10,
+    "technology": 8,
+    "building": 7,
+    "logic": 7,
+    "communication": 6
+  }
+},
+{
+  "id": "pr_crisis_communications",
+  "name": "Public Relations Director & Crisis Communications Strategist",
+  "category": "Government & Public Service",
+  "icon": "Megaphone",
+  "tagline": "Safeguard corporate reputation, steer press narratives, and manage global media crises",
+  "description": "Advises Fortune 500 CEOs, unicorn founders, and public figures through corporate scandals, high-stakes press conferences, and strategic global brand image management.",
+  "averageSalaryInr": "₹10 - ₹32 LPA",
+  "averageSalaryUsd": ",000 - ,000",
+  "growthRate": "19% (High Stakes Corporate Advisory)",
+  "topEmployers": [
+    "Edelman",
+    "Adfactors PR",
+    "Genesis BCW",
+    "Weber Shandwick",
+    "Google Global PR",
+    "Reliance Corporate Communications"
+  ],
+  "skills": [
+    "Crisis Scenario War-Rooms",
+    "Media Relations & Journalist Pitching",
+    "Executive Speechwriting",
+    "Reputation Threat Auditing",
+    "Press Conference Staging",
+    "Social Sentiment Analysis"
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1: Journalism & Mass Media",
+      "duration": "3 Years",
+      "topics": [
+        "B.A Journalism / Communications",
+        "Media Law, Defamation & Ethics",
+        "Press Release Drafting"
+      ]
+    },
+    {
+      "phase": "Phase 2: Media Pitching & Agency",
+      "duration": "2 Years",
+      "topics": [
+        "Building Journalist Rolodex",
+        "Targeting Business Press (ET, Bloomberg)",
+        "Thought Leadership Articles"
+      ]
+    },
+    {
+      "phase": "Phase 3: Crisis Simulation",
+      "duration": "1 Year",
+      "topics": [
+        "War-Room Protocol Execution",
+        "Holding Statements under Pressure",
+        "Rapid Response Digital PR"
+      ]
+    },
+    {
+      "phase": "Phase 4: Chief Communications Officer (CCO)",
+      "duration": "Ongoing",
+      "topics": [
+        "Board-Level Reputation Strategy",
+        "Merger & Acquisition Press Rolls",
+        "Global Media Management"
+      ]
+    }
+  ],
+  "youtubeSearchQuery": "public relations pr crisis communications reputation management career",
+  "featuredVideos": [
+    {
+      "title": "Public Relations & Crisis Communications Roadmap",
+      "query": "public relations career reputation management guide",
+      "embedId": "L8E_6GjYFqg"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Crisis Communication Management",
+      "platform": "Coursera",
+      "url": "https://www.coursera.org/learn/crisis-communication",
+      "provider": "Northwestern University",
+      "freeOption": true
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wikipedia: Public Relations",
+      "url": "https://en.wikipedia.org/wiki/Public_relations",
+      "type": "Encyclopedia",
+      "desc": "Practice of managing the communication between an organization and its publics."
+    },
+    {
+      "title": "Public Relations Society of India (PRSI)",
+      "url": "https://www.prsi.co.in/",
+      "type": "National Association",
+      "desc": "National association of PR practitioners established to promote PR professionalism."
+    }
+  ],
+  "weights": {
+    "communication": 10,
+    "leadership": 9,
+    "logic": 8,
+    "helping": 7,
+    "creativity": 7
+  }
+}
 ];
 
 export default careersData;
