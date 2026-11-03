@@ -127,6 +127,16 @@ app.get('/api/health', async (req, res) => {
   });
 });
 
+// Root Welcome Route (Ensures Render health checks on "/" return 200 OK)
+app.get('/', (req, res) => {
+  res.json({
+    service: 'SahiChayan Advisory API',
+    version: '2.0.0',
+    status: 'online',
+    health: '/api/health',
+  });
+});
+
 // 5. Mount API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/careers', careerRoutes);
