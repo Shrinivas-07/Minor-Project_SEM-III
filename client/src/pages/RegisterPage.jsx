@@ -19,12 +19,7 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      if (isSupabaseConfigured) {
-        await signUp(email, password, fullName);
-        alert('Registration successful! Please check your email for confirmation if enabled.');
-      } else {
-        loginDemoUser(fullName || 'Student User');
-      }
+      await signUp(email, password, fullName);
       navigate('/assessment');
     } catch (err) {
       setError(err.message || 'Registration failed.');

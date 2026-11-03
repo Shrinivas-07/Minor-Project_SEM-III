@@ -101,18 +101,14 @@ export function AssessmentProvider({ children }) {
     setSavedCareers(next);
 
     // If Supabase is connected and user is logged in
-    if (user && supabase) {
+    if (user) {
       try {
-        await fetch('/api/users/save-career', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: user.id,
-            careerId: career.id,
-            careerName: career.name,
-            category: career.category,
-            matchScore: career.matchScore || 0
-          })
+        await api.toggleSaveCareer({
+          userId: user.id,
+          careerId: career.id,
+          careerName: career.name,
+          category: career.category,
+          matchScore: career.matchScore || 0
         });
       } catch (err) {
         // Continue silently

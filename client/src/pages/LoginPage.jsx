@@ -18,12 +18,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      if (isSupabaseConfigured) {
-        await signIn(email, password);
-      } else {
-        // Fallback demo login
-        loginDemoUser(email.split('@')[0]);
-      }
+      await signIn(email, password);
       navigate('/dashboard');
     } catch (err) {
       setError(err.message || 'Login failed. Please check your credentials.');

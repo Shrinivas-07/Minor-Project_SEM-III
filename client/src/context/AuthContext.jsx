@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase, isSupabaseConfigured } from '../services/supabase';
+import { api } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -58,30 +59,58 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // Sign in with email/password via Supabase
+  // Sign in with email/password via Supabase or Backend Proxy
   const signIn = async (email, password) => {
-    if (!isSupabaseConfigured || !supabase) {
-      throw new Error('Supabase is not configured yet. Please use Demo Login or configure your keys.');
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      if (data?.user) {
+        setUser(data.user);
+        fetchProfile(data.user.id);
+      }
+      return data;
     }
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    return data;
+
+    // Backend proxy fallback
+    try {
+      const result = await api.backendLogin(email, password);
+      if (result?.user) {
+        setUser(result.user);
+        setProfile(result.profile || result.user);
+        return result;
+      }
+    } catch (backendErr) {
+      throw new Error(backendErr.message || 'Login failed.');
+    }
   };
 
-  // Sign up with Supabase
+  // Sign up with Supabase or Backend Proxy
   const signUp = async (email, password, fullName) => {
-    if (!isSupabaseConfigured || !supabase) {
-      throw new Error('Supabase is not configured yet. Please use Demo Login or configure your keys.');
-    }
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: fullName }
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: fullName }
+        }
+      });
+      if (error) throw error;
+      if (data?.user) {
+        setUser(data.user);
       }
-    });
-    if (error) throw error;
-    return data;
+      return data;
+    }
+
+    // Backend proxy fallback
+    try {
+      const result = await api.backendRegister(email, password, fullName);
+      if (result?.user) {
+        setUser(result.user);
+        return result;
+      }
+    } catch (backendErr) {
+      throw new Error(backendErr.message || 'Registration failed.');
+    }
   };
 
   // Instant Demo Login (for presentation & testing)

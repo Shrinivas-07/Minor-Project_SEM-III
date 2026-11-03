@@ -1,136 +1,76 @@
-const supabase = require('../config/supabase');
+/**
+ * User Controller
+ */
 
-// Upsert / sync user profile
-exports.syncProfile = async (req, res) => {
+const userService = require('../services/userService');
+const ApiResponse = require('../utils/responseHandler');
+
+exports.syncProfile = async (req, res, next) => {
   try {
-    const { userId, email, fullName, stream, educationLevel, bio, targetYear } = req.body;
+    const { userId, email, fullName, stream, educationLevel, bio, targetYear, avatarUrl } = req.body;
+    const effectiveUserId = req.user?.id || userId;
 
-    if (!userId) {
-      return res.status(400).json({ success: false, message: 'userId is required' });
+    if (!effectiveUserId) {
+      return ApiResponse.badRequest(res, 'userId is required');
     }
 
-    if (!supabase) {
-      return res.json({
-        success: true,
-        message: 'Profile stored in local session (Supabase not configured)',
-        data: { userId, email, fullName, stream, educationLevel, bio, targetYear }
-      });
-    }
+    const data = await userService.syncProfile({
+      userId: effectiveUserId,
+      email: req.user?.email || email,
+      fullName,
+      stream,
+      educationLevel,
+      bio,
+      targetYear,
+      avatarUrl,
+    });
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .upsert({
-        id: userId,
-        email,
-        full_name: fullName,
-        stream,
-        education_level: educationLevel,
-        bio,
-        target_year: targetYear,
-        updated_at: new Date().toISOString()
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    res.json({ success: true, data });
+    return ApiResponse.success(res, data, 'Profile updated successfully');
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    next(error);
   }
 };
 
-// Get profile
-exports.getProfile = async (req, res) => {
+exports.getProfile = async (req, res, next) => {
   try {
-    const { userId } = req.params;
-
-    if (!supabase) {
-      return res.json({ success: true, data: null });
-    }
-
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (error) throw error;
-
-    res.json({ success: true, data });
+    const userId = req.user?.id || req.params.userId;
+    const profile = await userService.getProfile(userId);
+    return ApiResponse.success(res, profile, 'Profile retrieved');
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    next(error);
   }
 };
 
-// Bookmark / save a career
-exports.toggleSaveCareer = async (req, res) => {
+exports.toggleSaveCareer = async (req, res, next) => {
   try {
     const { userId, careerId, careerName, category, matchScore, notes } = req.body;
+    const effectiveUserId = req.user?.id || userId;
 
-    if (!userId || !careerId) {
-      return res.status(400).json({ success: false, message: 'userId and careerId required' });
+    if (!effectiveUserId || !careerId) {
+      return ApiResponse.badRequest(res, 'userId and careerId are required');
     }
 
-    if (!supabase) {
-      return res.json({ success: true, message: 'Bookmark handled locally' });
-    }
+    const result = await userService.toggleSaveCareer({
+      userId: effectiveUserId,
+      careerId,
+      careerName,
+      category,
+      matchScore,
+      notes,
+    });
 
-    // Check if already saved
-    const { data: existing } = await supabase
-      .from('saved_careers')
-      .select('id')
-      .eq('user_id', userId)
-      .eq('career_id', careerId)
-      .maybeSingle();
-
-    if (existing) {
-      // Remove bookmark
-      await supabase.from('saved_careers').delete().eq('id', existing.id);
-      return res.json({ success: true, action: 'removed', careerId });
-    } else {
-      // Add bookmark
-      const { data, error } = await supabase
-        .from('saved_careers')
-        .insert({
-          user_id: userId,
-          career_id: careerId,
-          career_name: careerName,
-          category,
-          match_score: matchScore,
-          notes: notes || ''
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-      return res.json({ success: true, action: 'saved', data });
-    }
+    return ApiResponse.success(res, result, `Career bookmark ${result.action}`);
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    next(error);
   }
 };
 
-// Get user saved careers
-exports.getSavedCareers = async (req, res) => {
+exports.getSavedCareers = async (req, res, next) => {
   try {
-    const { userId } = req.params;
-
-    if (!supabase) {
-      return res.json({ success: true, data: [] });
-    }
-
-    const { data, error } = await supabase
-      .from('saved_careers')
-      .select('*')
-      .eq('user_id', userId)
-      .order('saved_at', { ascending: false });
-
-    if (error) throw error;
-
-    res.json({ success: true, data: data || [] });
+    const userId = req.user?.id || req.params.userId;
+    const bookmarks = await userService.getSavedCareers(userId);
+    return ApiResponse.success(res, bookmarks, 'Saved careers retrieved');
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    next(error);
   }
 };
-

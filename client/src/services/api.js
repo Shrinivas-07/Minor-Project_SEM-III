@@ -1,15 +1,39 @@
 import { careersData } from '../data/careersData';
 import { resourcesData } from '../data/resourcesData';
+import { supabase } from './supabase';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = (
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  ''
+).replace(/\/$/, ''); // Strip trailing slash
+
+/**
+ * Helper to build JSON headers with optional Supabase Bearer token
+ */
+async function getHeaders() {
+  const headers = { 'Content-Type': 'application/json' };
+  if (supabase) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+  return headers;
+}
 
 export const api = {
   // Assessment
   async calculateAssessment(scores, userId = null) {
     try {
+      const headers = await getHeaders();
       const res = await fetch(`${API_BASE}/api/assessment/calculate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ scores, userId }),
       });
       if (!res.ok) throw new Error('API server error');
@@ -61,9 +85,10 @@ export const api = {
   // AI Mentor Chat
   async chatWithMentor(message, careerId = null, userProfile = null, history = [], userId = null) {
     try {
+      const headers = await getHeaders();
       const res = await fetch(`${API_BASE}/api/ai/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ message, careerId, userProfile, history, userId }),
       });
       if (!res.ok) throw new Error('AI mentor error');
@@ -105,6 +130,61 @@ export const api = {
       }
       return { success: true, count: filtered.length, data: filtered };
     }
+  },
+
+  // Save / Bookmark Career
+  async toggleSaveCareer(payload) {
+    try {
+      const headers = await getHeaders();
+      const res = await fetch(`${API_BASE}/api/users/save-career`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error('Failed to save career');
+      return await res.json();
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  },
+
+  // Profile Sync
+  async syncProfile(payload) {
+    try {
+      const headers = await getHeaders();
+      const res = await fetch(`${API_BASE}/api/users/sync-profile`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error('Failed to sync profile');
+      return await res.json();
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  },
+
+  // Auth Proxy (Fallback if Supabase client is blocked in browser)
+  async backendLogin(email, password) {
+    const res = await fetch(`${API_BASE}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Login failed');
+    return data.data;
+  },
+
+  async backendRegister(email, password, fullName) {
+    const res = await fetch(`${API_BASE}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, fullName }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Registration failed');
+    return data.data;
   }
 };
 
@@ -115,7 +195,7 @@ function calculateLocalAssessment(scores) {
       let earnedScore = 0;
       let maxPossibleScore = 0;
 
-      Object.keys(career.weights).forEach((weightKey) => {
+      Object.keys(career.weights || {}).forEach((weightKey) => {
         const userScore = scores[weightKey] !== undefined ? scores[weightKey] : 5;
         const weight = career.weights[weightKey];
         earnedScore += userScore * weight;
@@ -164,4 +244,3 @@ function calculateLocalAssessment(scores) {
     }
   };
 }
-

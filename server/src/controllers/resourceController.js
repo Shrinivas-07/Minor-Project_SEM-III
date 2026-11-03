@@ -1,4 +1,9 @@
+/**
+ * Resource Controller
+ */
+
 const supabase = require('../config/supabase');
+const ApiResponse = require('../utils/responseHandler');
 
 const defaultResources = [
   {
@@ -68,39 +73,38 @@ const defaultResources = [
     type: "video",
     url: "https://www.youtube.com/watch?v=inWWhr5tnEA",
     embedId: "inWWhr5tnEA",
-    description: "Network security, Kali Linux penetration testing, vulnerability assessment, and preparing for CompTIA Security+.",
-    duration: "1 hr 10 mins",
+    description: "Hands-on penetration testing, network packet analysis with Wireshark, Linux security, and ethical hacking protocols.",
+    duration: "50 mins",
     difficulty: "intermediate",
     isFeatured: false
   },
   {
     id: "res-7",
-    title: "AI & Machine Learning Engineer Roadmap",
-    category: "Technology & AI",
-    type: "roadmap",
-    url: "https://roadmap.sh/ai-engineer",
+    title: "Chartered Accountancy (CA) Complete Roadmap",
+    category: "Finance & Business",
+    type: "guide",
+    url: "https://www.icai.org",
     embedId: null,
-    description: "Visual roadmap covering mathematics, transformers, RAG architecture, LLMOps, and production serving.",
-    duration: "Interactive Guide",
+    description: "Official guide to ICAI Foundation, Intermediate, Articleship training, and Final CA examinations in India.",
+    duration: "Official Portal",
     difficulty: "advanced",
     isFeatured: false
   },
   {
     id: "res-8",
-    title: "Investment Banking Financial Modeling Essentials",
-    category: "Finance & Business",
+    title: "National Defence Academy (NDA) Cadet Training Journey",
+    category: "Government & Public Policy",
     type: "video",
-    url: "https://www.youtube.com/watch?v=F3QpgXBtDe8",
-    embedId: "F3QpgXBtDe8",
-    description: "Core accounting concepts, discounted cash flow (DCF) models, and valuation frameworks used on Wall Street and Dalal Street.",
-    duration: "50 mins",
-    difficulty: "intermediate",
-    isFeatured: false
+    url: "https://www.youtube.com/watch?v=Bv0T89C6TdQ",
+    embedId: "Bv0T89C6TdQ",
+    description: "Inside the National Defence Academy (Khadakwasla): physical conditioning, academic curriculum, and military discipline.",
+    duration: "25 mins",
+    difficulty: "beginner",
+    isFeatured: true
   }
 ];
 
-// Get all resources
-exports.getResources = async (req, res) => {
+exports.getResources = async (req, res, next) => {
   try {
     const { category, type, search } = req.query;
 
@@ -108,12 +112,23 @@ exports.getResources = async (req, res) => {
 
     if (supabase) {
       try {
-        const { data } = await supabase.from('resource_hub').select('*');
-        if (data && data.length > 0) {
-          resources = data;
+        const { data, error } = await supabase.from('resource_hub').select('*');
+        if (!error && data && data.length > 0) {
+          resources = data.map((r) => ({
+            id: r.id,
+            title: r.title,
+            category: r.category,
+            type: r.type,
+            url: r.url,
+            embedId: r.embed_id || r.embedId,
+            description: r.description,
+            duration: r.duration,
+            difficulty: r.difficulty,
+            isFeatured: r.is_featured || r.isFeatured,
+          }));
         }
-      } catch (e) {
-        // Fall back to default resources
+      } catch (err) {
+        // Fall back to defaultResources
       }
     }
 
@@ -126,7 +141,9 @@ exports.getResources = async (req, res) => {
     }
 
     if (type && type !== 'All') {
-      filtered = filtered.filter((r) => r.type.toLowerCase() === type.toLowerCase());
+      filtered = filtered.filter(
+        (r) => r.type.toLowerCase() === type.toLowerCase()
+      );
     }
 
     if (search) {
@@ -139,13 +156,8 @@ exports.getResources = async (req, res) => {
       );
     }
 
-    res.json({
-      success: true,
-      count: filtered.length,
-      data: filtered,
-    });
+    return ApiResponse.success(res, filtered, 'Resources retrieved', 200, { total: filtered.length });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    next(error);
   }
 };
-
