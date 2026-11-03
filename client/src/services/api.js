@@ -17,16 +17,29 @@ const API_BASE = (
  */
 async function getHeaders() {
   const headers = { 'Content-Type': 'application/json' };
+  let token = null;
+
   if (supabase) {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.access_token) {
-        headers['Authorization'] = `Bearer ${session.access_token}`;
+        token = session.access_token;
       }
     } catch (e) {
       // Ignore
     }
   }
+
+  if (!token) {
+    try {
+      token = localStorage.getItem('sahichayan_auth_token');
+    } catch (e) {}
+  }
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   return headers;
 }
 

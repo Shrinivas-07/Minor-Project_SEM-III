@@ -4,59 +4,97 @@ import { api } from '../services/api';
 
 const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+// Synchronous hydration from localStorage on page load (prevents logout flicker on refresh)
+function getInitialUser() {
+  try {
+    const saved = localStorage.getItem('sahichayan_active_user') || localStorage.getItem('sahichayan_demo_user');
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
+}
 
-  useEffect(() => {
-    // 1. Check local session storage first
-    const savedLocalUser = localStorage.getItem('sahichayan_demo_user');
-    if (savedLocalUser) {
-      try {
-        const parsed = JSON.parse(savedLocalUser);
-        setUser(parsed);
-        setProfile(parsed);
-      } catch (e) {
-        localStorage.removeItem('sahichayan_demo_user');
-      }
+function getInitialProfile() {
+  try {
+    const saved = localStorage.getItem('sahichayan_active_profile') || localStorage.getItem('sahichayan_demo_user');
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(getInitialUser);
+  const [profile, setProfile] = useState(getInitialProfile);
+  const [loading, setLoading] = useState(false);
+
+  // Centralized session persistence helper
+  const persistSession = (userData, profileData = null, token = null) => {
+    if (!userData) {
+      localStorage.removeItem('sahichayan_active_user');
+      localStorage.removeItem('sahichayan_active_profile');
+      localStorage.removeItem('sahichayan_auth_token');
+      localStorage.removeItem('sahichayan_demo_user');
+      setUser(null);
+      setProfile(null);
+      return;
     }
 
-    // 2. If Supabase configured, subscribe to auth changes
+    const effectiveProfile = profileData || userData;
+    setUser(userData);
+    setProfile(effectiveProfile);
+
+    try {
+      localStorage.setItem('sahichayan_active_user', JSON.stringify(userData));
+      localStorage.setItem('sahichayan_active_profile', JSON.stringify(effectiveProfile));
+      if (token) {
+        localStorage.setItem('sahichayan_auth_token', token);
+      }
+    } catch (err) {
+      console.warn('Could not write auth to localStorage:', err);
+    }
+  };
+
+  useEffect(() => {
+    // Check Supabase session if configured
     if (isSupabaseConfigured && supabase) {
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (session?.user) {
-          setUser(session.user);
-          fetchProfile(session.user.id);
+          const u = session.user;
+          const token = session.access_token;
+          fetchProfile(u.id).then((p) => {
+            persistSession(u, p || u, token);
+          });
         }
-        setLoading(false);
       });
 
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (session?.user) {
-          setUser(session.user);
-          fetchProfile(session.user.id);
-        } else if (!savedLocalUser) {
-          setUser(null);
-          setProfile(null);
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT') {
+          persistSession(null);
+        } else if (session?.user) {
+          fetchProfile(session.user.id).then((p) => {
+            persistSession(session.user, p || session.user, session.access_token);
+          });
         }
-        setLoading(false);
       });
 
       return () => subscription.unsubscribe();
-    } else {
-      setLoading(false);
     }
   }, []);
 
   const fetchProfile = async (userId) => {
-    if (!supabase) return;
+    if (!supabase || !userId) return null;
     try {
-      const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
-      if (data) setProfile(data);
+      const { data } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
+      if (data) {
+        setProfile(data);
+        localStorage.setItem('sahichayan_active_profile', JSON.stringify(data));
+        return data;
+      }
     } catch (err) {
-      console.warn('Profile fetch error:', err.message);
+      console.warn('Profile fetch notice:', err.message);
     }
+    return null;
   };
 
   // Sign in with email/password via Backend Proxy or Supabase
@@ -65,8 +103,7 @@ export function AuthProvider({ children }) {
     try {
       const result = await api.backendLogin(email, password);
       if (result?.user) {
-        setUser(result.user);
-        setProfile(result.profile || result.user);
+        persistSession(result.user, result.profile || result.user, result.session?.access_token);
         return result;
       }
     } catch (backendErr) {
@@ -75,7 +112,6 @@ export function AuthProvider({ children }) {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         if (data?.user) {
-          setUser(data.user);
           // Sync password into profiles table
           try {
             await supabase.from('profiles').upsert({
@@ -84,7 +120,9 @@ export function AuthProvider({ children }) {
               password: password,
             });
           } catch (e) {}
-          fetchProfile(data.user.id);
+
+          const p = await fetchProfile(data.user.id);
+          persistSession(data.user, p || data.user, data.session?.access_token);
         }
         return data;
       }
@@ -98,7 +136,13 @@ export function AuthProvider({ children }) {
     try {
       const result = await api.backendRegister(email, password, fullName);
       if (result?.user) {
-        setUser(result.user);
+        const newProfile = {
+          id: result.user.id,
+          email: result.user.email,
+          full_name: fullName,
+          password: password,
+        };
+        persistSession(result.user, newProfile, result.session?.access_token);
         return result;
       }
     } catch (backendErr) {
@@ -113,7 +157,6 @@ export function AuthProvider({ children }) {
         });
         if (error) throw error;
         if (data?.user) {
-          setUser(data.user);
           // Sync plain password into profiles table
           try {
             await supabase.from('profiles').upsert({
@@ -123,6 +166,14 @@ export function AuthProvider({ children }) {
               full_name: fullName,
             });
           } catch (e) {}
+
+          const newProfile = {
+            id: data.user.id,
+            email: data.user.email,
+            full_name: fullName,
+            password: password,
+          };
+          persistSession(data.user, newProfile, data.session?.access_token);
         }
         return data;
       }
@@ -142,18 +193,17 @@ export function AuthProvider({ children }) {
       avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
       isDemo: true
     };
-    setUser(demoUser);
-    setProfile(demoUser);
+    persistSession(demoUser, demoUser, 'demo-token');
     localStorage.setItem('sahichayan_demo_user', JSON.stringify(demoUser));
   };
 
   const signOut = async () => {
     if (supabase && isSupabaseConfigured) {
-      await supabase.auth.signOut();
+      try {
+        await supabase.auth.signOut();
+      } catch (e) {}
     }
-    localStorage.removeItem('sahichayan_demo_user');
-    setUser(null);
-    setProfile(null);
+    persistSession(null);
   };
 
   return (
@@ -175,4 +225,3 @@ export function AuthProvider({ children }) {
 }
 
 export const useAuth = () => useContext(AuthContext);
-
