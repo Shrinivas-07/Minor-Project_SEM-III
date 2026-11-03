@@ -5,7 +5,11 @@ import { supabase } from './supabase';
 const API_BASE = (
   import.meta.env.VITE_API_BASE_URL ||
   import.meta.env.VITE_API_URL ||
-  ''
+  (typeof window !== 'undefined' &&
+   !window.location.hostname.includes('localhost') &&
+   !window.location.hostname.includes('127.0.0.1')
+    ? 'https://sahichayan.onrender.com'
+    : '')
 ).replace(/\/$/, ''); // Strip trailing slash
 
 /**
