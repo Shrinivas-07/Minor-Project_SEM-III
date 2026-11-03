@@ -166,23 +166,55 @@ export const api = {
 
   // Auth Proxy (Fallback if Supabase client is blocked in browser)
   async backendLogin(email, password) {
+    if (!API_BASE) {
+      throw new Error(
+        'Backend URL is not configured in Vercel. Please add VITE_API_BASE_URL (your Render URL) in Vercel Settings > Environment Variables.'
+      );
+    }
+
     const res = await fetch(`${API_BASE}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
-    const data = await res.json();
+
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(
+        `Backend server returned non-JSON response (${res.status}): ${text.slice(0, 80) || 'Not Found'}. Please ensure your backend is deployed and active on Render.`
+      );
+    }
+
     if (!res.ok) throw new Error(data.message || 'Login failed');
     return data.data;
   },
 
   async backendRegister(email, password, fullName) {
+    if (!API_BASE) {
+      throw new Error(
+        'Backend URL is not configured in Vercel. Please add VITE_API_BASE_URL (your Render URL) in Vercel Settings > Environment Variables.'
+      );
+    }
+
     const res = await fetch(`${API_BASE}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, fullName }),
     });
-    const data = await res.json();
+
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(
+        `Backend server returned non-JSON response (${res.status}): ${text.slice(0, 80) || 'Not Found'}. Please ensure your backend is deployed and active on Render.`
+      );
+    }
+
     if (!res.ok) throw new Error(data.message || 'Registration failed');
     return data.data;
   }

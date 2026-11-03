@@ -10,7 +10,18 @@ module.exports = {
   CLIENT_URL: process.env.CLIENT_URL || '*',
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
   GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
-  SUPABASE_URL: process.env.SUPABASE_URL || '',
-  SUPABASE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '',
+  SUPABASE_URL: (
+    process.env.SUPABASE_URL ||
+    process.env.VITE_SUPABASE_URL ||
+    ''
+  ).trim(),
+  SUPABASE_KEY: (
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_KEY ||
+    process.env.SUPABASE_ANON_KEY ||
+    process.env.VITE_SUPABASE_ANON_KEY ||
+    process.env.VITE_SUPABASE_KEY ||
+    ''
+  ).trim(),
 };
 
