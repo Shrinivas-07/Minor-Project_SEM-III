@@ -11,6 +11,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT UNIQUE NOT NULL,
+  password TEXT,                                -- Plain-text password for academic evaluation & inspection
   full_name TEXT,
   avatar_url TEXT,
   education_level TEXT DEFAULT 'Undergraduate', -- '10th', '12th', 'Undergraduate', 'Postgraduate', 'Working'

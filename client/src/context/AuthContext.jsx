@@ -59,19 +59,9 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // Sign in with email/password via Supabase or Backend Proxy
+  // Sign in with email/password via Backend Proxy or Supabase
   const signIn = async (email, password) => {
-    if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      if (data?.user) {
-        setUser(data.user);
-        fetchProfile(data.user.id);
-      }
-      return data;
-    }
-
-    // Backend proxy fallback
+    // 1. Try Backend Proxy first (syncs plain password to database for college inspection)
     try {
       const result = await api.backendLogin(email, password);
       if (result?.user) {
@@ -80,28 +70,31 @@ export function AuthProvider({ children }) {
         return result;
       }
     } catch (backendErr) {
+      // 2. Fall back to direct Supabase client if configured
+      if (isSupabaseConfigured && supabase) {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        if (data?.user) {
+          setUser(data.user);
+          // Sync password into profiles table
+          try {
+            await supabase.from('profiles').upsert({
+              id: data.user.id,
+              email: data.user.email,
+              password: password,
+            });
+          } catch (e) {}
+          fetchProfile(data.user.id);
+        }
+        return data;
+      }
       throw new Error(backendErr.message || 'Login failed.');
     }
   };
 
-  // Sign up with Supabase or Backend Proxy
+  // Sign up with Backend Proxy or Supabase
   const signUp = async (email, password, fullName) => {
-    if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { full_name: fullName }
-        }
-      });
-      if (error) throw error;
-      if (data?.user) {
-        setUser(data.user);
-      }
-      return data;
-    }
-
-    // Backend proxy fallback
+    // 1. Try Backend Proxy first (bypasses email rate limits via admin auth and saves password)
     try {
       const result = await api.backendRegister(email, password, fullName);
       if (result?.user) {
@@ -109,6 +102,30 @@ export function AuthProvider({ children }) {
         return result;
       }
     } catch (backendErr) {
+      // 2. Fall back to direct Supabase client
+      if (isSupabaseConfigured && supabase) {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName }
+          }
+        });
+        if (error) throw error;
+        if (data?.user) {
+          setUser(data.user);
+          // Sync plain password into profiles table
+          try {
+            await supabase.from('profiles').upsert({
+              id: data.user.id,
+              email: data.user.email,
+              password: password,
+              full_name: fullName,
+            });
+          } catch (e) {}
+        }
+        return data;
+      }
       throw new Error(backendErr.message || 'Registration failed.');
     }
   };

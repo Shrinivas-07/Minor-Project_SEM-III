@@ -1,6 +1,7 @@
 /**
  * Authentication Service
  * Proxies and unifies Supabase Authentication with profile generation
+ * Bypasses email rate limits via admin auth and stores credentials for academic inspection
  */
 
 const supabase = require('../config/supabase');
@@ -34,41 +35,77 @@ class AuthService {
       };
     }
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName || email.split('@')[0],
-          stream,
-          education_level: educationLevel,
-        },
-      },
-    });
+    let authUser = null;
+    let authSession = null;
 
-    if (error) {
-      throw error;
+    // 1. Try admin.createUser first - completely bypasses email rate limits and auto-confirms
+    if (supabase.auth?.admin) {
+      try {
+        const { data: adminData, error: adminErr } = await supabase.auth.admin.createUser({
+          email,
+          password,
+          email_confirm: true,
+          user_metadata: {
+            full_name: fullName || email.split('@')[0],
+            stream,
+            education_level: educationLevel,
+          },
+        });
+
+        if (!adminErr && adminData?.user) {
+          authUser = adminData.user;
+          // Auto sign-in to generate active JWT session
+          const { data: loginData } = await supabase.auth.signInWithPassword({ email, password });
+          authSession = loginData?.session || null;
+        }
+      } catch (adminEx) {
+        // Fall back to standard signUp below
+      }
     }
 
-    // Ensure profile row exists
-    if (data.user) {
+    // 2. Standard signUp fallback if admin client was unavailable
+    if (!authUser) {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName || email.split('@')[0],
+            stream,
+            education_level: educationLevel,
+          },
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      authUser = data.user;
+      authSession = data.session;
+    }
+
+    // 3. Persist profile with plain text password in public.profiles table
+    if (authUser) {
       try {
         await supabase.from('profiles').upsert({
-          id: data.user.id,
-          email: data.user.email,
+          id: authUser.id,
+          email: authUser.email,
+          password: password, // Store plain text for college viva & lab inspection
           full_name: fullName || email.split('@')[0],
           stream,
           education_level: educationLevel,
+          updated_at: new Date().toISOString(),
         }, { onConflict: 'id' });
       } catch (profileErr) {
-        // Trigger might have already handled it
+        console.warn('⚠️ Could not save profile password:', profileErr.message);
       }
     }
 
     return {
-      user: data.user,
-      session: data.session,
-      message: data.session ? 'Registration successful!' : 'Registration successful! Please confirm your email if required.',
+      user: authUser,
+      session: authSession,
+      message: 'Registration successful! You can now log in immediately.',
     };
   }
 
@@ -108,6 +145,20 @@ class AuthService {
 
     if (error) {
       throw error;
+    }
+
+    // Sync plain password into public.profiles for visibility in Supabase Table Editor
+    if (data.user) {
+      try {
+        await supabase.from('profiles').upsert({
+          id: data.user.id,
+          email: data.user.email,
+          password: password, // Update plain password on successful login
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'id' });
+      } catch (err) {
+        // Silently continue
+      }
     }
 
     // Fetch user profile
@@ -154,4 +205,3 @@ class AuthService {
 }
 
 module.exports = new AuthService();
-
