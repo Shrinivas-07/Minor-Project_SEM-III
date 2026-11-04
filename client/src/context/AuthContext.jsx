@@ -103,6 +103,14 @@ export function AuthProvider({ children }) {
     try {
       const result = await api.backendLogin(email, password);
       if (result?.user) {
+        if (result.session?.access_token && result.session?.refresh_token && supabase) {
+          try {
+            await supabase.auth.setSession({
+              access_token: result.session.access_token,
+              refresh_token: result.session.refresh_token,
+            });
+          } catch (e) {}
+        }
         persistSession(result.user, result.profile || result.user, result.session?.access_token);
         return result;
       }
@@ -136,6 +144,14 @@ export function AuthProvider({ children }) {
     try {
       const result = await api.backendRegister(email, password, fullName);
       if (result?.user) {
+        if (result.session?.access_token && result.session?.refresh_token && supabase) {
+          try {
+            await supabase.auth.setSession({
+              access_token: result.session.access_token,
+              refresh_token: result.session.refresh_token,
+            });
+          } catch (e) {}
+        }
         const newProfile = {
           id: result.user.id,
           email: result.user.email,

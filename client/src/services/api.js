@@ -169,29 +169,33 @@ export const api = {
   async getSavedCareers(userId) {
     if (!userId) return { success: true, data: [] };
 
-    // 1. Try direct Supabase query if configured
+    // 1. Try direct Supabase query only if client session is active for this user
     if (supabase) {
       try {
-        const { data, error } = await supabase
-          .from('saved_careers')
-          .select('*')
-          .eq('user_id', userId)
-          .order('saved_at', { ascending: false });
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.id === userId) {
+          const { data, error } = await supabase
+            .from('saved_careers')
+            .select('*')
+            .eq('user_id', userId)
+            .order('saved_at', { ascending: false });
 
-        if (!error && Array.isArray(data)) {
-          return { success: true, data };
+          if (!error && Array.isArray(data) && data.length > 0) {
+            return { success: true, data };
+          }
         }
       } catch (e) {
         // Fall back to backend API
       }
     }
 
-    // 2. Query Render backend API
+    // 2. Query Render backend API (Uses service role key / verified token)
     try {
       const headers = await getHeaders();
       const res = await fetch(`${API_BASE}/api/users/saved-careers/${userId}`, { headers });
       if (!res.ok) throw new Error('Failed to fetch saved careers');
-      return await res.json();
+      const json = await res.json();
+      return { success: true, data: json.data || [] };
     } catch (err) {
       return { success: false, data: [], message: err.message };
     }
@@ -201,17 +205,20 @@ export const api = {
   async getUserAssessments(userId) {
     if (!userId) return { success: true, data: [] };
 
-    // 1. Try direct Supabase query if configured
+    // 1. Try direct Supabase query only if client session is active for this user
     if (supabase) {
       try {
-        const { data, error } = await supabase
-          .from('quiz_assessments')
-          .select('*')
-          .eq('user_id', userId)
-          .order('completed_at', { ascending: false });
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.id === userId) {
+          const { data, error } = await supabase
+            .from('quiz_assessments')
+            .select('*')
+            .eq('user_id', userId)
+            .order('completed_at', { ascending: false });
 
-        if (!error && Array.isArray(data)) {
-          return { success: true, data };
+          if (!error && Array.isArray(data) && data.length > 0) {
+            return { success: true, data };
+          }
         }
       } catch (e) {
         // Fall back to backend API
@@ -223,7 +230,8 @@ export const api = {
       const headers = await getHeaders();
       const res = await fetch(`${API_BASE}/api/assessment/history/${userId}`, { headers });
       if (!res.ok) throw new Error('Failed to fetch assessment history');
-      return await res.json();
+      const json = await res.json();
+      return { success: true, data: json.data || [] };
     } catch (err) {
       return { success: false, data: [], message: err.message };
     }
