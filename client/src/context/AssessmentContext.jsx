@@ -80,21 +80,54 @@ export function AssessmentProvider({ children }) {
         // 1. Fetch saved careers from database
         const savedRes = await api.getSavedCareers(user.id);
         if (isMounted && savedRes?.success && Array.isArray(savedRes.data)) {
-          const normalized = savedRes.data.map((item) => ({
-            id: item.career_id || item.id,
-            career_id: item.career_id || item.id,
-            name: item.career_name || item.name,
-            career_name: item.career_name || item.name,
-            category: item.category || 'General',
-            averageSalaryInr: item.average_salary_inr || item.averageSalaryInr || 'Competitive',
-            growthRate: item.growth_rate || item.growthRate || 'High Demand',
-            matchScore: item.match_score || item.matchScore || 0,
-            status: item.status || 'Exploring',
-            savedAt: item.saved_at || item.savedAt || new Date().toISOString(),
-          }));
+          if (savedRes.data.length > 0) {
+            const normalized = savedRes.data.map((item) => ({
+              id: item.career_id || item.id,
+              career_id: item.career_id || item.id,
+              name: item.career_name || item.name,
+              career_name: item.career_name || item.name,
+              category: item.category || 'General',
+              averageSalaryInr: item.average_salary_inr || item.averageSalaryInr || 'Competitive',
+              growthRate: item.growth_rate || item.growthRate || 'High Demand',
+              matchScore: item.match_score || item.matchScore || 0,
+              status: item.status || 'Exploring',
+              savedAt: item.saved_at || item.savedAt || new Date().toISOString(),
+            }));
 
-          setSavedCareers(normalized);
-          localStorage.setItem('sahichayan_saved_careers', JSON.stringify(normalized));
+            // Merge cloud data with any local bookmarks so nothing is ever lost on refresh
+            setSavedCareers((prev) => {
+              const map = new Map();
+              normalized.forEach((c) => map.set(c.id, c));
+              prev.forEach((c) => {
+                const key = c.id || c.career_id;
+                if (!map.has(key)) map.set(key, c);
+              });
+              const merged = Array.from(map.values());
+              localStorage.setItem('sahichayan_saved_careers', JSON.stringify(merged));
+              return merged;
+            });
+          } else {
+            // Cloud has 0 items; if user has existing local bookmarks, push them up to cloud!
+            const localSaved = (() => {
+              try {
+                return JSON.parse(localStorage.getItem('sahichayan_saved_careers')) || [];
+              } catch {
+                return [];
+              }
+            })();
+
+            if (localSaved.length > 0) {
+              localSaved.forEach((c) => {
+                api.toggleSaveCareer({
+                  userId: user.id,
+                  careerId: c.id || c.career_id,
+                  careerName: c.name || c.career_name,
+                  category: c.category,
+                  matchScore: c.matchScore || 0,
+                }).catch(() => {});
+              });
+            }
+          }
         }
 
         // 2. Fetch latest assessment from database
