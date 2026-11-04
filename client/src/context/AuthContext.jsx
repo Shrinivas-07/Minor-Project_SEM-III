@@ -204,6 +204,11 @@ export function AuthProvider({ children }) {
       } catch (e) {}
     }
     persistSession(null);
+    try {
+      localStorage.removeItem('sahichayan_saved_careers');
+      localStorage.removeItem('sahichayan_results');
+      localStorage.removeItem('sahichayan_scores');
+    } catch (e) {}
   };
 
   return (

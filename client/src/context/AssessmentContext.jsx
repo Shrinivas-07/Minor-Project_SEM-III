@@ -28,6 +28,7 @@ const initialScores = {
 
 export function AssessmentProvider({ children }) {
   const { user } = useAuth();
+
   const [scores, setScores] = useState(() => {
     const saved = localStorage.getItem('sahichayan_scores');
     return saved ? JSON.parse(saved) : initialScores;
@@ -48,6 +49,7 @@ export function AssessmentProvider({ children }) {
   const [isAiMentorOpen, setIsAiMentorOpen] = useState(false);
   const [mentorCareerContext, setMentorCareerContext] = useState(null);
 
+  // Sync to local storage
   useEffect(() => {
     localStorage.setItem('sahichayan_scores', JSON.stringify(scores));
   }, [scores]);
@@ -62,12 +64,76 @@ export function AssessmentProvider({ children }) {
     localStorage.setItem('sahichayan_saved_careers', JSON.stringify(savedCareers));
   }, [savedCareers]);
 
+  // ============================================================================
+  // CROSS-DEVICE CLOUD SYNCHRONIZATION EFFECT
+  // Fetches the user's bookmarks & latest assessment from Supabase/Render on login
+  // ============================================================================
+  useEffect(() => {
+    if (!user || !user.id || user.isDemo) {
+      return;
+    }
+
+    let isMounted = true;
+
+    async function syncCloudData() {
+      try {
+        // 1. Fetch saved careers from database
+        const savedRes = await api.getSavedCareers(user.id);
+        if (isMounted && savedRes?.success && Array.isArray(savedRes.data)) {
+          const normalized = savedRes.data.map((item) => ({
+            id: item.career_id || item.id,
+            career_id: item.career_id || item.id,
+            name: item.career_name || item.name,
+            career_name: item.career_name || item.name,
+            category: item.category || 'General',
+            averageSalaryInr: item.average_salary_inr || item.averageSalaryInr || 'Competitive',
+            growthRate: item.growth_rate || item.growthRate || 'High Demand',
+            matchScore: item.match_score || item.matchScore || 0,
+            status: item.status || 'Exploring',
+            savedAt: item.saved_at || item.savedAt || new Date().toISOString(),
+          }));
+
+          setSavedCareers(normalized);
+          localStorage.setItem('sahichayan_saved_careers', JSON.stringify(normalized));
+        }
+
+        // 2. Fetch latest assessment from database
+        const assessRes = await api.getUserAssessments(user.id);
+        if (isMounted && assessRes?.success && Array.isArray(assessRes.data) && assessRes.data.length > 0) {
+          const latest = assessRes.data[0];
+          const normalizedResult = {
+            topCareers: latest.top_careers || latest.topCareers || [],
+            dominantTrait: latest.dominant_trait || latest.dominantTrait || 'Balanced',
+            averageScore: latest.average_score || latest.averageScore || 5,
+            completedAt: latest.completed_at || latest.completedAt || new Date().toISOString(),
+          };
+
+          setAssessmentResult(normalizedResult);
+          localStorage.setItem('sahichayan_results', JSON.stringify(normalizedResult));
+
+          if (latest.trait_scores) {
+            setScores(latest.trait_scores);
+            localStorage.setItem('sahichayan_scores', JSON.stringify(latest.trait_scores));
+          }
+        }
+      } catch (err) {
+        console.warn('Cross-device cloud synchronization notice:', err.message);
+      }
+    }
+
+    syncCloudData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.id]);
+
   const updateScore = (key, value) => {
-    setScores(prev => ({ ...prev, [key]: Number(value) }));
+    setScores((prev) => ({ ...prev, [key]: Number(value) }));
   };
 
   const applyArchetype = (presetScores) => {
-    setScores(prev => ({ ...prev, ...presetScores }));
+    setScores((prev) => ({ ...prev, ...presetScores }));
   };
 
   const runAssessment = async () => {
@@ -80,47 +146,50 @@ export function AssessmentProvider({ children }) {
   };
 
   const toggleSaveCareer = async (career) => {
-    const exists = savedCareers.some(c => c.id === career.id);
+    const careerKey = career.id || career.career_id;
+    const exists = savedCareers.some((c) => (c.id || c.career_id) === careerKey);
+
     let next;
     if (exists) {
-      next = savedCareers.filter(c => c.id !== career.id);
+      next = savedCareers.filter((c) => (c.id || c.career_id) !== careerKey);
     } else {
       next = [
         {
-          id: career.id,
-          name: career.name,
+          id: careerKey,
+          career_id: careerKey,
+          name: career.name || career.career_name,
           category: career.category,
-          averageSalaryInr: career.averageSalaryInr,
-          growthRate: career.growthRate,
+          averageSalaryInr: career.averageSalaryInr || career.average_salary_inr || 'Competitive',
+          growthRate: career.growthRate || career.growth_rate || 'High Demand',
           savedAt: new Date().toISOString(),
-          status: 'Exploring'
+          status: 'Exploring',
         },
-        ...savedCareers
+        ...savedCareers,
       ];
     }
     setSavedCareers(next);
 
-    // If Supabase is connected and user is logged in
-    if (user) {
+    // Sync to cloud database if user is authenticated
+    if (user && user.id && !user.isDemo) {
       try {
         await api.toggleSaveCareer({
           userId: user.id,
-          careerId: career.id,
-          careerName: career.name,
+          careerId: careerKey,
+          careerName: career.name || career.career_name,
           category: career.category,
-          matchScore: career.matchScore || 0
+          matchScore: career.matchScore || career.match_score || 0,
         });
       } catch (err) {
-        // Continue silently
+        console.warn('Could not persist bookmark to cloud:', err.message);
       }
     }
   };
 
   const isCareerSaved = (careerId) => {
-    return savedCareers.some(c => c.id === careerId);
+    return savedCareers.some((c) => c.id === careerId || c.career_id === careerId);
   };
 
-  // Open the unified 3-tier in-app resource hub (YouTube Search in-app, Course Sites, Wikipedia/Govt)
+  // Open the unified 3-tier in-app resource hub
   const openInAppVideo = (
     title,
     embedId = null,
@@ -139,8 +208,8 @@ export function AssessmentProvider({ children }) {
         provider,
         query: query || (careerData ? careerData.youtubeSearchQuery : `${title} complete course roadmap tutorial`),
         careerData,
-        defaultTab
-      }
+        defaultTab,
+      },
     });
   };
 
@@ -157,14 +226,13 @@ export function AssessmentProvider({ children }) {
   };
 
   const openAiMentor = (career = null) => {
-    if (career) {
-      setMentorCareerContext(career);
-    }
+    setMentorCareerContext(career);
     setIsAiMentorOpen(true);
   };
 
   const closeAiMentor = () => {
     setIsAiMentorOpen(false);
+    setMentorCareerContext(null);
   };
 
   return (

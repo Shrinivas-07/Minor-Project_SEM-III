@@ -165,6 +165,70 @@ export const api = {
     }
   },
 
+  // Get Saved Careers for user (Cross-Device Sync)
+  async getSavedCareers(userId) {
+    if (!userId) return { success: true, data: [] };
+
+    // 1. Try direct Supabase query if configured
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('saved_careers')
+          .select('*')
+          .eq('user_id', userId)
+          .order('saved_at', { ascending: false });
+
+        if (!error && Array.isArray(data)) {
+          return { success: true, data };
+        }
+      } catch (e) {
+        // Fall back to backend API
+      }
+    }
+
+    // 2. Query Render backend API
+    try {
+      const headers = await getHeaders();
+      const res = await fetch(`${API_BASE}/api/users/saved-careers/${userId}`, { headers });
+      if (!res.ok) throw new Error('Failed to fetch saved careers');
+      return await res.json();
+    } catch (err) {
+      return { success: false, data: [], message: err.message };
+    }
+  },
+
+  // Get Assessment History for user (Cross-Device Sync)
+  async getUserAssessments(userId) {
+    if (!userId) return { success: true, data: [] };
+
+    // 1. Try direct Supabase query if configured
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('quiz_assessments')
+          .select('*')
+          .eq('user_id', userId)
+          .order('completed_at', { ascending: false });
+
+        if (!error && Array.isArray(data)) {
+          return { success: true, data };
+        }
+      } catch (e) {
+        // Fall back to backend API
+      }
+    }
+
+    // 2. Query Render backend API
+    try {
+      const headers = await getHeaders();
+      const res = await fetch(`${API_BASE}/api/assessment/history/${userId}`, { headers });
+      if (!res.ok) throw new Error('Failed to fetch assessment history');
+      return await res.json();
+    } catch (err) {
+      return { success: false, data: [], message: err.message };
+    }
+  },
+
   // Profile Sync
   async syncProfile(payload) {
     try {
