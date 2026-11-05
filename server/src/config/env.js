@@ -23,5 +23,8 @@ module.exports = {
     process.env.VITE_SUPABASE_KEY ||
     ''
   ).trim(),
+  BREVO_API_KEY: (process.env.BREVO_API_KEY || '').trim(),
+  BREVO_SENDER_EMAIL: (process.env.BREVO_SENDER_EMAIL || 'support@sahichayan.com').trim(),
+  BREVO_SENDER_NAME: (process.env.BREVO_SENDER_NAME || 'SahiChayan AI Security').trim(),
 };
 

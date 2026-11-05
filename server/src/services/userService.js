@@ -9,7 +9,7 @@ class UserService {
   /**
    * Upsert or update a user profile
    */
-  async syncProfile({ userId, email, fullName, stream, educationLevel, bio, targetYear, avatarUrl }) {
+  async syncProfile({ userId, email, fullName, stream, educationLevel, bio, targetYear, avatarUrl, college, location, phone, username }) {
     if (!userId) {
       throw new Error('userId is required to sync profile.');
     }
@@ -24,6 +24,10 @@ class UserService {
         bio,
         target_year: targetYear,
         avatar_url: avatarUrl,
+        college,
+        location,
+        phone,
+        username,
         isLocal: true,
       };
     }
@@ -40,6 +44,10 @@ class UserService {
     if (bio !== undefined) payload.bio = bio;
     if (targetYear !== undefined) payload.target_year = targetYear;
     if (avatarUrl !== undefined) payload.avatar_url = avatarUrl;
+    if (college !== undefined) payload.college = college;
+    if (location !== undefined) payload.location = location;
+    if (phone !== undefined) payload.phone = phone;
+    if (username !== undefined) payload.username = username;
 
     const { data, error } = await supabase
       .from('profiles')

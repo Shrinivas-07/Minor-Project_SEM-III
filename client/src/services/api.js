@@ -281,7 +281,7 @@ export const api = {
     return data.data;
   },
 
-  async backendRegister(email, password, fullName) {
+  async backendRegister(email, password, fullName, extra = {}) {
     if (!API_BASE) {
       throw new Error(
         'Backend URL is not configured in Vercel. Please add VITE_API_BASE_URL (your Render URL) in Vercel Settings > Environment Variables.'
@@ -291,7 +291,7 @@ export const api = {
     const res = await fetch(`${API_BASE}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, fullName }),
+      body: JSON.stringify({ email, password, fullName, ...extra }),
     });
 
     const text = await res.text();
@@ -306,6 +306,40 @@ export const api = {
 
     if (!res.ok) throw new Error(data.message || 'Registration failed');
     return data.data;
+  },
+
+  // Brevo OTP verification
+  async sendOtp(email, fullName = '', purpose = 'registration') {
+    const res = await fetch(`${API_BASE}/api/auth/send-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, fullName, purpose }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || 'Failed to dispatch verification code');
+    return data;
+  },
+
+  async verifyOtp(email, otp, purpose = 'registration') {
+    const res = await fetch(`${API_BASE}/api/auth/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otp, purpose }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || 'Invalid or expired verification code');
+    return data;
+  },
+
+  async resetPassword(email, otp, newPassword) {
+    const res = await fetch(`${API_BASE}/api/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otp, newPassword }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || 'Password reset failed');
+    return data;
   }
 };
 
