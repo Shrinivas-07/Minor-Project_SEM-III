@@ -29,7 +29,7 @@ export default function LandingPage() {
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/5 border border-white/15 backdrop-blur-md shadow-inner mb-6">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="font-mono text-xs font-semibold tracking-wider text-slate-300 uppercase">
-                SAHICHAYAN.AI • ONE-STOP CAREER INTELLIGENCE
+                AI-POWERED APTITUDE TELEMETRY & CAREER COMPASS
               </span>
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             </div>

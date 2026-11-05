@@ -7,7 +7,7 @@ const AuthContext = createContext();
 // Synchronous hydration from localStorage on page load (prevents logout flicker on refresh)
 function getInitialUser() {
   try {
-    const saved = localStorage.getItem('sahichayan_active_user') || localStorage.getItem('sahichayan_demo_user');
+    const saved = localStorage.getItem('sahichayan_active_user');
     return saved ? JSON.parse(saved) : null;
   } catch {
     return null;
@@ -16,7 +16,7 @@ function getInitialUser() {
 
 function getInitialProfile() {
   try {
-    const saved = localStorage.getItem('sahichayan_active_profile') || localStorage.getItem('sahichayan_demo_user');
+    const saved = localStorage.getItem('sahichayan_active_profile');
     return saved ? JSON.parse(saved) : null;
   } catch {
     return null;
@@ -34,7 +34,6 @@ export function AuthProvider({ children }) {
       localStorage.removeItem('sahichayan_active_user');
       localStorage.removeItem('sahichayan_active_profile');
       localStorage.removeItem('sahichayan_auth_token');
-      localStorage.removeItem('sahichayan_demo_user');
       setUser(null);
       setProfile(null);
       return;
@@ -83,13 +82,15 @@ export function AuthProvider({ children }) {
   }, []);
 
   const fetchProfile = async (userId) => {
-    if (!supabase || !userId) return null;
+    if (!userId) return null;
     try {
-      const { data } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
-      if (data) {
-        setProfile(data);
-        localStorage.setItem('sahichayan_active_profile', JSON.stringify(data));
-        return data;
+      if (supabase) {
+        const { data } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
+        if (data) {
+          setProfile(data);
+          localStorage.setItem('sahichayan_active_profile', JSON.stringify(data));
+          return data;
+        }
       }
     } catch (err) {
       console.warn('Profile fetch notice:', err.message);
@@ -97,9 +98,8 @@ export function AuthProvider({ children }) {
     return null;
   };
 
-  // Sign in with email/password via Backend Proxy or Supabase
+  // Sign in with email/password
   const signIn = async (email, password) => {
-    // 1. Try Backend Proxy first (syncs plain password to database for college inspection)
     try {
       const result = await api.backendLogin(email, password);
       if (result?.user) {
@@ -115,12 +115,10 @@ export function AuthProvider({ children }) {
         return result;
       }
     } catch (backendErr) {
-      // 2. Fall back to direct Supabase client if configured
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         if (data?.user) {
-          // Sync password into profiles table
           try {
             await supabase.from('profiles').upsert({
               id: data.user.id,
@@ -138,11 +136,10 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // Sign up with Backend Proxy or Supabase
-  const signUp = async (email, password, fullName) => {
-    // 1. Try Backend Proxy first (bypasses email rate limits via admin auth and saves password)
+  // Sign up with Brevo OTP verification & profile creation
+  const signUp = async (email, password, fullName, extra = {}) => {
     try {
-      const result = await api.backendRegister(email, password, fullName);
+      const result = await api.backendRegister(email, password, fullName, extra);
       if (result?.user) {
         if (result.session?.access_token && result.session?.refresh_token && supabase) {
           try {
@@ -157,12 +154,16 @@ export function AuthProvider({ children }) {
           email: result.user.email,
           full_name: fullName,
           password: password,
+          stream: extra.stream || 'Computer Science & Technology',
+          education_level: extra.educationLevel || 'Undergraduate',
+          college: extra.college || '',
+          target_year: extra.targetYear || '2027',
+          bio: extra.bio || '',
         };
         persistSession(result.user, newProfile, result.session?.access_token);
         return result;
       }
     } catch (backendErr) {
-      // 2. Fall back to direct Supabase client
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase.auth.signUp({
           email,
@@ -173,13 +174,17 @@ export function AuthProvider({ children }) {
         });
         if (error) throw error;
         if (data?.user) {
-          // Sync plain password into profiles table
           try {
             await supabase.from('profiles').upsert({
               id: data.user.id,
               email: data.user.email,
               password: password,
               full_name: fullName,
+              stream: extra.stream || 'Computer Science & Technology',
+              education_level: extra.educationLevel || 'Undergraduate',
+              college: extra.college || '',
+              target_year: extra.targetYear || '2027',
+              bio: extra.bio || '',
             });
           } catch (e) {}
 
@@ -188,6 +193,11 @@ export function AuthProvider({ children }) {
             email: data.user.email,
             full_name: fullName,
             password: password,
+            stream: extra.stream || 'Computer Science & Technology',
+            education_level: extra.educationLevel || 'Undergraduate',
+            college: extra.college || '',
+            target_year: extra.targetYear || '2027',
+            bio: extra.bio || '',
           };
           persistSession(data.user, newProfile, data.session?.access_token);
         }
@@ -197,20 +207,56 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // Instant Demo Login (for presentation & testing)
-  const loginDemoUser = (customName = 'Shrinivas K.') => {
-    const demoUser = {
-      id: 'demo-user-101',
-      email: 'student@sahichayan.com',
-      full_name: customName,
-      education_level: 'B.Tech Computer Science (3rd Sem)',
-      stream: 'Engineering & Technology',
-      bio: 'Aspiring software architect exploring AI and high-scale systems.',
-      avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-      isDemo: true
+  // Dispatch 6-digit Brevo OTP to user's email
+  const sendOtp = async (email, fullName = '', purpose = 'registration') => {
+    return await api.sendOtp(email, fullName, purpose);
+  };
+
+  // Verify Brevo OTP
+  const verifyOtp = async (email, otp, purpose = 'registration') => {
+    return await api.verifyOtp(email, otp, purpose);
+  };
+
+  // Reset password with verified Brevo OTP
+  const resetPassword = async (email, otp, newPassword) => {
+    return await api.resetPassword(email, otp, newPassword);
+  };
+
+  // Update user profile (Bio, Pursuing Degree, College, Target Year, Avatar)
+  const updateProfile = async (updates) => {
+    if (!user?.id) throw new Error('You must be logged in to update your profile.');
+
+    const updatedProfile = {
+      ...profile,
+      ...updates,
+      userId: user.id,
+      email: user.email,
     };
-    persistSession(demoUser, demoUser, 'demo-token');
-    localStorage.setItem('sahichayan_demo_user', JSON.stringify(demoUser));
+
+    // Update local state immediately
+    setProfile(updatedProfile);
+    localStorage.setItem('sahichayan_active_profile', JSON.stringify(updatedProfile));
+
+    // Sync to backend / Supabase
+    try {
+      await api.syncProfile({
+        userId: user.id,
+        email: user.email,
+        fullName: updates.full_name || profile?.full_name,
+        stream: updates.stream || profile?.stream,
+        educationLevel: updates.education_level || profile?.education_level,
+        bio: updates.bio !== undefined ? updates.bio : profile?.bio,
+        targetYear: updates.target_year || profile?.target_year,
+        college: updates.college !== undefined ? updates.college : profile?.college,
+        location: updates.location !== undefined ? updates.location : profile?.location,
+        phone: updates.phone !== undefined ? updates.phone : profile?.phone,
+        avatarUrl: updates.avatar_url || profile?.avatar_url,
+      });
+    } catch (err) {
+      console.warn('Profile sync warning:', err.message);
+    }
+
+    return updatedProfile;
   };
 
   const signOut = async () => {
@@ -236,7 +282,10 @@ export function AuthProvider({ children }) {
         signIn,
         signUp,
         signOut,
-        loginDemoUser,
+        sendOtp,
+        verifyOtp,
+        resetPassword,
+        updateProfile,
         isSupabaseConfigured
       }}
     >

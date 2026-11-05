@@ -7,7 +7,7 @@ const ApiResponse = require('../utils/responseHandler');
 
 exports.syncProfile = async (req, res, next) => {
   try {
-    const { userId, email, fullName, stream, educationLevel, bio, targetYear, avatarUrl } = req.body;
+    const { userId, email, fullName, stream, educationLevel, bio, targetYear, avatarUrl, college, location, phone, username } = req.body;
     const effectiveUserId = req.user?.id || userId;
 
     if (!effectiveUserId) {
@@ -23,6 +23,10 @@ exports.syncProfile = async (req, res, next) => {
       bio,
       targetYear,
       avatarUrl,
+      college,
+      location,
+      phone,
+      username,
     });
 
     return ApiResponse.success(res, data, 'Profile updated successfully');

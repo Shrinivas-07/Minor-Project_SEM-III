@@ -69,7 +69,7 @@ export function AssessmentProvider({ children }) {
   // Fetches the user's bookmarks & latest assessment from Supabase/Render on login
   // ============================================================================
   useEffect(() => {
-    if (!user || !user.id || user.isDemo) {
+    if (!user || !user.id) {
       return;
     }
 
@@ -203,7 +203,7 @@ export function AssessmentProvider({ children }) {
     setSavedCareers(next);
 
     // Sync to cloud database if user is authenticated
-    if (user && user.id && !user.isDemo) {
+    if (user && user.id) {
       try {
         await api.toggleSaveCareer({
           userId: user.id,
