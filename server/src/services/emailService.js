@@ -18,12 +18,14 @@ class EmailService {
       registration: 'Verify Your Email Address',
       login: 'One-Time Login Passcode',
       reset: 'Reset Your SahiChayan Password',
+      reset_password: 'Reset Your SahiChayan Password',
     };
 
     const actionTextMap = {
       registration: 'completing your SahiChayan account registration',
-      login: 'signing in to your SahiChayan advisory portal',
+      login: 'signing in to your SahiChayan account',
       reset: 'resetting your account password',
+      reset_password: 'resetting your account password',
     };
 
     const subject = `Your SahiChayan Verification Code: ${otp}`;
@@ -37,45 +39,44 @@ class EmailService {
   <meta charset="utf-8">
   <title>${subject}</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070A12; margin: 0; padding: 30px 15px; color: #E2E8F0; }
-    .card { max-width: 520px; margin: 0 auto; background: #0E1322; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 24px; padding: 36px 28px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); }
-    .logo-badge { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #4F46E5, #9333EA); padding: 8px 16px; border-radius: 12px; color: #FFFFFF; font-weight: 800; font-size: 14px; letter-spacing: 0.5px; text-decoration: none; }
-    .headline { font-size: 24px; font-weight: 800; margin-top: 24px; color: #FFFFFF; letter-spacing: -0.5px; }
-    .subtext { font-size: 14px; line-height: 1.6; color: #94A3B8; margin-top: 10px; }
-    .otp-box { background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(236, 72, 153, 0.15)); border: 1px solid rgba(147, 51, 234, 0.4); border-radius: 18px; padding: 24px 20px; text-align: center; margin: 28px 0; }
-    .otp-code { font-family: 'Courier New', Courier, monospace; font-size: 38px; font-weight: 900; letter-spacing: 10px; color: #F43F5E; text-shadow: 0 0 20px rgba(244, 63, 94, 0.4); margin: 0; }
-    .otp-expiry { font-size: 12px; color: #CBD5E1; margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-    .security-note { font-size: 12px; line-height: 1.5; color: #64748B; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 20px; margin-top: 24px; }
-    .footer { text-align: center; font-size: 11px; color: #475569; margin-top: 24px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F4F4F5; margin: 0; padding: 36px 16px; color: #18181B; }
+    .card { max-width: 500px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E4E4E7; border-radius: 16px; padding: 36px 32px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); }
+    .brand-bar { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; color: #0F172A; margin-bottom: 24px; }
+    .brand-accent { color: #1D4ED8; }
+    .headline { font-size: 22px; font-weight: 700; margin: 0; color: #0F172A; letter-spacing: -0.4px; }
+    .subtext { font-size: 14px; line-height: 1.6; color: #52525B; margin-top: 10px; }
+    .otp-box { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 22px 20px; text-align: center; margin: 26px 0; }
+    .otp-code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #0F172A; margin: 0; }
+    .otp-expiry { font-size: 12px; color: #64748B; margin-top: 8px; font-weight: 500; }
+    .security-note { font-size: 12px; line-height: 1.5; color: #71717A; border-top: 1px solid #F4F4F5; padding-top: 18px; margin-top: 24px; }
+    .footer { text-align: center; font-size: 12px; color: #71717A; margin-top: 24px; }
   </style>
 </head>
 <body>
   <div class="card">
-    <div style="text-align: center;">
-      <div class="logo-badge">🧭 SAHICHAYAN AI</div>
-      <h1 class="headline">${title}</h1>
-      <p class="subtext">
-        Hello <strong>${toName || 'Future Leader'}</strong>,<br/>
-        Use the 6-digit verification code below for ${actionText}.
-      </p>
-    </div>
+    <div class="brand-bar">Sahi<span class="brand-accent">Chayan</span></div>
+    <h1 class="headline">${title}</h1>
+    <p class="subtext">
+      Hello <strong>${toName || 'Student'}</strong>,<br/>
+      Use the 6-digit verification code below for ${actionText}.
+    </p>
 
     <div class="otp-box">
       <div class="otp-code">${otp}</div>
-      <div class="otp-expiry">⏳ Valid for 10 minutes</div>
+      <div class="otp-expiry">This code expires in 10 minutes.</div>
     </div>
 
-    <p class="subtext" style="text-align: center; font-size: 13px;">
-      If you did not request this verification code, please disregard this email or update your credentials immediately.
+    <p class="subtext" style="font-size: 13px;">
+      If you did not request this verification code, you can safely ignore this message.
     </p>
 
     <div class="security-note">
-      🔒 <strong>Security Notice:</strong> SahiChayan mentors and administrators will never ask you for this OTP code via phone or social media.
+      <strong>Security Note:</strong> SahiChayan staff will never ask you to share this passcode.
     </div>
   </div>
 
   <div class="footer">
-    © ${new Date().getFullYear()} SahiChayan.Com — Scientific Career Guidance & AI Advisory Engine.
+    © ${new Date().getFullYear()} SahiChayan.Com — Career Discovery &amp; Roadmap Platform.
   </div>
 </body>
 </html>
@@ -109,7 +110,7 @@ class EmailService {
         },
         body: JSON.stringify({
           sender: {
-            name: BREVO_SENDER_NAME || 'SahiChayan AI Security',
+            name: BREVO_SENDER_NAME || 'SahiChayan Security',
             email: BREVO_SENDER_EMAIL || 'support@sahichayan.com',
           },
           to: [

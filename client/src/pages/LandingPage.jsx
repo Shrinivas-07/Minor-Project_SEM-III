@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Sparkles, Compass, ArrowRight, Play, CheckCircle2, Star, TrendingUp, 
-  ShieldCheck, Brain, Rocket, Award, Users, Bot, Layers, BookOpen, 
-  Globe, Flame, ExternalLink, Activity, Terminal, Check
+  Compass, ArrowRight, Play, TrendingUp, BookOpen, Globe, 
+  MessageSquare, Sliders, CheckCircle2, Layers
 } from 'lucide-react';
 import { careersData } from '../data/careersData';
 import { useAssessment } from '../context/AssessmentContext';
@@ -13,321 +12,295 @@ export default function LandingPage() {
   const featuredCareers = careersData.slice(0, 6);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#090d16] text-slate-100 overflow-x-hidden selection:bg-brand-500 selection:text-white">
+    <div className="flex flex-col min-h-screen bg-white text-slate-900 overflow-x-hidden">
       {/* ========================================================================= */}
-      {/* 1. HERO SECTION WITH TEXTURED GRID & VIBRANT GLOWS                        */}
+      {/* 1. EXECUTIVE ASYMMETRIC STARTUP HERO SECTION                              */}
       {/* ========================================================================= */}
-      <section className="relative pt-12 pb-24 lg:pt-20 lg:pb-32 bg-grid-mesh overflow-hidden border-b border-white/10">
-        {/* Colorful Ambient Light Orbs */}
-        <div className="absolute top-10 left-1/4 -translate-x-1/2 w-[550px] h-[350px] bg-gradient-to-tr from-brand-600/30 to-purple-600/20 blur-[130px] rounded-full pointer-events-none" />
-        <div className="absolute top-24 right-1/4 translate-x-1/3 w-[450px] h-[300px] bg-gradient-to-br from-amber-500/20 via-rose-500/15 to-transparent blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[700px] h-[250px] bg-cyan-500/15 blur-[140px] rounded-full pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto">
-            {/* Top Monospace Tag Badge */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/5 border border-white/15 backdrop-blur-md shadow-inner mb-6">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="font-mono text-xs font-semibold tracking-wider text-slate-300 uppercase">
-                AI-POWERED APTITUDE TELEMETRY & CAREER COMPASS
-              </span>
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            </div>
-
-            {/* Main Editorial Headline */}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.08] uppercase">
-              Stop Guessing. <br />
-              Find Your True <span className="gradient-text-vibrant">Career Vector.</span>
-            </h1>
-
-            {/* Sub-headline */}
-            <p className="mt-6 text-base sm:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto font-normal">
-              Scientific <strong className="text-white font-semibold">18-trait aptitude matching</strong>, in-app YouTube search video masterclasses, verified university course paths, and real-time guidance from our <span className="text-brand-300 font-semibold">Gemini AI Mentor</span>.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                to="/assessment"
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-600 via-indigo-600 to-accent-600 hover:from-brand-500 hover:to-accent-500 text-white font-bold text-sm sm:text-base shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2.5 cursor-pointer border border-white/20"
-              >
-                <span>Take 18-Trait Assessment</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-
-              <button
-                type="button"
-                onClick={() => openInAppVideo(
-                  "Artificial Intelligence & Machine Learning Roadmap",
-                  null,
-                  "https://www.youtube.com",
-                  "YouTube",
-                  "artificial intelligence engineer roadmap 2026 complete course"
-                )}
-                className="w-full sm:w-auto px-7 py-4 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-semibold text-sm sm:text-base border border-white/15 backdrop-blur-md transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-              >
-                <Play className="w-4 h-4 fill-rose-500 text-rose-500" />
-                <span>Try In-App Video Hub</span>
-              </button>
-
-              <Link
-                to="/careers"
-                className="w-full sm:w-auto px-6 py-4 rounded-2xl text-slate-300 hover:text-white font-semibold text-sm flex items-center justify-center gap-1.5 transition-colors"
-              >
-                <span>Browse 32+ Careers</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-
-            {/* Metric Pills */}
-            <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-              <div>
-                <p className="text-2xl sm:text-3xl font-black text-white">18</p>
-                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mt-0.5">Cognitive Traits</p>
-              </div>
-              <div>
-                <p className="text-2xl sm:text-3xl font-black gradient-text-cyan">32+</p>
-                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mt-0.5">Career Options</p>
-              </div>
-              <div>
-                <p className="text-2xl sm:text-3xl font-black text-amber-400">3-Tier</p>
-                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mt-0.5">In-App Resources</p>
-              </div>
-              <div>
-                <p className="text-2xl sm:text-3xl font-black text-emerald-400">Live</p>
-                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mt-0.5">Sahi AI Mentor</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 2. SHOWCASE LIBRARY (INSPIRED BY REFERENCE DESIGN MESH CARDS)             */}
-      {/* ========================================================================= */}
-      <section className="py-20 lg:py-28 bg-[#0b101d] bg-dots-mesh border-b border-white/10">
+      <section className="relative pt-14 pb-20 lg:pt-20 lg:pb-28 bg-white bg-subtle-grid border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-brand-400">
-              [ COMPONENT SHOWCASE ]
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mt-2 uppercase tracking-tight">
-              Designed For Deep Learning & Action.
-            </h2>
-            <p className="text-slate-400 text-sm mt-3">
-              Explore the core architectural components that power the SahiChayan student guidance engine.
-            </p>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+            
+            {/* Left Column: Clear Typography & Action */}
+            <div className="lg:col-span-7">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700 mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-600" />
+                <span>18-Trait Psychometric Assessment &amp; Career Roadmaps</span>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Card 1: Warm Sun & Assessment Engine */}
-            <div className="relative rounded-3xl p-7 bg-gradient-to-br from-amber-950/30 via-slate-900 to-slate-950 border border-amber-500/20 overflow-hidden group hover:border-amber-400/40 transition-all shadow-xl">
-              <div className="absolute top-0 right-0 w-36 h-36 bg-amber-400/10 blur-2xl rounded-full" />
-              <div className="relative z-10">
-                <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-300 flex items-center justify-center font-mono font-bold text-sm mb-4">
-                  01
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-slate-950 tracking-tight leading-[1.08]">
+                Choose your career path with clarity, not guesswork.
+              </h1>
+
+              <p className="mt-5 text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
+                Evaluate your strengths across 18 cognitive and practical traits, benchmark real compensation in India and globally, and follow structured 4-phase roadmaps built for students.
+              </p>
+
+              {/* CTA Controls */}
+              <div className="mt-8 flex flex-wrap items-center gap-3.5">
+                <Link
+                  to="/assessment"
+                  className="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  <span>Take 18-Trait Assessment</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+
+                <Link
+                  to="/careers"
+                  className="px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-300 transition-colors"
+                >
+                  Explore 32+ Careers
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => openInAppVideo(
+                    "Software & Systems Engineering Roadmap",
+                    null,
+                    "https://www.youtube.com",
+                    "YouTube",
+                    "software engineer roadmap 2026 complete course"
+                  )}
+                  className="px-4 py-3.5 text-sm font-semibold text-slate-700 hover:text-brand-600 flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <Play className="w-4 h-4 text-brand-600 fill-brand-600" />
+                  <span>Watch Video Guides</span>
+                </button>
+              </div>
+
+              {/* Clean Metric Strip */}
+              <div className="mt-12 pt-8 border-t border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-6">
+                <div>
+                  <p className="text-2xl font-extrabold text-slate-900 tracking-tight">18</p>
+                  <p className="text-xs font-medium text-slate-500 mt-0.5">Cognitive Traits</p>
                 </div>
-                <h3 className="text-xl font-black text-white tracking-tight">
-                  18-Trait Aptitude Sliders
-                </h3>
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                  Rate your cognitive curiosity, leadership, tech interest, and creative drive without arbitrary multiple-choice limits.
-                </p>
+                <div>
+                  <p className="text-2xl font-extrabold text-slate-900 tracking-tight">32+</p>
+                  <p className="text-xs font-medium text-slate-500 mt-0.5">Career Pathways</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-extrabold text-slate-900 tracking-tight">4-Phase</p>
+                  <p className="text-xs font-medium text-slate-500 mt-0.5">Study Roadmaps</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-extrabold text-brand-600 tracking-tight">Verified</p>
+                  <p className="text-xs font-medium text-slate-500 mt-0.5">Salary Benchmarks</p>
+                </div>
+              </div>
+            </div>
 
-                {/* Micro Visual Preview */}
-                <div className="mt-5 space-y-2 bg-black/40 rounded-2xl p-4 border border-white/5">
-                  <div className="flex justify-between text-[11px] text-slate-300">
-                    <span>Logic & AI Passion</span>
-                    <strong className="text-amber-300 font-mono">9.5 / 10</strong>
+            {/* Right Column: Clean Interactive Product Preview Card */}
+            <div className="lg:col-span-5">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-soft p-6 sm:p-7">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                  <div>
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Sample Assessment Output</p>
+                    <h2 className="text-base font-bold text-slate-900 mt-0.5">Student Compatibility Profile</h2>
                   </div>
-                  <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                    <div className="bg-gradient-to-r from-amber-400 to-rose-400 h-full w-[95%]" />
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-700">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    Matched
+                  </span>
+                </div>
+
+                {/* Trait Breakdown Preview */}
+                <div className="py-5 space-y-3.5 border-b border-slate-100">
+                  <div>
+                    <div className="flex justify-between text-xs font-medium text-slate-700 mb-1.5">
+                      <span>Analytical &amp; Systems Thinking</span>
+                      <span className="font-bold text-slate-900">9.2 / 10</span>
+                    </div>
+                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-slate-900 rounded-full w-[92%]" />
+                    </div>
                   </div>
-                  <div className="flex justify-between text-[11px] text-slate-300 pt-1">
-                    <span>Aviation Interest</span>
-                    <strong className="text-cyan-300 font-mono">8.0 / 10</strong>
+                  <div>
+                    <div className="flex justify-between text-xs font-medium text-slate-700 mb-1.5">
+                      <span>Technical Building &amp; Engineering</span>
+                      <span className="font-bold text-slate-900">8.6 / 10</span>
+                    </div>
+                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-brand-600 rounded-full w-[86%]" />
+                    </div>
                   </div>
-                  <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                    <div className="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full w-[80%]" />
+                  <div>
+                    <div className="flex justify-between text-xs font-medium text-slate-700 mb-1.5">
+                      <span>Strategic Communication &amp; Leadership</span>
+                      <span className="font-bold text-slate-900">7.8 / 10</span>
+                    </div>
+                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-slate-500 rounded-full w-[78%]" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recommended Output Preview */}
+                <div className="pt-5 space-y-3">
+                  <p className="text-xs font-semibold text-slate-500">Top Compatible Career Tracks</p>
+
+                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">Full-Stack &amp; Cloud Architect</p>
+                      <p className="text-xs text-slate-500 mt-0.5">India: ₹12 – 40 LPA • Global: $115K+</p>
+                    </div>
+                    <span className="text-sm font-extrabold text-brand-600 shrink-0">94%</span>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">Product Manager (Digital Platforms)</p>
+                      <p className="text-xs text-slate-500 mt-0.5">India: ₹15 – 42 LPA • Global: $125K+</p>
+                    </div>
+                    <span className="text-sm font-extrabold text-slate-700 shrink-0">89%</span>
                   </div>
                 </div>
 
                 <Link
                   to="/assessment"
-                  className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 hover:text-amber-200"
+                  className="mt-5 w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
                 >
-                  <span>Launch Assessment</span>
+                  <span>Compute Your Personal Score</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
 
-            {/* Card 2: YouTube Search In-App Video Hub */}
-            <div className="relative rounded-3xl p-7 bg-gradient-to-br from-rose-950/30 via-slate-900 to-slate-950 border border-rose-500/20 overflow-hidden group hover:border-rose-400/40 transition-all shadow-xl">
-              <div className="absolute top-0 right-0 w-36 h-36 bg-rose-500/10 blur-2xl rounded-full" />
-              <div className="relative z-10">
-                <div className="w-10 h-10 rounded-2xl bg-rose-500/20 border border-rose-500/30 text-rose-300 flex items-center justify-center font-mono font-bold text-sm mb-4">
-                  02
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 2. PLATFORM CAPABILITIES (QUIET, STRUCTURED 3-COLUMN GRID)                */}
+      {/* ========================================================================= */}
+      <section className="py-20 lg:py-24 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mb-14">
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">
+              Platform Capabilities
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 mt-2 tracking-tight">
+              Built for disciplined career planning
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed">
+              Every module inside SahiChayan connects personal aptitude with verified market data and actionable study plans.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Capability 1 */}
+            <div className="pro-card rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center mb-5">
+                  <Sliders className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-black text-white tracking-tight">
-                  In-App Video Masterclasses
-                </h3>
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                  No expired video IDs. Query-driven dynamic YouTube search results playable directly inside the application.
+                <h3 className="text-lg font-bold text-slate-900">18-Trait Assessment Matrix</h3>
+                <p className="text-sm text-slate-600 mt-2 leading-relaxed">
+                  Score your curiosity, analytical thinking, creativity, empathy, and operational aptitude across 18 nuanced dimensions.
                 </p>
-
-                {/* Video Mockup */}
-                <div className="mt-5 rounded-2xl bg-black/50 border border-white/10 p-3 flex items-center gap-3">
-                  <div className="w-12 h-10 rounded-lg bg-rose-600/40 border border-rose-500/50 flex items-center justify-center shrink-0">
-                    <Play className="w-4 h-4 fill-rose-300 text-rose-300" />
-                  </div>
-                  <div className="overflow-hidden">
-                    <p className="text-xs font-bold text-white truncate">Full Course Roadmap 2026</p>
-                    <p className="text-[10px] text-slate-400 font-mono">Dynamic in-app playback</p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => openInAppVideo(
-                    "Full Stack Web Development Roadmap",
-                    null,
-                    "https://www.youtube.com",
-                    "YouTube",
-                    "full stack web development roadmap complete course"
-                  )}
-                  className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-rose-300 hover:text-rose-200 cursor-pointer"
-                >
-                  <span>Open Video Hub</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
               </div>
+              <Link to="/assessment" className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700">
+                <span>Launch Assessment</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
 
-            {/* Card 3: Multi-Platform Courses */}
-            <div className="relative rounded-3xl p-7 bg-gradient-to-br from-indigo-950/30 via-slate-900 to-slate-950 border border-indigo-500/20 overflow-hidden group hover:border-indigo-400/40 transition-all shadow-xl">
-              <div className="absolute top-0 right-0 w-36 h-36 bg-indigo-500/10 blur-2xl rounded-full" />
-              <div className="relative z-10">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 flex items-center justify-center font-mono font-bold text-sm mb-4">
-                  03
+            {/* Capability 2 */}
+            <div className="pro-card rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center mb-5">
+                  <Play className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-black text-white tracking-tight">
-                  Multi-Site Course Directory
-                </h3>
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                  Verified course certifications and free audits across Coursera, Kaggle, freeCodeCamp, edX, and Harvard CS50.
+                <h3 className="text-lg font-bold text-slate-900">In-App Video Masterclasses</h3>
+                <p className="text-sm text-slate-600 mt-2 leading-relaxed">
+                  Watch curated curriculum walkthroughs, beginner crash courses, and role reviews directly inside the platform without broken links.
                 </p>
-
-                {/* Platforms Chips */}
-                <div className="mt-5 flex flex-wrap gap-2">
-                  <span className="text-[10px] font-bold bg-white/10 text-white px-2.5 py-1 rounded-md border border-white/10">Coursera</span>
-                  <span className="text-[10px] font-bold bg-white/10 text-cyan-300 px-2.5 py-1 rounded-md border border-white/10">Kaggle Learn</span>
-                  <span className="text-[10px] font-bold bg-white/10 text-emerald-300 px-2.5 py-1 rounded-md border border-white/10">Harvard CS50</span>
-                  <span className="text-[10px] font-bold bg-white/10 text-amber-300 px-2.5 py-1 rounded-md border border-white/10">freeCodeCamp</span>
-                </div>
-
-                <Link
-                  to="/resources"
-                  className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-indigo-300 hover:text-indigo-200"
-                >
-                  <span>Explore Courses</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
               </div>
+              <button
+                type="button"
+                onClick={() => openInAppVideo(
+                  "Full Stack Web Development Roadmap",
+                  null,
+                  "https://www.youtube.com",
+                  "YouTube",
+                  "full stack web development roadmap complete course"
+                )}
+                className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700 cursor-pointer w-fit"
+              >
+                <span>Open Video Hub</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
             </div>
 
-            {/* Card 4: Sahi AI Career Mentor (Flame style) */}
-            <div className="relative rounded-3xl p-7 bg-gradient-to-br from-cyan-950/30 via-slate-900 to-slate-950 border border-cyan-500/20 overflow-hidden group hover:border-cyan-400/40 transition-all shadow-xl">
-              <div className="absolute top-0 right-0 w-36 h-36 bg-cyan-400/10 blur-2xl rounded-full" />
-              <div className="relative z-10">
-                <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 flex items-center justify-center font-mono font-bold text-sm mb-4">
-                  04
+            {/* Capability 3 */}
+            <div className="pro-card rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center mb-5">
+                  <BookOpen className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-                  <span>Gemini AI Career Mentor</span>
-                  <Flame className="w-4 h-4 text-cyan-400 animate-pulse" />
-                </h3>
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                  Real-time contextual advisory powered by Google Gemini 1.5 Flash. Ask about exams, salaries, and degrees.
+                <h3 className="text-lg font-bold text-slate-900">Multi-Site Course Directory</h3>
+                <p className="text-sm text-slate-600 mt-2 leading-relaxed">
+                  Access structured free and certified courses from Coursera, Harvard CS50, NPTEL, Kaggle Learn, and freeCodeCamp.
                 </p>
-
-                <div className="mt-5 p-3 rounded-2xl bg-black/40 border border-cyan-500/20 text-[11px] text-cyan-200 italic">
-                  "How do I balance UPSC preparation with an Engineering degree?"
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => openAiMentor()}
-                  className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-cyan-300 hover:text-cyan-200 cursor-pointer"
-                >
-                  <span>Chat with Mentor</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
               </div>
+              <Link to="/resources" className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700">
+                <span>Browse Courses</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
 
-            {/* Card 5: Real Compensation & Market Data */}
-            <div className="relative rounded-3xl p-7 bg-gradient-to-br from-emerald-950/30 via-slate-900 to-slate-950 border border-emerald-500/20 overflow-hidden group hover:border-emerald-400/40 transition-all shadow-xl">
-              <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-400/10 blur-2xl rounded-full" />
-              <div className="relative z-10">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 flex items-center justify-center font-mono font-bold text-sm mb-4">
-                  05
+            {/* Capability 4 */}
+            <div className="pro-card rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center mb-5">
+                  <MessageSquare className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-black text-white tracking-tight">
-                  Verified Salary Benchmarks
-                </h3>
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                  Real compensation ranges comparing Indian entry & senior LPA against global remote market packages.
+                <h3 className="text-lg font-bold text-slate-900">Personalized Career Advisor</h3>
+                <p className="text-sm text-slate-600 mt-2 leading-relaxed">
+                  Get clear guidance on entrance exams, college streams, portfolio projects, and transitioning across disciplines.
                 </p>
-
-                <div className="mt-5 grid grid-cols-2 gap-2 bg-black/40 rounded-2xl p-3 border border-white/5">
-                  <div>
-                    <span className="text-[10px] text-slate-400 block font-mono">INDIA RANGE</span>
-                    <strong className="text-xs text-emerald-300 font-bold">₹12 - 40 LPA</strong>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 block font-mono">GLOBAL RANGE</span>
-                    <strong className="text-xs text-cyan-300 font-bold">$110K - $250K</strong>
-                  </div>
-                </div>
-
-                <Link
-                  to="/careers"
-                  className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 hover:text-emerald-200"
-                >
-                  <span>Browse Salaries</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
               </div>
+              <button
+                type="button"
+                onClick={() => openAiMentor()}
+                className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700 cursor-pointer w-fit"
+              >
+                <span>Open Career Advisor</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
             </div>
 
-            {/* Card 6: General Knowledge & Regulatory Portals */}
-            <div className="relative rounded-3xl p-7 bg-gradient-to-br from-purple-950/30 via-slate-900 to-slate-950 border border-purple-500/20 overflow-hidden group hover:border-purple-400/40 transition-all shadow-xl">
-              <div className="absolute top-0 right-0 w-36 h-36 bg-purple-400/10 blur-2xl rounded-full" />
-              <div className="relative z-10">
-                <div className="w-10 h-10 rounded-2xl bg-purple-500/20 border border-purple-500/30 text-purple-300 flex items-center justify-center font-mono font-bold text-sm mb-4">
-                  06
+            {/* Capability 5 */}
+            <div className="pro-card rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center mb-5">
+                  <TrendingUp className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-black text-white tracking-tight">
-                  Wikipedia & Sovereign Portals
-                </h3>
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                  Direct official links to statutory regulatory bodies (DGCA, UPSC, NMC, Bar Council, SEBI) & Wikipedia overviews.
+                <h3 className="text-lg font-bold text-slate-900">India &amp; Global Salary Data</h3>
+                <p className="text-sm text-slate-600 mt-2 leading-relaxed">
+                  Compare realistic entry-to-senior compensation bands in Indian LPA alongside remote and international benchmarks.
                 </p>
-
-                <div className="mt-5 flex items-center gap-2 text-xs text-slate-300 bg-black/40 p-3 rounded-2xl border border-white/5">
-                  <Globe className="w-4 h-4 text-purple-400 shrink-0" />
-                  <span className="truncate">Official Syllabus & Acts Integration</span>
-                </div>
-
-                <Link
-                  to="/resources"
-                  className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-purple-300 hover:text-purple-200"
-                >
-                  <span>View Knowledge Base</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
               </div>
+              <Link to="/careers" className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700">
+                <span>Compare Benchmarks</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            {/* Capability 6 */}
+            <div className="pro-card rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center mb-5">
+                  <Globe className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">Official Licensing &amp; Portals</h3>
+                <p className="text-sm text-slate-600 mt-2 leading-relaxed">
+                  Direct references to official regulatory portals including UPSC, DGCA, NMC, Bar Council, SEBI, and Wikipedia briefs.
+                </p>
+              </div>
+              <Link to="/resources" className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700">
+                <span>View Knowledge Base</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </div>
         </div>
@@ -336,25 +309,25 @@ export default function LandingPage() {
       {/* ========================================================================= */}
       {/* 3. FEATURED CAREER PATHWAYS                                               */}
       {/* ========================================================================= */}
-      <section className="py-20 lg:py-28 bg-[#090d16] border-b border-white/10">
+      <section className="py-20 lg:py-24 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="font-mono text-xs font-bold uppercase tracking-widest text-brand-400">
-                [ POPULAR TRACKS ]
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-black text-white mt-1 uppercase tracking-tight">
-                High-Impact Career Pathways
+              <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">
+                Career Directory
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 mt-2 tracking-tight">
+                High-growth career pathways
               </h2>
-              <p className="text-slate-400 text-sm mt-2">
-                Click any career to explore in-app video tutorials, multi-platform courses, and full roadmaps.
+              <p className="text-slate-600 text-sm sm:text-base mt-2">
+                Inspect structured 4-phase roadmaps, core skills, and video tutorials for each field.
               </p>
             </div>
             <Link
               to="/careers"
-              className="text-xs sm:text-sm font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1.5"
+              className="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1.5 shrink-0"
             >
-              <span>Explore All 32+ Careers</span>
+              <span>View all 32+ careers</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -363,40 +336,40 @@ export default function LandingPage() {
             {featuredCareers.map((career) => (
               <div
                 key={career.id}
-                className="bg-slate-900/80 rounded-3xl p-6 border border-white/10 hover:border-brand-400/50 transition-all flex flex-col justify-between group shadow-lg hover:shadow-brand-500/10"
+                className="pro-card rounded-2xl p-6 flex flex-col justify-between group"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-brand-300 bg-brand-950/80 px-2.5 py-1 rounded-md border border-brand-800">
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <span className="text-xs font-semibold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-md border border-brand-100">
                       {career.category}
                     </span>
-                    <span className="text-xs font-semibold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-800">
+                    <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                       {career.growthRate.split('(')[0].trim()}
                     </span>
                   </div>
 
-                  <Link to={`/career/${career.id}`} className="group-hover:text-brand-300 transition-colors">
-                    <h3 className="text-lg font-bold text-white">{career.name}</h3>
+                  <Link to={`/career/${career.id}`}>
+                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition-colors">
+                      {career.name}
+                    </h3>
                   </Link>
-                  <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-slate-600 mt-2 line-clamp-2 leading-relaxed">
                     {career.description}
                   </p>
 
-                  {/* Skills tags */}
                   <div className="flex flex-wrap gap-1.5 mt-4">
-                    {career.skills.slice(0, 4).map((skill, sIdx) => (
-                      <span key={sIdx} className="text-[10px] bg-white/5 text-slate-300 px-2 py-0.5 rounded font-mono border border-white/5">
+                    {career.skills.slice(0, 3).map((skill, sIdx) => (
+                      <span key={sIdx} className="text-[11px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
                         {skill}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                {/* Salary & Action */}
-                <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
                   <div>
-                    <span className="text-[10px] text-slate-400 block font-mono">EST. COMPENSATION</span>
-                    <span className="text-xs font-bold text-white">{career.averageSalaryInr}</span>
+                    <span className="text-[11px] text-slate-500 block">Avg. India Package</span>
+                    <span className="text-xs font-bold text-slate-900">{career.averageSalaryInr}</span>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -411,17 +384,18 @@ export default function LandingPage() {
                         career,
                         'youtube'
                       )}
-                      className="p-2 rounded-xl bg-rose-600/20 text-rose-300 hover:bg-rose-600 hover:text-white transition-colors cursor-pointer border border-rose-500/30"
-                      title="Open In-App Video & Course Hub"
+                      className="p-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer"
+                      title="Watch Video Tutorials"
                     >
                       <Play className="w-3.5 h-3.5 fill-current" />
                     </button>
                     <Link
                       to={`/career/${career.id}`}
-                      className="p-2 rounded-xl bg-white/10 hover:bg-brand-600 text-white transition-colors"
-                      title="Full Career Dossier"
+                      className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1 transition-colors"
+                      title="View Career Roadmap"
                     >
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <span>Roadmap</span>
+                      <ArrowRight className="w-3 h-3" />
                     </Link>
                   </div>
                 </div>
@@ -432,27 +406,32 @@ export default function LandingPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. CALL TO ACTION BANNER                                                  */}
+      {/* 4. MATTE SLATE CTA SECTION                                                */}
       {/* ========================================================================= */}
-      <section className="py-24 bg-gradient-to-t from-slate-950 to-[#090d16] text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-mesh opacity-30 pointer-events-none" />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="w-12 h-12 rounded-2xl bg-brand-500/20 border border-brand-500/30 text-brand-300 flex items-center justify-center mx-auto mb-4">
-            <Compass className="w-6 h-6" />
+      <section className="py-20 bg-slate-900 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="w-11 h-11 rounded-xl bg-white/10 border border-white/15 text-white flex items-center justify-center mx-auto mb-5">
+            <Layers className="w-5 h-5" />
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight uppercase">
-            Start Your Career Journey Today
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+            Ready to map your educational roadmap?
           </h2>
-          <p className="mt-4 text-base text-slate-300 max-w-xl mx-auto">
-            Tune your 18-trait sliders in under 3 minutes, discover your top compatible career options, and explore in-app video roadmaps.
+          <p className="mt-3 text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
+            Rate your traits in under 3 minutes to discover top compatible career pathways, real compensation data, and step-by-step milestone plans.
           </p>
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/assessment"
-              className="px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-600 via-indigo-600 to-accent-600 hover:from-brand-500 hover:to-accent-500 text-white font-bold text-base shadow-xl shadow-brand-500/25 active:scale-95 transition-all flex items-center gap-2.5 cursor-pointer border border-white/20"
+              className="px-7 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-semibold text-sm transition-colors flex items-center gap-2 shadow-sm"
             >
-              <span>Take Free 18-Trait Assessment</span>
+              <span>Start Free Assessment</span>
               <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              to="/register"
+              className="px-7 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm border border-slate-700 transition-colors"
+            >
+              Create Student Account
             </Link>
           </div>
         </div>

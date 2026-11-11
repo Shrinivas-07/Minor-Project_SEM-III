@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  X, Play, BookOpen, Globe, Search, ExternalLink, Sparkles, 
-  Layers, CheckCircle2, Award, Clock, ArrowRight, RefreshCw, Film
+  X, Play, BookOpen, Globe, ExternalLink, Film, MessageSquare
 } from 'lucide-react';
 import { useAssessment } from '../../context/AssessmentContext';
 
@@ -58,18 +57,18 @@ export default function FieldResourcesHub() {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header */}
-        <div className="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 via-brand-50/30 to-slate-50 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-slate-200 bg-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-500 to-brand-600 text-white flex items-center justify-center shadow-md shadow-brand-500/15">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center">
               <Film className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 bg-brand-100/70 px-2 py-0.5 rounded">
-                  In-App Resource Center
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                  Learning Resource Center
                 </span>
                 {careerData?.category && (
-                  <span className="text-[10px] text-slate-500 font-medium">
+                  <span className="text-[11px] text-slate-500 font-medium">
                     {careerData.category}
                   </span>
                 )}
@@ -86,10 +85,10 @@ export default function FieldResourcesHub() {
                 closeInAppVideo();
                 openAiMentor(careerData || { name: title });
               }}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-50 text-brand-700 hover:bg-brand-100 text-xs font-semibold border border-brand-200/60 transition-colors"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold transition-colors cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Ask AI Mentor</span>
+              <MessageSquare className="w-3.5 h-3.5 text-brand-600" />
+              <span>Ask Career Advisor</span>
             </button>
             <button
               onClick={closeInAppVideo}
@@ -295,16 +294,16 @@ export default function FieldResourcesHub() {
 
         {/* Bottom Bar */}
         <div className="px-6 py-3.5 bg-white border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-          <span>In-App SahiChayan Resource Engine</span>
+          <span>SahiChayan Resource Directory</span>
           <button
             onClick={() => {
               closeInAppVideo();
               openAiMentor(careerData || { name: title });
             }}
-            className="text-brand-600 font-semibold hover:text-brand-700 flex items-center gap-1 cursor-pointer"
+            className="text-brand-600 font-semibold hover:text-brand-700 flex items-center gap-1.5 cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Need advice? Ask Sahi AI Mentor</span>
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Need guidance? Ask Career Advisor</span>
           </button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, MapPin, Clock, CheckCircle, Sparkles, BookOpen } from 'lucide-react';
+import { X, Clock, CheckCircle, MessageSquare } from 'lucide-react';
 import { useAssessment } from '../../context/AssessmentContext';
 
 export default function RoadmapModal() {
@@ -77,10 +77,10 @@ export default function RoadmapModal() {
               closeInAppRoadmap();
               openAiMentor(career);
             }}
-            className="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-sm active:scale-95 transition-all"
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Customize with AI Mentor</span>
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Customize with Advisor</span>
           </button>
         </div>
       </div>

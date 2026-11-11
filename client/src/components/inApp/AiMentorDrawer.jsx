@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Bot, Send, Sparkles, User, RefreshCw, ChevronRight, MessageSquare, Flame } from 'lucide-react';
+import { X, Send, User, RefreshCw, MessageSquare, Compass } from 'lucide-react';
 import { useAssessment } from '../../context/AssessmentContext';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
@@ -11,7 +11,7 @@ export default function AiMentorDrawer() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "Namaste! I'm your Sahi AI Career Mentor. Ask me anything about career roadmaps, college streams, entry exams, project ideas, or salary progression in India and globally."
+      content: "Welcome to SahiChayan Career Advisory. Ask anything about career roadmaps, college degrees, entrance exams, portfolio projects, or salary expectations in India and globally."
     }
   ]);
   const [input, setInput] = useState('');
@@ -38,7 +38,7 @@ export default function AiMentorDrawer() {
         ...prev,
         {
           role: 'assistant',
-          content: `🎯 **Focus Career**: **${mentorCareerContext.name}**\n\nI can help you break down the required roadmap, salary outlook (${mentorCareerContext.averageSalaryInr || '₹8 - 25 LPA'}), recommended college degrees, or portfolio projects. What would you like to explore?`
+          content: `Focus Career: ${mentorCareerContext.name}\n\nI can help break down the required roadmap, salary outlook (${mentorCareerContext.averageSalaryInr || '₹8 - 25 LPA'}), recommended college degrees, or portfolio projects. What would you like to explore?`
         }
       ]);
     }
@@ -71,14 +71,14 @@ export default function AiMentorDrawer() {
       if (res?.data?.reply) {
         setMessages(prev => [...prev, { role: 'assistant', content: res.data.reply }]);
       } else {
-        throw new Error('No reply from AI service');
+        throw new Error('No reply from advisory service');
       }
     } catch (err) {
       setMessages(prev => [
         ...prev,
         {
           role: 'assistant',
-          content: "I'm having trouble connecting to the advisory server. You can ask another question, or check if the backend server is running on port 5000!"
+          content: "Unable to connect to the advisory service right now. Please try again in a moment."
         }
       ]);
     } finally {
@@ -88,52 +88,45 @@ export default function AiMentorDrawer() {
 
   return (
     <>
-      {/* Floating Action Trigger Button (Bottom-Right Corner) */}
+      {/* Subtle Executive Trigger Button (Bottom-Right Corner) */}
       {!isAiMentorOpen && (
         <button
           type="button"
           onClick={() => openAiMentor()}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 sm:px-5 py-3.5 rounded-full bg-gradient-to-r from-brand-600 via-indigo-600 to-accent-600 text-white shadow-2xl hover:shadow-brand-500/40 hover:scale-105 active:scale-95 transition-all duration-300 font-bold text-xs sm:text-sm cursor-pointer border border-white/20 group"
-          aria-label="Open Sahi AI Career Mentor"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-lg transition-colors font-semibold text-xs sm:text-sm cursor-pointer border border-slate-700"
+          aria-label="Open Career Advisor"
         >
-          <div className="relative">
-            <Bot className="w-5 h-5 text-white animate-bounce-slow" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-white animate-pulse" />
-          </div>
-          <span className="tracking-wide">Ask Sahi AI</span>
-          <Sparkles className="w-4 h-4 text-amber-300 group-hover:rotate-12 transition-transform" />
+          <MessageSquare className="w-4 h-4 text-brand-400" />
+          <span>Career Advisor</span>
         </button>
       )}
 
       {/* Slide-over Drawer */}
       {isAiMentorOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/40 backdrop-blur-xs animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/40 backdrop-blur-xs">
           <div 
-            className="w-full max-w-md h-full bg-white shadow-2xl border-l border-slate-200 flex flex-col animate-in slide-in-from-right duration-300"
+            className="w-full max-w-md h-full bg-white shadow-2xl border-l border-slate-200 flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="px-5 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 via-brand-50/40 to-indigo-50/30 flex items-center justify-between">
+            <div className="px-5 py-4 border-b border-slate-200 bg-white flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-accent-500 text-white flex items-center justify-center shadow-md shadow-brand-500/20">
-                  <Bot className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center">
+                  <Compass className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    Sahi AI Career Mentor
-                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                      Live
-                    </span>
+                  <h3 className="text-sm font-bold text-slate-900">
+                    Career Advisor
                   </h3>
-                  <p className="text-[11px] text-slate-500 truncate max-w-[200px]">
-                    {mentorCareerContext ? `Context: ${mentorCareerContext.name}` : "General Career Intelligence"}
+                  <p className="text-[11px] text-slate-500 truncate max-w-[220px]">
+                    {mentorCareerContext ? `Focus: ${mentorCareerContext.name}` : "Personalized Career Guidance"}
                   </p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={closeAiMentor}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
+                className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                 aria-label="Close Drawer"
               >
                 <X className="w-5 h-5" />
@@ -141,26 +134,26 @@ export default function AiMentorDrawer() {
             </div>
 
             {/* Conversation Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/60">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
               {messages.map((msg, index) => {
-                const isAi = msg.role === 'assistant';
+                const isAdvisor = msg.role === 'assistant';
                 return (
                   <div
                     key={index}
-                    className={`flex items-start gap-2.5 ${isAi ? '' : 'flex-row-reverse'}`}
+                    className={`flex items-start gap-2.5 ${isAdvisor ? '' : 'flex-row-reverse'}`}
                   >
                     <div
-                      className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs shrink-0 shadow-xs ${
-                        isAi ? 'bg-brand-600 text-white' : 'bg-slate-800 text-white'
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs shrink-0 ${
+                        isAdvisor ? 'bg-slate-900 text-white' : 'bg-brand-600 text-white'
                       }`}
                     >
-                      {isAi ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
+                      {isAdvisor ? <Compass className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
                     </div>
                     <div
                       className={`max-w-[84%] rounded-2xl px-4 py-3 text-xs leading-relaxed ${
-                        isAi
-                          ? 'bg-white text-slate-800 border border-slate-200 shadow-xs'
-                          : 'bg-brand-600 text-white shadow-xs'
+                        isAdvisor
+                          ? 'bg-white text-slate-800 border border-slate-200 shadow-card'
+                          : 'bg-slate-900 text-white'
                       }`}
                     >
                       <div className="whitespace-pre-line">{msg.content}</div>
@@ -171,12 +164,12 @@ export default function AiMentorDrawer() {
 
               {loading && (
                 <div className="flex items-start gap-2.5">
-                  <div className="w-7 h-7 rounded-xl bg-brand-600 text-white flex items-center justify-center text-xs">
-                    <Bot className="w-4 h-4" />
+                  <div className="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs">
+                    <Compass className="w-3.5 h-3.5" />
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-2xl px-4 py-2.5 shadow-xs flex items-center gap-2">
+                  <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-card flex items-center gap-2">
                     <RefreshCw className="w-3.5 h-3.5 text-brand-600 animate-spin" />
-                    <span className="text-xs text-slate-500 font-medium">Sahi AI is analyzing your career query...</span>
+                    <span className="text-xs text-slate-500 font-medium">Preparing guidance...</span>
                   </div>
                 </div>
               )}
@@ -185,8 +178,8 @@ export default function AiMentorDrawer() {
 
             {/* Suggested Prompt Chips */}
             <div className="px-4 py-2.5 bg-white border-t border-slate-100">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-brand-500" /> Instant Questions
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                Suggested Questions
               </p>
               <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
                 {suggestedQuestions.map((q, qIdx) => (
@@ -194,7 +187,7 @@ export default function AiMentorDrawer() {
                     key={qIdx}
                     type="button"
                     onClick={() => handleSend(q)}
-                    className="text-[11px] text-slate-600 hover:text-brand-700 bg-slate-100 hover:bg-brand-50 border border-slate-200 px-2.5 py-1 rounded-full transition-colors text-left truncate max-w-full cursor-pointer"
+                    className="text-[11px] text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 px-2.5 py-1 rounded-full transition-colors text-left truncate max-w-full cursor-pointer"
                   >
                     {q}
                   </button>
@@ -214,13 +207,13 @@ export default function AiMentorDrawer() {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask advice on skills, exams, colleges, salaries..."
-                className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:bg-white transition-all"
+                placeholder="Ask about skills, exams, colleges, or salaries..."
+                className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-600 focus:bg-white transition-all"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || loading}
-                className="p-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 disabled:opacity-50 text-white transition-all shadow-xs shrink-0 cursor-pointer"
+                className="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white transition-colors shrink-0 cursor-pointer"
                 aria-label="Send message"
               >
                 <Send className="w-4 h-4" />

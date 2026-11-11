@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  Compass, Sparkles, ArrowRight, Lock, Mail, User, AlertCircle, 
-  CheckCircle2, GraduationCap, School, Calendar, RotateCcw, ArrowLeft, KeyRound
+  Compass, ArrowRight, Lock, Mail, User, AlertCircle, 
+  CheckCircle2, GraduationCap, School, Calendar, RotateCcw, ArrowLeft
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { DEGREE_CATEGORIES } from '../data/degreesData';
@@ -11,8 +11,7 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const { signUp, sendOtp, verifyOtp } = useAuth();
 
-  // Registration states
-  const [step, setStep] = useState(1); // 1: form details, 2: 6-digit OTP
+  const [step, setStep] = useState(1); // 1: account details, 2: 6-digit OTP verification
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,14 +19,12 @@ export default function RegisterPage() {
   const [college, setCollege] = useState('');
   const [targetYear, setTargetYear] = useState('2027');
 
-  // OTP states
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [resendTimer, setResendTimer] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [devOtpHint, setDevOtpHint] = useState('');
 
-  // Countdown timer for Resend OTP
   useEffect(() => {
     let interval = null;
     if (resendTimer > 0) {
@@ -67,15 +64,14 @@ export default function RegisterPage() {
     }
   };
 
-  // Step 1: Send OTP to Brevo
   const handleInitiateRegistration = async (e) => {
     e.preventDefault();
     if (!fullName.trim()) {
-      setError('Please provide your full legal or student name.');
+      setError('Please enter your full name.');
       return;
     }
     if (!email.trim() || !email.includes('@')) {
-      setError('Please provide a valid email address.');
+      setError('Please enter a valid email address.');
       return;
     }
     if (password.length < 6) {
@@ -89,18 +85,17 @@ export default function RegisterPage() {
     try {
       const res = await sendOtp(email.trim().toLowerCase(), 'registration');
       if (res?.devOtp) {
-        setDevOtpHint(`Dev preview code: ${res.devOtp}`);
+        setDevOtpHint(`Developer preview code: ${res.devOtp}`);
       }
       setStep(2);
       setResendTimer(45);
     } catch (err) {
-      setError(err.message || 'Unable to dispatch verification OTP. Please try again.');
+      setError(err.message || 'Unable to send verification code. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Resend OTP
   const handleResendOtp = async () => {
     if (resendTimer > 0 || loading) return;
     setError('');
@@ -108,22 +103,21 @@ export default function RegisterPage() {
     try {
       const res = await sendOtp(email.trim().toLowerCase(), 'registration');
       if (res?.devOtp) {
-        setDevOtpHint(`Dev preview code: ${res.devOtp}`);
+        setDevOtpHint(`Developer preview code: ${res.devOtp}`);
       }
       setResendTimer(45);
     } catch (err) {
-      setError(err.message || 'Failed to resend code.');
+      setError(err.message || 'Failed to resend verification code.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Step 2: Verify OTP and Register user in DB
   const handleCompleteRegistration = async (e) => {
     e.preventDefault();
     const fullOtp = otp.join('');
     if (fullOtp.length !== 6) {
-      setError('Please enter the full 6-digit verification code.');
+      setError('Please enter the complete 6-digit verification code.');
       return;
     }
 
@@ -131,10 +125,8 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      // 1. Verify OTP with backend
       await verifyOtp(email.trim().toLowerCase(), fullOtp, 'registration');
 
-      // 2. Perform Account Registration
       await signUp(email.trim().toLowerCase(), password, fullName.trim(), {
         stream: degree,
         college: college.trim(),
@@ -142,58 +134,47 @@ export default function RegisterPage() {
         educationLevel: degree.includes('Class') ? 'Secondary' : 'Undergraduate',
       });
 
-      // 3. Direct to Dashboard
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'OTP verification or registration failed.');
+      setError(err.message || 'Verification or registration failed.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex items-center justify-center p-4 py-12 relative overflow-hidden selection:bg-brand-500 selection:text-white">
-      {/* Dynamic Iridescent Ambient Background Lights */}
-      <div className="absolute top-1/6 right-1/4 translate-x-1/3 w-[550px] h-[400px] bg-gradient-to-tr from-brand-600/30 via-pink-600/25 to-purple-500/20 blur-[140px] rounded-full pointer-events-none animate-float-slow" />
-      <div className="absolute bottom-1/6 left-1/4 -translate-x-1/2 w-[500px] h-[380px] bg-gradient-to-br from-cyan-500/25 via-indigo-600/25 to-emerald-500/15 blur-[130px] rounded-full pointer-events-none animate-float-reverse" />
-      <div className="absolute inset-0 bg-grid-mesh opacity-30 pointer-events-none" />
-
-      {/* Main Glass Card */}
-      <div className="w-full max-w-lg spatial-glass-card rounded-3xl p-8 sm:p-10 relative z-10 border border-white/15 cute-spring shadow-2xl backdrop-blur-2xl">
-        {/* Iridescent Top Accent Bar */}
-        <div className="absolute top-0 left-8 right-8 h-[3px] bg-gradient-to-r from-cyan-400 via-brand-500 to-pink-500 rounded-full animate-iridescent" />
-
-        {/* Brand Header */}
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 py-12">
+      <div className="w-full max-w-lg bg-white rounded-2xl p-8 sm:p-10 border border-slate-200 shadow-soft">
+        {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2.5 mb-4 group">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-500 via-indigo-500 to-pink-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/30 group-hover:scale-110 transition-transform duration-300">
-              <Compass className="w-6 h-6 animate-spin-slow" />
-            </div>
+          <Link to="/" className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-900 text-white mb-4 hover:bg-brand-600 transition-colors">
+            <Compass className="w-5 h-5" />
           </Link>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-mono text-cyan-300 mb-2">
-            <Sparkles className="w-3 h-3 text-amber-300" />
-            <span>STEP {step} OF 2 • {step === 1 ? 'ACADEMIC PROFILE' : 'EMAIL OTP VERIFICATION'}</span>
+          <div className="mb-2">
+            <span className="inline-block px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-[11px] font-semibold text-slate-600">
+              Step {step} of 2
+            </span>
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">
-            {step === 1 ? 'Create Student Account' : 'Verify Brevo Security OTP'}
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+            {step === 1 ? 'Create your student account' : 'Verify your email address'}
           </h1>
-          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-            {step === 1 
-              ? 'Join SahiChayan for 18-trait psychometric vectors, verified college curricula, and AI mentorship.'
-              : `A 6-digit confirmation code was sent to ${email}`}
+          <p className="text-sm text-slate-500 mt-1.5 max-w-sm mx-auto">
+            {step === 1
+              ? 'Save your career matches, academic track, and customized learning roadmaps.'
+              : `Enter the 6-digit verification code sent to ${email}`}
           </p>
         </div>
 
-        {/* Alert Notifications */}
+        {/* Notifications */}
         {error && (
-          <div className="mb-6 p-3.5 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2.5 animate-in fade-in duration-200">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+          <div className="mb-5 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
             <span className="leading-snug">{error}</span>
           </div>
         )}
 
         {devOtpHint && step === 2 && (
-          <div className="mb-6 p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-mono flex items-center justify-between">
+          <div className="mb-5 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-mono flex items-center justify-between">
             <span>{devOtpHint}</span>
             <button 
               type="button" 
@@ -201,80 +182,76 @@ export default function RegisterPage() {
                 const code = devOtpHint.replace(/\D/g, '').slice(0, 6);
                 if (code.length === 6) setOtp(code.split(''));
               }}
-              className="underline text-amber-200 hover:text-white"
+              className="font-sans font-semibold underline text-amber-900 hover:text-amber-700"
             >
               Auto-fill
             </button>
           </div>
         )}
 
-        {/* ========================================================================= */}
-        {/* STEP 1: FORM PROFILE DETAILS                                              */}
-        {/* ========================================================================= */}
+        {/* Step 1: Account & Academic Details */}
         {step === 1 && (
           <form onSubmit={handleInitiateRegistration} className="space-y-4">
             <div>
-              <label className="text-xs font-bold text-slate-300 block mb-1">Full Legal Name</label>
+              <label className="text-xs font-semibold text-slate-700 block mb-1.5">Full name</label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="e.g. Shrinivas K."
-                  className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all font-medium"
+                  placeholder="e.g. Shrinivas Kulkarni"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/15 transition-all"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-bold text-slate-300 block mb-1">Email Address (for Brevo OTP)</label>
+              <label className="text-xs font-semibold text-slate-700 block mb-1.5">Email address</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@student.edu"
-                  className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all font-medium"
+                  placeholder="name@university.edu"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/15 transition-all"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-bold text-slate-300 block mb-1">Password</label>
+              <label className="text-xs font-semibold text-slate-700 block mb-1.5">Password</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Minimum 6 characters"
-                  className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all font-medium"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/15 transition-all"
                   required
                 />
               </div>
             </div>
 
-            {/* Currently Pursuing Degree Dropdown */}
             <div>
-              <label className="text-xs font-bold text-slate-300 block mb-1 flex items-center justify-between">
-                <span>Current Pursuing Degree / Stream</span>
-                <span className="text-[10px] text-cyan-400 font-normal">Categorized</span>
+              <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                Current degree or academic stream
               </label>
               <div className="relative">
-                <GraduationCap className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <GraduationCap className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <select
                   value={degree}
                   onChange={(e) => setDegree(e.target.value)}
-                  className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-slate-900 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all font-medium cursor-pointer"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/15 transition-all cursor-pointer"
                 >
                   {DEGREE_CATEGORIES.map((cat) => (
-                    <optgroup key={cat.category} label={`━━ ${cat.category} ━━`} className="bg-slate-900 text-cyan-400 font-bold">
+                    <optgroup key={cat.category} label={cat.category} className="font-semibold text-slate-800">
                       {cat.degrees.map((d) => (
-                        <option key={d} value={d} className="bg-slate-900 text-white font-normal">
+                        <option key={d} value={d} className="font-normal text-slate-900">
                           {d}
                         </option>
                       ))}
@@ -284,33 +261,32 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* College & Target Graduation Year Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1">College / School</label>
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">College or school</label>
                 <div className="relative">
-                  <School className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                  <School className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={college}
                     onChange={(e) => setCollege(e.target.value)}
-                    placeholder="e.g. State University"
-                    className="w-full pl-11 pr-4 py-2 rounded-2xl bg-white/5 border border-white/10 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-500 transition-all"
+                    placeholder="e.g. Pune University"
+                    className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-600 transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1">Target Year</label>
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">Graduation year</label>
                 <div className="relative">
-                  <Calendar className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <select
                     value={targetYear}
                     onChange={(e) => setTargetYear(e.target.value)}
-                    className="w-full pl-11 pr-4 py-2 rounded-2xl bg-slate-900 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-500 transition-all cursor-pointer"
+                    className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 focus:outline-none focus:border-brand-600 transition-all cursor-pointer"
                   >
                     {[2024, 2025, 2026, 2027, 2028, 2029, 2030].map((yr) => (
-                      <option key={yr} value={yr} className="bg-slate-900 text-white">
+                      <option key={yr} value={yr}>
                         {yr}
                       </option>
                     ))}
@@ -322,29 +298,27 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-4 py-3.5 rounded-2xl bg-gradient-to-r from-brand-600 via-indigo-600 to-pink-600 hover:from-brand-500 hover:to-pink-500 text-white font-bold text-xs tracking-wide shadow-lg shadow-brand-600/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2 border border-white/20 disabled:opacity-50"
+              className="w-full mt-2 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 shadow-xs"
             >
-              <span>{loading ? 'Dispatching Brevo OTP...' : 'Continue to Email Verification'}</span>
+              <span>{loading ? 'Sending verification code...' : 'Continue'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
         )}
 
-        {/* ========================================================================= */}
-        {/* STEP 2: BREVO 6-DIGIT OTP VERIFICATION CARD                               */}
-        {/* ========================================================================= */}
+        {/* Step 2: 6-Digit Email OTP */}
         {step === 2 && (
           <form onSubmit={handleCompleteRegistration} className="space-y-6">
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-center">
-              <span className="text-[11px] text-slate-400 block mb-1">Security Code sent to:</span>
-              <span className="text-xs font-mono font-bold text-cyan-300">{email}</span>
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center">
+              <span className="text-xs text-slate-500 block">Verification code sent to</span>
+              <span className="text-sm font-semibold text-slate-900">{email}</span>
             </div>
 
             <div>
-              <label className="text-xs font-bold text-slate-300 block mb-2 text-center">
-                Enter 6-Digit Verification Code
+              <label className="text-xs font-semibold text-slate-700 block mb-2.5 text-center">
+                Enter 6-digit code
               </label>
-              <div className="flex justify-center gap-2 sm:gap-3" onPaste={handleOtpPaste}>
+              <div className="flex justify-center gap-2 sm:gap-2.5" onPaste={handleOtpPaste}>
                 {otp.map((digit, idx) => (
                   <input
                     key={idx}
@@ -354,18 +328,18 @@ export default function RegisterPage() {
                     value={digit}
                     onChange={(e) => handleOtpChange(e.target.value, idx)}
                     onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-                    className="w-11 h-14 text-center text-xl font-mono font-black rounded-2xl bg-white/10 border border-white/20 text-cyan-300 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 transition-all shadow-inner"
+                    className="w-11 h-13 py-2.5 text-center text-xl font-mono font-bold rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:outline-none focus:border-brand-600 focus:bg-white focus:ring-2 focus:ring-brand-600/15 transition-all"
                   />
                 ))}
               </div>
 
-              <div className="flex items-center justify-between mt-3 px-1">
-                <span className="text-[11px] text-slate-400">Didn't receive email?</span>
+              <div className="flex items-center justify-between mt-3.5 px-1">
+                <span className="text-xs text-slate-500">Didn't receive email?</span>
                 <button
                   type="button"
                   disabled={resendTimer > 0 || loading}
                   onClick={handleResendOtp}
-                  className="text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 disabled:text-slate-500 transition-colors flex items-center gap-1"
+                  className="text-xs font-semibold text-brand-600 hover:text-brand-700 disabled:text-slate-400 transition-colors flex items-center gap-1"
                 >
                   <RotateCcw className="w-3 h-3" />
                   <span>{resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend Code'}</span>
@@ -376,9 +350,9 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white font-bold text-xs tracking-wide shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2 border border-white/20 disabled:opacity-50"
+              className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              <span>{loading ? 'Verifying & Creating Profile...' : 'Verify & Launch Dashboard'}</span>
+              <span>{loading ? 'Creating Account...' : 'Verify & Create Account'}</span>
               <CheckCircle2 className="w-4 h-4" />
             </button>
 
@@ -388,21 +362,20 @@ export default function RegisterPage() {
                 setError('');
                 setStep(1);
               }}
-              className="w-full py-2 text-xs text-slate-400 hover:text-white flex items-center justify-center gap-1.5 transition-colors"
+              className="w-full py-2 text-xs font-medium text-slate-500 hover:text-slate-900 flex items-center justify-center gap-1.5 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to Edit Profile Details</span>
+              <span>Edit account details</span>
             </button>
           </form>
         )}
 
-        {/* Footer Navigation */}
-        <div className="mt-8 pt-6 border-t border-white/10 text-center">
-          <p className="text-xs text-slate-400">
+        {/* Footer */}
+        <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+          <p className="text-xs text-slate-500">
             Already have an account?{' '}
-            <Link to="/login" className="font-bold text-cyan-400 hover:text-cyan-300 transition-colors inline-flex items-center gap-1">
-              <span>Sign In here</span>
-              <ArrowRight className="w-3 h-3" />
+            <Link to="/login" className="font-semibold text-brand-600 hover:text-brand-700 transition-colors">
+              Sign in
             </Link>
           </p>
         </div>
