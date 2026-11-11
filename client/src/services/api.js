@@ -361,14 +361,7 @@ function calculateLocalAssessment(scores) {
         maxPossibleScore > 0 ? Math.round((earnedScore / maxPossibleScore) * 100) : 0;
 
       return {
-        id: career.id,
-        name: career.name,
-        category: career.category,
-        tagline: career.tagline,
-        description: career.description,
-        averageSalaryInr: career.averageSalaryInr,
-        growthRate: career.growthRate,
-        skills: career.skills.slice(0, 5),
+        ...career,
         matchScore: matchPercentage,
       };
     })

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Sliders, CheckCircle2, Bookmark, BookmarkCheck, 
   ArrowRight, Play, MapPin, RefreshCw, Layers, Award, TrendingUp, Info, MessageSquare
@@ -226,7 +227,9 @@ export default function AssessmentPage() {
                             {career.averageSalaryInr}
                           </span>
                         </div>
-                        <h3 className="text-lg font-bold text-slate-900">{career.name}</h3>
+                        <Link to={`/career/${career.id}`}>
+                          <h3 className="text-lg font-bold text-slate-900 hover:text-brand-600 transition-colors">{career.name}</h3>
+                        </Link>
                         <p className="text-xs text-slate-500 mt-1 max-w-xl">{career.description}</p>
                         
                         {/* Skills */}

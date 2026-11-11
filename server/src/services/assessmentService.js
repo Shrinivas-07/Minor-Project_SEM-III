@@ -28,14 +28,8 @@ class AssessmentService {
 
         if (weightKeys.length === 0) {
           return {
-            id: career.id,
-            name: career.name,
-            category: career.category,
-            tagline: career.tagline,
-            description: career.description,
-            averageSalaryInr: career.averageSalaryInr,
-            growthRate: career.growthRate,
-            skills: career.skills.slice(0, 5),
+            ...career,
+            skills: career.skills || [],
             matchScore: 65, // Baseline default
           };
         }
@@ -56,15 +50,8 @@ class AssessmentService {
           maxPossibleScore > 0 ? Math.min(100, Math.round((earnedScore / maxPossibleScore) * 100)) : 50;
 
         return {
-          id: career.id,
-          name: career.name,
-          category: career.category,
-          tagline: career.tagline,
-          description: career.description,
-          averageSalaryInr: career.averageSalaryInr,
-          averageSalaryUsd: career.averageSalaryUsd,
-          growthRate: career.growthRate,
-          skills: career.skills.slice(0, 5),
+          ...career,
+          skills: career.skills || [],
           matchScore: matchPercentage,
         };
       })

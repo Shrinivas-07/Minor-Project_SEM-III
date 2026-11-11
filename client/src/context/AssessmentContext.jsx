@@ -2,8 +2,40 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { useAuth } from './AuthContext';
 import { supabase } from '../services/supabase';
+import { careersData } from '../data/careersData';
 
 const AssessmentContext = createContext();
+
+/**
+ * Merges a lightweight or DB-fetched career summary with the full catalog record
+ * so roadmap milestones, courses, knowledge links, and salaries are always populated.
+ */
+function hydrateCareer(career) {
+  if (!career || typeof career !== 'object') return career;
+  const careerId = career.id || career.career_id;
+  const careerName = (career.name || career.career_name || '').toLowerCase();
+  const catalogMatch = careersData.find(
+    (c) => c.id === careerId || (careerName && c.name.toLowerCase() === careerName)
+  );
+  if (!catalogMatch) return career;
+  return {
+    ...catalogMatch,
+    ...career,
+    id: careerId || catalogMatch.id,
+    name: career.name || career.career_name || catalogMatch.name,
+    skills: Array.isArray(career.skills) && career.skills.length >= catalogMatch.skills.length
+      ? career.skills
+      : catalogMatch.skills,
+    roadmap: Array.isArray(career.roadmap) && career.roadmap.length > 0 ? career.roadmap : catalogMatch.roadmap,
+    courses: Array.isArray(career.courses) && career.courses.length > 0 ? career.courses : catalogMatch.courses,
+    knowledge: Array.isArray(career.knowledge) && career.knowledge.length > 0 ? career.knowledge : catalogMatch.knowledge,
+    topEmployers: Array.isArray(career.topEmployers) && career.topEmployers.length > 0 ? career.topEmployers : catalogMatch.topEmployers,
+    featuredVideos: Array.isArray(career.featuredVideos) && career.featuredVideos.length > 0 ? career.featuredVideos : catalogMatch.featuredVideos,
+    youtubeSearchQuery: career.youtubeSearchQuery || catalogMatch.youtubeSearchQuery,
+    averageSalaryUsd: career.averageSalaryUsd || catalogMatch.averageSalaryUsd,
+    averageSalaryInr: career.averageSalaryInr || catalogMatch.averageSalaryInr,
+  };
+}
 
 const initialScores = {
   creativity: 7,
@@ -135,7 +167,7 @@ export function AssessmentProvider({ children }) {
         if (isMounted && assessRes?.success && Array.isArray(assessRes.data) && assessRes.data.length > 0) {
           const latest = assessRes.data[0];
           const normalizedResult = {
-            topCareers: latest.top_careers || latest.topCareers || [],
+            topCareers: (latest.top_careers || latest.topCareers || []).map(hydrateCareer),
             dominantTrait: latest.dominant_trait || latest.dominantTrait || 'Balanced',
             averageScore: latest.average_score || latest.averageScore || 5,
             completedAt: latest.completed_at || latest.completedAt || new Date().toISOString(),
@@ -172,8 +204,12 @@ export function AssessmentProvider({ children }) {
   const runAssessment = async () => {
     const res = await api.calculateAssessment(scores, user?.id);
     if (res.success && res.data) {
-      setAssessmentResult(res.data);
-      return res.data;
+      const hydratedResult = {
+        ...res.data,
+        topCareers: (res.data.topCareers || []).map(hydrateCareer),
+      };
+      setAssessmentResult(hydratedResult);
+      return hydratedResult;
     }
     return null;
   };
@@ -232,6 +268,7 @@ export function AssessmentProvider({ children }) {
     careerData = null,
     defaultTab = 'youtube'
   ) => {
+    const hydratedCareer = hydrateCareer(careerData);
     setActiveVideoModal({
       isOpen: true,
       video: {
@@ -239,8 +276,8 @@ export function AssessmentProvider({ children }) {
         embedId,
         url,
         provider,
-        query: query || (careerData ? careerData.youtubeSearchQuery : `${title} complete course roadmap tutorial`),
-        careerData,
+        query: query || (hydratedCareer ? hydratedCareer.youtubeSearchQuery : `${title} complete course roadmap tutorial`),
+        careerData: hydratedCareer,
         defaultTab,
       },
     });
@@ -251,7 +288,7 @@ export function AssessmentProvider({ children }) {
   };
 
   const openInAppRoadmap = (career) => {
-    setActiveRoadmapModal({ isOpen: true, career });
+    setActiveRoadmapModal({ isOpen: true, career: hydrateCareer(career) });
   };
 
   const closeInAppRoadmap = () => {
