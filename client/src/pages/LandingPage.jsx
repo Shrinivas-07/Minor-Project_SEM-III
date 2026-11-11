@@ -22,11 +22,6 @@ export default function LandingPage() {
             
             {/* Left Column: Clear Typography & Action */}
             <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700 mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-600" />
-                <span>18-Trait Psychometric Assessment &amp; Career Roadmaps</span>
-              </div>
-
               <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-slate-950 tracking-tight leading-[1.08]">
                 Choose your career path with clarity, not guesswork.
               </h1>

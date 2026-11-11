@@ -116,11 +116,11 @@ export default function DashboardPage() {
           </div>
 
           {/* Profile Identity & Details */}
-          <div className="px-6 sm:px-8 pb-7 relative">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 -mt-14 sm:-mt-16 mb-6">
-              <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 text-center sm:text-left">
-                {/* Circular Avatar */}
-                <div className="relative group cursor-pointer" onClick={handleOpenEdit}>
+          <div className="px-6 sm:px-8 pb-7 pt-4 relative">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
+                {/* Circular Avatar overlapping only itself across the banner edge */}
+                <div className="relative group cursor-pointer -mt-20 shrink-0" onClick={handleOpenEdit}>
                   <img
                     src={profile?.avatar_url || formData.avatar_url}
                     alt="Profile avatar"
@@ -132,9 +132,9 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                <div className="pt-1">
+                <div>
                   <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
-                    <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
                       {profile?.full_name || 'Student Profile'}
                     </h1>
                     <span
