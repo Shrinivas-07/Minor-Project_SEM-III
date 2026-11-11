@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { 
-  Sparkles, Sliders, CheckCircle2, Bookmark, BookmarkCheck, 
-  ArrowRight, Play, MapPin, RefreshCw, Layers, Award, TrendingUp, Info
+  Sliders, CheckCircle2, Bookmark, BookmarkCheck, 
+  ArrowRight, Play, MapPin, RefreshCw, Layers, Award, TrendingUp, Info, MessageSquare
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { traitCategories, archetypePresets, allTraits } from '../data/traitsData';
@@ -56,33 +56,33 @@ export default function AssessmentPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-3xl mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-semibold mb-3">
-            <Sliders className="w-3.5 h-3.5" /> 18-Trait Self-Assessment Engine
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-700 text-xs font-semibold mb-3">
+            <Sliders className="w-3.5 h-3.5 text-brand-600" /> 18-Trait Psychometric Assessment
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Map Your Aptitude to 30+ Career Paths
+            Map your aptitude across 32+ career paths
           </h1>
           <p className="text-slate-600 text-sm mt-2 leading-relaxed">
-            Adjust the sliders below reflecting your genuine curiosities, cognitive strengths, and motivations. 
-            Our weighted matrix matches your unique trait vector to top industry benchmarks.
+            Adjust the sliders below based on your genuine curiosities, cognitive strengths, and motivations. 
+            Our scoring model evaluates your profile against top industry benchmarks.
           </p>
         </div>
 
         {/* Archetype Quick-Load Presets */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-brand-600" />
-              Quick Archetype Presets (Optional)
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-card mb-8">
+          <div className="flex items-center justify-between mb-2.5">
+            <span className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5 text-slate-500" />
+              Sample Student Profiles (Optional Presets)
             </span>
-            <span className="text-xs text-slate-400">1-click prefill</span>
+            <span className="text-xs text-slate-400">Prefill sliders</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {archetypePresets.map((preset) => (
               <button
                 key={preset.name}
                 onClick={() => applyArchetype(preset.scores)}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-50 hover:bg-brand-50 hover:text-brand-700 hover:border-brand-200 border border-slate-200 transition-all text-slate-700 active:scale-95"
+                className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-slate-50 hover:bg-slate-100 hover:text-slate-900 border border-slate-200 transition-colors text-slate-700 cursor-pointer"
                 title={preset.tagline}
               >
                 {preset.name}
@@ -97,10 +97,10 @@ export default function AssessmentPage() {
             <button
               key={cat.name}
               onClick={() => setActiveTab(idx)}
-              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
+              className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 activeTab === idx
-                  ? 'bg-brand-600 text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80'
+                  ? 'bg-slate-900 text-white'
+                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
               }`}
             >
               {cat.name} ({cat.traits.length})
@@ -170,17 +170,17 @@ export default function AssessmentPage() {
           <button
             onClick={handleCalculate}
             disabled={calculating}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-md shadow-brand-500/25 active:scale-95 transition-all flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
             {calculating ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Computing Fits...</span>
+                <span>Calculating Fits...</span>
               </>
             ) : (
               <>
-                <Sparkles className="w-4 h-4" />
-                <span>Calculate Sahi Match</span>
+                <span>Calculate Career Matches</span>
+                <ArrowRight className="w-4 h-4" />
               </>
             )}
           </button>
@@ -274,10 +274,10 @@ export default function AssessmentPage() {
 
                         <button
                           onClick={() => openAiMentor(career)}
-                          className="px-3.5 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold shadow-xs flex items-center gap-1 transition-all active:scale-95"
+                          className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                         >
-                          <Sparkles className="w-3.5 h-3.5" />
-                          <span>Ask AI</span>
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          <span>Advisor</span>
                         </button>
                       </div>
                     </div>

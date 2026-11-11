@@ -108,13 +108,13 @@ export const api = {
         headers,
         body: JSON.stringify({ message, careerId, userProfile, history, userId }),
       });
-      if (!res.ok) throw new Error('AI mentor error');
+      if (!res.ok) throw new Error('Advisory service error');
       return await res.json();
     } catch (err) {
       return {
         success: true,
         data: {
-          reply: `Here are key insights for your inquiry: Focusing on foundational skills, building hands-on portfolio case studies, and preparing for industry certifications will fast-track your success. (Connect backend with your GEMINI_API_KEY for dynamic real-time AI responses!)`,
+          reply: `Focusing on core domain fundamentals, completing structured 4-phase milestones, and building documented portfolio projects are the strongest ways to break into this field. You can also explore verified courses and salary benchmarks in the Career Directory.`,
           careerId,
           timestamp: new Date().toISOString()
         }

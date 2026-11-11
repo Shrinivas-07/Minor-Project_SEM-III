@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
-  ArrowLeft, Bookmark, BookmarkCheck, Sparkles, Play, CheckCircle2, 
-  Clock, DollarSign, TrendingUp, Building2, Layers, BookOpen, Share2,
-  Globe, ExternalLink, Film, Search, Award
+  ArrowLeft, Bookmark, BookmarkCheck, Play, CheckCircle2, 
+  Clock, BookOpen, Globe, ExternalLink, MessageSquare
 } from 'lucide-react';
 import { careersData } from '../data/careersData';
 import { useAssessment } from '../context/AssessmentContext';
@@ -111,10 +110,10 @@ export default function CareerDetailPage() {
 
               <button
                 onClick={() => openAiMentor(career)}
-                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-md shadow-brand-500/20 active:scale-95 transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors cursor-pointer"
               >
-                <Sparkles className="w-4 h-4" />
-                <span>Ask AI Mentor</span>
+                <MessageSquare className="w-4 h-4" />
+                <span>Ask Career Advisor</span>
               </button>
             </div>
           </div>

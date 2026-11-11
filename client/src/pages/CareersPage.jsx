@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Search, Filter, Sparkles, ArrowRight, Bookmark, BookmarkCheck, 
-  Layers, Play, Check, X, Scale
+  Search, ArrowRight, Bookmark, BookmarkCheck, 
+  Scale
 } from 'lucide-react';
 import { careersData } from '../data/careersData';
 import { useAssessment } from '../context/AssessmentContext';
@@ -48,28 +48,28 @@ export default function CareersPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-3xl mb-8">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-3 py-1 rounded-full border border-brand-200">
-            Career Intelligence Directory
+          <span className="text-xs font-semibold uppercase tracking-wider text-brand-600">
+            Career Directory
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-2">
-            Explore 30+ High-Impact Career Tracks
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-1.5">
+            Explore 32+ career pathways
           </h1>
           <p className="text-slate-600 text-sm mt-2 leading-relaxed">
-            Discover real salary ranges, 4-phase educational roadmaps, and verified skills for modern industries across India and global markets.
+            Compare salary ranges, 4-phase educational roadmaps, and required skills across Indian and global industries.
           </p>
         </div>
 
         {/* Search & Filter Bar */}
-        <div className="bg-white rounded-3xl p-4 border border-slate-200/80 shadow-xs mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-card mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Search Input */}
           <div className="relative w-full md:w-96">
-            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search careers, skills, or keywords..."
-              className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:bg-white transition-all"
+              placeholder="Search careers, skills, or fields..."
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-600 focus:bg-white transition-all"
             />
           </div>
 
@@ -79,10 +79,10 @@ export default function CareersPage() {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-brand-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200/70'
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 {cat}
@@ -91,31 +91,31 @@ export default function CareersPage() {
           </div>
         </div>
 
-        {/* Side-by-Side Comparison Drawer / Banner if 2 careers selected */}
+        {/* Side-by-Side Comparison Banner */}
         {compareList.length > 0 && (
-          <div className="sticky top-20 z-30 mb-8 bg-brand-900 text-white p-4 rounded-2xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in duration-200">
+          <div className="sticky top-20 z-30 mb-8 bg-slate-900 text-white p-4 rounded-xl shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <Scale className="w-5 h-5 text-brand-300" />
+              <Scale className="w-5 h-5 text-brand-400" />
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-brand-300">Comparing ({compareList.length}/2)</p>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Comparing ({compareList.length}/2)</p>
                 <p className="text-sm font-semibold truncate">
-                  {compareList.map(c => c.name).join('  VS  ')}
+                  {compareList.map(c => c.name).join('  vs  ')}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setCompareList([])}
-                className="px-3 py-1 text-xs text-brand-200 hover:text-white"
+                className="px-3 py-1.5 text-xs text-slate-300 hover:text-white cursor-pointer"
               >
                 Clear
               </button>
               {compareList.length === 2 && (
                 <button
                   onClick={() => openAiMentor({ name: `${compareList[0].name} vs ${compareList[1].name}` })}
-                  className="px-4 py-2 bg-brand-500 hover:bg-brand-400 rounded-xl text-xs font-bold text-white shadow-xs"
+                  className="px-4 py-2 bg-brand-600 hover:bg-brand-500 rounded-lg text-xs font-semibold text-white transition-colors cursor-pointer"
                 >
-                  Ask AI to Compare Both
+                  Compare with Advisor
                 </button>
               )}
             </div>
@@ -200,8 +200,8 @@ export default function CareersPage() {
                     </button>
                     <Link
                       to={`/career/${career.id}`}
-                      className="p-1.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white transition-colors"
-                      title="Full In-App Dossier"
+                      className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white transition-colors"
+                      title="View Career Guide"
                     >
                       <ArrowRight className="w-4 h-4" />
                     </Link>
