@@ -9,7 +9,7 @@ module.exports = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   CLIENT_URL: process.env.CLIENT_URL || '*',
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
-  GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
+  GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-3.5-flash',
   SUPABASE_URL: (
     process.env.SUPABASE_URL ||
     process.env.VITE_SUPABASE_URL ||
