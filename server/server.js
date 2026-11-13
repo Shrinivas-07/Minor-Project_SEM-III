@@ -3,7 +3,7 @@ const { PORT } = require('./src/config/env');
 
 const server = app.listen(PORT, () => {
   console.log(`===============================================`);
-  console.log(`🚀 SahiChayan API Server running on port ${PORT}`);
+  console.log(`🚀 ClearPath API Server running on port ${PORT}`);
   console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
   console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`===============================================`);

@@ -294,7 +294,7 @@ export default function FieldResourcesHub() {
 
         {/* Bottom Bar */}
         <div className="px-6 py-3.5 bg-white border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-          <span>SahiChayan Resource Directory</span>
+          <span>ClearPath Resource Directory</span>
           <button
             onClick={() => {
               closeInAppVideo();

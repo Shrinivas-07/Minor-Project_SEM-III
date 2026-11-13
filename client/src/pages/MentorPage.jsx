@@ -11,7 +11,7 @@ export default function MentorPage() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `Hello${profile?.full_name ? `, ${profile.full_name}` : ''}. Welcome to SahiChayan Career Advisory.\n\nYou can ask questions about:\n• Degree programs and entrance exam timelines\n• Salary progressions across Indian and global markets\n• Portfolio projects and internships to build\n• Comparing two career tracks side by side`
+      content: `Hello${profile?.full_name ? `, ${profile.full_name}` : ''}. Welcome to ClearPath Career Advisory.\n\nYou can ask questions about:\n• Degree programs and entrance exam timelines\n• Salary progressions across Indian and global markets\n• Portfolio projects and internships to build\n• Comparing two career tracks side by side`
     }
   ]);
   const [input, setInput] = useState('');
@@ -72,7 +72,7 @@ export default function MentorPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-700 text-xs font-semibold mb-2">
-              <MessageSquare className="w-3.5 h-3.5 text-brand-600" /> SahiChayan Career Advisor
+              <MessageSquare className="w-3.5 h-3.5 text-brand-600" /> ClearPath Career Advisor
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Personalized Career Advisory

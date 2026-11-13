@@ -17,18 +17,18 @@ class EmailService {
     const titleMap = {
       registration: 'Verify Your Email Address',
       login: 'One-Time Login Passcode',
-      reset: 'Reset Your SahiChayan Password',
-      reset_password: 'Reset Your SahiChayan Password',
+      reset: 'Reset Your ClearPath Password',
+      reset_password: 'Reset Your ClearPath Password',
     };
 
     const actionTextMap = {
-      registration: 'completing your SahiChayan account registration',
-      login: 'signing in to your SahiChayan account',
+      registration: 'completing your ClearPath account registration',
+      login: 'signing in to your ClearPath account',
       reset: 'resetting your account password',
       reset_password: 'resetting your account password',
     };
 
-    const subject = `Your SahiChayan Verification Code: ${otp}`;
+    const subject = `Your ClearPath Verification Code: ${otp}`;
     const title = titleMap[purpose] || 'Verification Passcode';
     const actionText = actionTextMap[purpose] || 'verifying your identity';
 
@@ -54,7 +54,7 @@ class EmailService {
 </head>
 <body>
   <div class="card">
-    <div class="brand-bar">Sahi<span class="brand-accent">Chayan</span></div>
+    <div class="brand-bar">Clear<span class="brand-accent">Path</span></div>
     <h1 class="headline">${title}</h1>
     <p class="subtext">
       Hello <strong>${toName || 'Student'}</strong>,<br/>
@@ -71,12 +71,12 @@ class EmailService {
     </p>
 
     <div class="security-note">
-      <strong>Security Note:</strong> SahiChayan staff will never ask you to share this passcode.
+      <strong>Security Note:</strong> ClearPath staff will never ask you to share this passcode.
     </div>
   </div>
 
   <div class="footer">
-    © ${new Date().getFullYear()} SahiChayan.Com — Career Discovery &amp; Roadmap Platform.
+    © ${new Date().getFullYear()} ClearPath — Career Discovery &amp; Roadmap Platform.
   </div>
 </body>
 </html>
@@ -110,8 +110,8 @@ class EmailService {
         },
         body: JSON.stringify({
           sender: {
-            name: BREVO_SENDER_NAME || 'SahiChayan Security',
-            email: BREVO_SENDER_EMAIL || 'support@sahichayan.com',
+            name: BREVO_SENDER_NAME || 'ClearPath Security',
+            email: BREVO_SENDER_EMAIL || 'support@clearpath.com',
           },
           to: [
             {

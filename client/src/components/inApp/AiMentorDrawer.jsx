@@ -11,7 +11,7 @@ export default function AiMentorDrawer() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "Welcome to SahiChayan Career Advisory. Ask anything about career roadmaps, college degrees, entrance exams, portfolio projects, or salary expectations in India and globally."
+      content: "Welcome to ClearPath Career Advisory. Ask anything about career roadmaps, college degrees, entrance exams, portfolio projects, or salary expectations in India and globally."
     }
   ]);
   const [input, setInput] = useState('');

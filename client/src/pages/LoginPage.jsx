@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  Compass, ArrowRight, Lock, Mail, AlertCircle, 
+  ArrowRight, Lock, Mail, AlertCircle, 
   KeyRound, CheckCircle2, RotateCcw, ShieldCheck, ArrowLeft, Eye, EyeOff
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { ClearPathIcon } from '../components/common/ClearPathLogo';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -148,10 +149,10 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-900 text-white mb-4 hover:bg-brand-600 transition-colors">
-            <Compass className="w-5 h-5" />
+            <ClearPathIcon className="w-5 h-5" />
           </Link>
           <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-            {mode === 'login' ? 'Sign in to SahiChayan' : mode === 'forgot_email' ? 'Reset your password' : 'Enter verification code'}
+            {mode === 'login' ? 'Sign in to ClearPath' : mode === 'forgot_email' ? 'Reset your password' : 'Enter verification code'}
           </h1>
           <p className="text-sm text-slate-500 mt-1.5">
             {mode === 'login'
@@ -390,7 +391,7 @@ export default function LoginPage() {
         {/* Footer Link */}
         <div className="mt-8 pt-6 border-t border-slate-100 text-center">
           <p className="text-xs text-slate-500">
-            New to SahiChayan?{' '}
+            New to ClearPath?{' '}
             <Link to="/register" className="font-semibold text-brand-600 hover:text-brand-700 transition-colors">
               Create a student account
             </Link>

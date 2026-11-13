@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Compass, Send, Check, ShieldCheck } from 'lucide-react';
+import { Send, Check, ShieldCheck } from 'lucide-react';
+import ClearPathLogo from './ClearPathLogo';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -53,16 +54,11 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="col-span-2">
-            <Link to="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white text-slate-950 flex items-center justify-center">
-                <Compass className="w-5 h-5" />
-              </div>
-              <span className="font-bold text-lg text-white tracking-tight">
-                Sahi<span className="text-brand-400">Chayan</span>
-              </span>
+            <Link to="/" className="inline-block group">
+              <ClearPathLogo variant="dark" size="md" />
             </Link>
             <p className="text-sm text-slate-400 mt-4 leading-relaxed max-w-sm">
-              SahiChayan (सही चयन) helps students evaluate cognitive strengths across 18 dimensions, compare verified industry outcomes, and follow clear educational roadmaps.
+              ClearPath helps students evaluate cognitive strengths across 18 dimensions, compare verified industry outcomes, and follow clear educational roadmaps.
             </p>
             <div className="flex items-center gap-2 mt-5 text-xs text-slate-400">
               <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
@@ -109,7 +105,7 @@ export default function Footer() {
 
         {/* Bottom Copyright Row */}
         <div className="border-t border-slate-800/80 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} SahiChayan.Com. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} ClearPath. All rights reserved.</p>
           <p>Structured Career Discovery &amp; Educational Roadmaps</p>
         </div>
       </div>

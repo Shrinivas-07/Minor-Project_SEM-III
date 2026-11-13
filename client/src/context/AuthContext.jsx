@@ -7,7 +7,7 @@ const AuthContext = createContext();
 // Synchronous hydration from localStorage on page load (prevents logout flicker on refresh)
 function getInitialUser() {
   try {
-    const saved = localStorage.getItem('sahichayan_active_user');
+    const saved = localStorage.getItem('clearpath_active_user') || localStorage.getItem('sahichayan_active_user');
     return saved ? JSON.parse(saved) : null;
   } catch {
     return null;
@@ -16,7 +16,7 @@ function getInitialUser() {
 
 function getInitialProfile() {
   try {
-    const saved = localStorage.getItem('sahichayan_active_profile');
+    const saved = localStorage.getItem('clearpath_active_profile') || localStorage.getItem('sahichayan_active_profile');
     return saved ? JSON.parse(saved) : null;
   } catch {
     return null;
@@ -31,6 +31,9 @@ export function AuthProvider({ children }) {
   // Centralized session persistence helper
   const persistSession = (userData, profileData = null, token = null) => {
     if (!userData) {
+      localStorage.removeItem('clearpath_active_user');
+      localStorage.removeItem('clearpath_active_profile');
+      localStorage.removeItem('clearpath_auth_token');
       localStorage.removeItem('sahichayan_active_user');
       localStorage.removeItem('sahichayan_active_profile');
       localStorage.removeItem('sahichayan_auth_token');
@@ -44,10 +47,10 @@ export function AuthProvider({ children }) {
     setProfile(effectiveProfile);
 
     try {
-      localStorage.setItem('sahichayan_active_user', JSON.stringify(userData));
-      localStorage.setItem('sahichayan_active_profile', JSON.stringify(effectiveProfile));
+      localStorage.setItem('clearpath_active_user', JSON.stringify(userData));
+      localStorage.setItem('clearpath_active_profile', JSON.stringify(effectiveProfile));
       if (token) {
-        localStorage.setItem('sahichayan_auth_token', token);
+        localStorage.setItem('clearpath_auth_token', token);
       }
     } catch (err) {
       console.warn('Could not write auth to localStorage:', err);
@@ -88,7 +91,7 @@ export function AuthProvider({ children }) {
         const { data } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
         if (data) {
           setProfile(data);
-          localStorage.setItem('sahichayan_active_profile', JSON.stringify(data));
+          localStorage.setItem('clearpath_active_profile', JSON.stringify(data));
           return data;
         }
       }
@@ -235,7 +238,7 @@ export function AuthProvider({ children }) {
 
     // Update local state immediately
     setProfile(updatedProfile);
-    localStorage.setItem('sahichayan_active_profile', JSON.stringify(updatedProfile));
+    localStorage.setItem('clearpath_active_profile', JSON.stringify(updatedProfile));
 
     // Sync to backend / Supabase
     try {
@@ -267,6 +270,9 @@ export function AuthProvider({ children }) {
     }
     persistSession(null);
     try {
+      localStorage.removeItem('clearpath_saved_careers');
+      localStorage.removeItem('clearpath_results');
+      localStorage.removeItem('clearpath_scores');
       localStorage.removeItem('sahichayan_saved_careers');
       localStorage.removeItem('sahichayan_results');
       localStorage.removeItem('sahichayan_scores');

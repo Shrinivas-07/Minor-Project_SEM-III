@@ -177,7 +177,7 @@ export default function LandingPage() {
               Built for disciplined career planning
             </h2>
             <p className="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed">
-              Every module inside SahiChayan connects personal aptitude with verified market data and actionable study plans.
+              Every module inside ClearPath connects personal aptitude with verified market data and actionable study plans.
             </p>
           </div>
 

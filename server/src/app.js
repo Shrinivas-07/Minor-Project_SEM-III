@@ -1,5 +1,5 @@
 /**
- * SahiChayan.Com - Production Express Application
+ * ClearPath - Production Express Application
  */
 
 const express = require('express');
@@ -107,7 +107,7 @@ app.get('/api/health', async (req, res) => {
 
   res.json({
     status: 'healthy',
-    service: 'SahiChayan Advisory API',
+    service: 'ClearPath Advisory API',
     version: '2.0.0',
     environment: NODE_ENV,
     uptimeSeconds: Math.floor(process.uptime()),
@@ -130,7 +130,7 @@ app.get('/api/health', async (req, res) => {
 // Root Welcome Route (Ensures Render health checks on "/" return 200 OK)
 app.get('/', (req, res) => {
   res.json({
-    service: 'SahiChayan Advisory API',
+    service: 'ClearPath Advisory API',
     version: '2.0.0',
     status: 'online',
     health: '/api/health',
@@ -149,7 +149,7 @@ app.use('/api/users', userRoutes);
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: `Endpoint '${req.method} ${req.originalUrl}' does not exist on SahiChayan API.`,
+    message: `Endpoint '${req.method} ${req.originalUrl}' does not exist on ClearPath API.`,
   });
 });
 
