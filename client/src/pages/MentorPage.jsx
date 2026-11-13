@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, User, RefreshCw, Compass, MessageSquare } from 'lucide-react';
+import { Send, User, RefreshCw, MessageSquare } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { careersData } from '../data/careersData';
+import FormattedMessage from '../components/common/FormattedMessage';
+import { ClearPathIcon } from '../components/common/ClearPathLogo';
 
 export default function MentorPage() {
   const { user, profile } = useAuth();
@@ -109,17 +111,21 @@ export default function MentorPage() {
                       isAdvisor ? 'bg-slate-900 text-white' : 'bg-brand-600 text-white'
                     }`}
                   >
-                    {isAdvisor ? <Compass className="w-4 h-4" /> : <User className="w-4 h-4" />}
+                    {isAdvisor ? <ClearPathIcon className="w-4 h-4" /> : <User className="w-4 h-4" />}
                   </div>
 
                   <div
-                    className={`max-w-[85%] rounded-2xl p-4 sm:p-5 text-xs sm:text-sm leading-relaxed ${
+                    className={`max-w-[88%] rounded-2xl p-4 sm:p-5 text-xs sm:text-sm leading-relaxed ${
                       isAdvisor
                         ? 'bg-white text-slate-800 border border-slate-200 shadow-card'
                         : 'bg-slate-900 text-white'
                     }`}
                   >
-                    <div className="whitespace-pre-line">{msg.content}</div>
+                    {isAdvisor ? (
+                      <FormattedMessage content={msg.content} />
+                    ) : (
+                      <div className="whitespace-pre-line">{msg.content}</div>
+                    )}
                   </div>
                 </div>
               );
@@ -128,12 +134,12 @@ export default function MentorPage() {
             {loading && (
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center">
-                  <Compass className="w-4 h-4" />
+                  <ClearPathIcon className="w-4 h-4" />
                 </div>
                 <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 shadow-card flex items-center gap-2.5">
                   <RefreshCw className="w-4 h-4 text-brand-600 animate-spin" />
                   <span className="text-xs font-medium text-slate-500">
-                    Preparing guidance...
+                    Consulting ClearPath Advisor...
                   </span>
                 </div>
               </div>
