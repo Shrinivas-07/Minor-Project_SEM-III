@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Send, User, RefreshCw, MessageSquare, Compass } from 'lucide-react';
+import { X, Send, User, RefreshCw, MessageSquare } from 'lucide-react';
 import { useAssessment } from '../../context/AssessmentContext';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
+import FormattedMessage from '../common/FormattedMessage';
+import { ClearPathIcon } from '../common/ClearPathLogo';
 
 export default function AiMentorDrawer() {
   const { isAiMentorOpen, openAiMentor, closeAiMentor, mentorCareerContext } = useAssessment();
@@ -112,11 +114,11 @@ export default function AiMentorDrawer() {
             <div className="px-5 py-4 border-b border-slate-200 bg-white flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center">
-                  <Compass className="w-4 h-4" />
+                  <ClearPathIcon className="w-4 h-4" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900">
-                    Career Advisor
+                    ClearPath Career Advisor
                   </h3>
                   <p className="text-[11px] text-slate-500 truncate max-w-[220px]">
                     {mentorCareerContext ? `Focus: ${mentorCareerContext.name}` : "Personalized Career Guidance"}
@@ -147,16 +149,20 @@ export default function AiMentorDrawer() {
                         isAdvisor ? 'bg-slate-900 text-white' : 'bg-brand-600 text-white'
                       }`}
                     >
-                      {isAdvisor ? <Compass className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
+                      {isAdvisor ? <ClearPathIcon className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
                     </div>
                     <div
-                      className={`max-w-[84%] rounded-2xl px-4 py-3 text-xs leading-relaxed ${
+                      className={`max-w-[88%] rounded-2xl px-4 py-3 text-xs leading-relaxed ${
                         isAdvisor
                           ? 'bg-white text-slate-800 border border-slate-200 shadow-card'
                           : 'bg-slate-900 text-white'
                       }`}
                     >
-                      <div className="whitespace-pre-line">{msg.content}</div>
+                      {isAdvisor ? (
+                        <FormattedMessage content={msg.content} />
+                      ) : (
+                        <div className="whitespace-pre-line">{msg.content}</div>
+                      )}
                     </div>
                   </div>
                 );
@@ -165,11 +171,11 @@ export default function AiMentorDrawer() {
               {loading && (
                 <div className="flex items-start gap-2.5">
                   <div className="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs">
-                    <Compass className="w-3.5 h-3.5" />
+                    <ClearPathIcon className="w-3.5 h-3.5" />
                   </div>
                   <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-card flex items-center gap-2">
                     <RefreshCw className="w-3.5 h-3.5 text-brand-600 animate-spin" />
-                    <span className="text-xs text-slate-500 font-medium">Preparing guidance...</span>
+                    <span className="text-xs text-slate-500 font-medium">Consulting ClearPath Advisor...</span>
                   </div>
                 </div>
               )}

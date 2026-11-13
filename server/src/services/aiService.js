@@ -43,11 +43,12 @@ CORE ADVISORY PRINCIPLES:
    - If they ask for advice on learning or switching careers, provide concrete, actionable milestones and portfolio suggestions.
    - If they greet ("Hi", "Hello"), respond warmly and ask what career question, degree, or roadmap they would like to explore today.
 
-2. ADAPTIVE & NATURAL FORMATTING:
-   - Vary your response format organically to match what was asked.
-   - Do NOT force rigid pre-scripted headers or identical templates onto every answer.
-   - For quick queries, give concise, direct answers with key takeaways.
-   - For roadmaps, use clean step-by-step phases with bullet points.
+2. CLEAN SECTION-WISE STRUCTURE (NO RAW SYMBOLS):
+   - Organize the answer cleanly section-wise with clear topic and sub-topic titles.
+   - Do NOT use raw markdown formatting symbols like "###" or divider dashes like "---". Use clean descriptive headings on their own line.
+   - Use numbered lists (1., 2., 3.) for chronological phases, roadmaps, and step-by-step instructions.
+   - Use clean bullet points (•) for feature highlights, key skills, and takeaways.
+   - Bold important terms, degree names, skills, and numbers cleanly.
    - For comparisons ("X vs Y"), provide structured comparisons (roles, salaries, learning curve, growth).
    - For salary queries, give realistic Indian LPA figures (Entry, Mid, Senior) alongside global benchmarks.
 
@@ -82,78 +83,87 @@ What is on your mind today?`;
 
     // 2. UPSC / Civil Services / Govt Exams
     if (q.includes('upsc') || q.includes('civil service') || q.includes('ias') || q.includes('ips') || q.includes('government job')) {
-      return `### Preparing for Civil Services (UPSC CSE)
+      return `Topic: Civil Services Examination (UPSC CSE) Strategy
 
 Cracking the UPSC Civil Services Examination requires a structured, multi-stage marathon approach:
 
-#### 1. The Exam Structure
-- **Stage 1 (Prelims):** GS Paper 1 (100 questions, cut-off based) + CSAT Paper 2 (qualifying at 33%).
-- **Stage 2 (Mains):** 9 subjective descriptive papers (Essay, 4 General Studies papers, and 2 Optional subject papers).
-- **Stage 3 (Interview / Personality Test):** Evaluates mental alertness, critical assimilation, and moral integrity.
+Sub-Topic: The 3-Stage Exam Pattern
+• Stage 1 (Prelims): GS Paper 1 (100 questions, cut-off based) + CSAT Paper 2 (qualifying at 33%).
+• Stage 2 (Mains): 9 subjective descriptive papers (Essay, 4 General Studies papers, and 2 Optional subject papers).
+• Stage 3 (Personality Test): Evaluates mental alertness, leadership traits, and moral integrity.
 
-#### 2. Year-by-Year Preparation Strategy
-1. **Foundation (Months 1–4):** Read basic **NCERT textbooks (Classes 6–12)** in History, Geography, Polity, and Economics. Start reading a national daily (*The Hindu* or *The Indian Express*) consistently.
-2. **Standard Reference Books (Months 5–9):** Laxmikanth for Indian Polity, Spectrum for Modern History, Ramesh Singh/Nitin Singhania for Economy.
-3. **Optional Subject Selection:** Choose an optional subject where your academic interest meets available syllabus and scoring trend (e.g., PSIR, Sociology, Geography, Pub Ad, or your graduation subject).
-4. **Answer Writing & Mock Tests (Months 10–12):** Daily answer writing for Mains and solving 40+ full-length Prelims test papers.
+Sub-Topic: Year-by-Year Preparation Strategy
+1. Foundation (Months 1–4): Read basic NCERT textbooks (Classes 6–12) in History, Geography, Polity, and Economics. Read The Hindu or The Indian Express daily.
+2. Standard Reference Books (Months 5–9): M. Laxmikanth for Indian Polity, Spectrum for Modern History, Ramesh Singh for Economy.
+3. Optional Subject Selection: Choose an optional subject where your academic interest meets scoring trends (e.g., PSIR, Sociology, Geography, Pub Ad, or your graduation subject).
+4. Answer Writing & Mock Tests (Months 10–12): Practice daily answer writing for Mains and solve 40+ full-length Prelims test papers.
 
-**Pro-Tip:** If you are currently in college, dedicate 2–3 focused hours daily to current affairs and NCERTs so you have a massive advantage by your graduation year.`;
+Pro-Tip: If you are currently in college, dedicate 2–3 focused hours daily to current affairs and NCERTs so you have a massive advantage upon graduation.`;
     }
 
     // 3. Degree Comparison / Education Choices
     if (q.includes('vs') || q.includes('compare') || q.includes('difference') || q.includes('which is better') || q.includes('bca') || q.includes('b.tech') || q.includes('btech')) {
-      return `### Comparative Educational Guidance
+      return `Topic: Comparative Educational Guidance
 
 When choosing between career tracks or academic degrees, evaluate these key dimensions:
 
-1. **Foundational Depth vs Practical Application:**
-   - **Comprehensive Technical Degrees (e.g. B.Tech / B.E.):** Offer deep grounding in math, computer architecture, systems, and algorithms. High campus recruitment pipeline for Tier-1/Tier-2 product companies.
-   - **Applied Degree Programs (e.g. BCA, B.Sc CS):** Faster focus on application software, database design, and web development. Usually 3 years, making an **MCA** or strong industry portfolio essential for reaching senior-tier compensation parity.
+Sub-Topic: Foundational Depth vs Practical Application
+1. Comprehensive Technical Degrees (e.g. B.Tech / B.E.):
+   • Offer deep grounding in math, computer architecture, systems, and algorithms.
+   • High campus recruitment pipeline for Tier-1/Tier-2 product companies.
+2. Applied Degree Programs (e.g. BCA, B.Sc CS):
+   • Faster focus on application software, database design, and web development.
+   • Usually 3 years, making an MCA or strong industry portfolio essential for reaching senior-tier compensation parity.
 
-2. **Market Realities:**
-   - Companies today increasingly prioritize **verified proof of work** (GitHub repos, live deployed web apps, Kaggle medals, contributions to open-source) over institutional prestige alone.
-   - A proactive student who builds real projects will outperform a passive student regardless of the degree title.
+Sub-Topic: Industry Realities
+• Companies today increasingly prioritize verified proof of work (GitHub repos, live deployed web apps, Kaggle medals, contributions to open-source) over institutional prestige alone.
+• A proactive student who builds real projects will outperform a passive student regardless of the degree title.
 
-3. **Recommended Next Step:**
-   - What specific domain (e.g., Full-Stack Web, AI/ML, Cloud DevOps, Cybersecurity, Data Analytics) excites you most? Share your stream and I will tailor an exact 6-month skill blueprint!`;
+Sub-Topic: Recommended Next Step
+• What specific domain (e.g., Full-Stack Web, AI/ML, Cloud DevOps, Cybersecurity, Data Analytics) excites you most? Share your stream and I will tailor an exact 6-month skill blueprint!`;
     }
 
     // 4. Career Switch / Non-CS / Commerce to Tech
     if (q.includes('non-cs') || q.includes('switch') || q.includes('mechanical') || q.includes('civil') || q.includes('commerce') || q.includes('arts') || q.includes('without experience')) {
-      return `### Transitioning into Tech from a Non-CS Background
+      return `Topic: Transitioning into Tech from a Non-CS Background
 
 Breaking into technology from another background (Commerce, Mechanical, Arts, or Life Sciences) is completely achievable when you take a systematic approach:
 
-1. **Leverage Your Domain Advantage:**
-   - **Commerce / Economics Students:** Natural fit for **Data Analytics, Business Intelligence, FinTech, and Product Management**, because you already understand financial metrics and business logic.
-   - **Engineering (Mechanical / Civil / Electrical):** Your analytical math and problem-solving skills make it easy to learn programming languages like Python and SQL.
+Sub-Topic: Leverage Your Domain Advantage
+• Commerce & Economics Students: Natural fit for Data Analytics, Business Intelligence, FinTech, and Product Management, because you already understand financial metrics and business logic.
+• Engineering Students (Mechanical / Civil / Electrical): Your analytical math and problem-solving skills make it easy to learn programming languages like Python and SQL.
 
-2. **The 3-Step Transition Roadmap:**
-   - **Step 1 — One Core Language:** Master **Python** or **JavaScript/TypeScript** thoroughly. Do not jump between 5 languages.
-   - **Step 2 — Data & Systems:** Learn **SQL** and relational databases. Every modern enterprise application depends on data querying.
-   - **Step 3 — Build "Proof-of-Work" Projects:** Deploy 2 full-scale production applications solving a problem in your original domain (e.g., a stock portfolio analytics dashboard or an IoT sensor monitor).
+Sub-Topic: The 3-Step Transition Roadmap
+1. Step 1 — One Core Language: Master Python or JavaScript/TypeScript thoroughly. Do not jump between multiple languages.
+2. Step 2 — Data & Systems: Learn SQL and relational databases. Every modern enterprise application depends on data querying.
+3. Step 3 — Build Proof-of-Work Projects: Deploy 2 full-scale production applications solving a problem in your original domain (e.g., a stock portfolio analytics dashboard or an IoT sensor monitor).
 
-3. **Stepping-Stone Strategy:**
-   - Start by targeting roles like **Data Analyst, QA Automation Engineer, or Technical Support Engineer**. After 1–2 years of industry experience, transition into core Software Engineering or Data Science.`;
+Sub-Topic: Stepping-Stone Strategy
+• Start by targeting roles like Data Analyst, QA Automation Engineer, or Technical Support Engineer. After 1–2 years of industry experience, transition into core Software Engineering or Data Science.`;
     }
 
     // 5. Salary & Compensation
     if (q.includes('salary') || q.includes('package') || q.includes('lpa') || q.includes('compensation') || q.includes('highest paying')) {
       const careerName = careerContext?.name || 'High-Growth Tech Specializations';
-      return `### Compensation & Salary Benchmarks
+      return `Topic: Compensation & Salary Benchmarks for ${careerName}
 
-Salary trajectories for **${careerName}** across Indian and international markets:
+Salary trajectories across Indian and international markets:
 
-| Experience Level | Indian Market (INR) | Global / Remote (USD) |
-| :--- | :--- | :--- |
-| **Entry Level (0–2 Years)** | ₹6 LPA – ₹14 LPA | $65,000 – $95,000 |
-| **Mid-Level (3–6 Years)** | ₹16 LPA – ₹32 LPA | $110,000 – $160,000 |
-| **Senior / Lead (7+ Years)** | ₹35 LPA – ₹70+ LPA | $175,000 – $240,000+ |
+Sub-Topic: Experience-Based Progression
+1. Entry Level (0–2 Years):
+   • Indian Market: ₹6 LPA – ₹14 LPA
+   • Global / Remote: $65,000 – $95,000
+2. Mid-Level (3–6 Years):
+   • Indian Market: ₹16 LPA – ₹32 LPA
+   • Global / Remote: $110,000 – $160,000
+3. Senior / Lead (7+ Years):
+   • Indian Market: ₹35 LPA – ₹70+ LPA
+   • Global / Remote: $175,000 – $240,000+
 
-#### Factors That Drive Top-Tier (Top 10%) Compensation:
-1. **System Architecture & Scale:** Knowledge of distributed systems, concurrency, and cloud infrastructure (AWS/GCP).
-2. **Ownership & Delivery:** Ability to take vague business requirements and deliver robust production code independently.
-3. **Problem-Solving Skills:** Strong understanding of Data Structures & Algorithms (DSA) for passing Tier-1 company screening rounds.`;
+Sub-Topic: Key Factors That Drive Top-Tier (Top 10%) Compensation
+• System Architecture & Scale: Knowledge of distributed systems, concurrency, and cloud infrastructure (AWS/GCP).
+• Ownership & Delivery: Ability to take business requirements and deliver robust production code independently.
+• Problem-Solving Mastery: Strong understanding of Data Structures & Algorithms (DSA) for passing Tier-1 company screening rounds.`;
     }
 
     // 6. Skills, Learning Roadmap, or Capstones
@@ -161,38 +171,40 @@ Salary trajectories for **${careerName}** across Indian and international market
       const skills = Array.isArray(careerContext?.skills) ? careerContext.skills.join(', ') : 'Core Programming, System Design, Modern Frameworks, Databases';
       const target = careerContext?.name || 'Modern Technology Careers';
 
-      return `### Recommended Learning Roadmap for ${target}
+      return `Topic: Recommended Learning Roadmap for ${target}
 
 To build high-value competence in this track, structure your learning into three focused phases:
 
-1. **Phase 1: Foundations & Core Logic (Weeks 1–6)**
-   - Master core fundamentals: ${skills.split(',').slice(0, 3).join(', ')}.
-   - Practice problem-solving on platforms like LeetCode or HackerRank (aim for consistent 30–45 mins daily).
+Sub-Topic: Phase-Wise Learning Plan
+1. Phase 1: Foundations & Core Logic (Weeks 1–6)
+   • Master core fundamentals: ${skills.split(',').slice(0, 3).join(', ')}.
+   • Practice problem-solving on platforms like LeetCode or HackerRank (aim for consistent 30–45 mins daily).
 
-2. **Phase 2: Real-World Development (Weeks 7–16)**
-   - Build full-stack or end-to-end applications that solve an actual problem.
-   - Use industry-standard version control (**Git & GitHub**), writing clean commit messages and clear README documentation.
+2. Phase 2: Real-World Development (Weeks 7–16)
+   • Build full-stack or end-to-end applications that solve an actual problem.
+   • Use industry-standard version control (Git & GitHub), writing clean commit messages and clear documentation.
 
-3. **Phase 3: Deployment & Proof of Work (Weeks 17–24)**
-   - Deploy your projects live on platforms like **Vercel, Render, or AWS**.
-   - Create a clean 1-page portfolio website showcasing your architecture diagrams and demo links.
+3. Phase 3: Deployment & Proof of Work (Weeks 17–24)
+   • Deploy your projects live on platforms like Vercel, Render, or AWS.
+   • Create a clean 1-page portfolio website showcasing your architecture diagrams and demo links.
 
 Would you like me to suggest 2 specific capstone project ideas tailored to your current skillset?`;
     }
 
     // 7. Contextual Fallback for any other query
-    return `### Strategic Guidance for Your Inquiry
+    return `Topic: Strategic Guidance for Your Inquiry
 
-Regarding **"${message}"**:
+Regarding: "${message}"
 
-1. **Core Direction:**
-   - In modern career planning, the most successful path combines **deep foundational knowledge** with **consistent practical execution**.
-   ${userProfile?.stream ? `- As a student in **${userProfile.stream}**, align your extracurricular learning with emerging market demands rather than sticking strictly to classroom syllabi.` : ''}
+Sub-Topic: Core Strategy
+1. Foundation & Market Alignment:
+   • In modern career planning, the most successful path combines deep foundational knowledge with consistent practical execution.
+   ${userProfile?.stream ? `• As a student in ${userProfile.stream}, align your extracurricular learning with emerging market demands rather than sticking strictly to classroom syllabi.` : ''}
 
-2. **Actionable Recommendations:**
-   - Identify the top 2 industry-standard tools or skills needed for this specialization.
-   - Spend 80% of your effort building tangible projects and 20% on passive tutorial watching.
-   - Network actively with seniors and alumni on LinkedIn who are currently working in roles you aspire to.
+2. Actionable Recommendations:
+   • Identify the top 2 industry-standard tools or skills needed for this specialization.
+   • Spend 80% of your effort building tangible projects and 20% on passive tutorial watching.
+   • Network actively with seniors and alumni on LinkedIn who are currently working in roles you aspire to.
 
 Feel free to ask for a deeper breakdown of degrees, entrance exams, or project ideas!`;
   }
