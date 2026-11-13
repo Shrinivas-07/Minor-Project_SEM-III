@@ -32,7 +32,7 @@ async function getHeaders() {
 
   if (!token) {
     try {
-      token = localStorage.getItem('sahichayan_auth_token');
+      token = localStorage.getItem('clearpath_auth_token') || localStorage.getItem('sahichayan_auth_token');
     } catch (e) {}
   }
 

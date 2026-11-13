@@ -1,4 +1,4 @@
-# 🧭 SahiChayan.Com (सही चयन) — AI Career Advisory & Roadmapping Web App
+# 🧭 ClearPath — Career Discovery, Aptitude & Roadmap Platform
 
 > **Academic Project**: Minor Project — Semester III  
 > **Repository**: [https://github.com/Shrinivas-07/Minor-Project_SEM-III](https://github.com/Shrinivas-07/Minor-Project_SEM-III)  
@@ -19,9 +19,9 @@
 
 ## 📖 Executive Summary
 
-**SahiChayan** (Hindi for *"The Right Choice"*) is an enterprise-grade AI-powered career counseling and roadmapping web application. It addresses the pervasive challenge of career uncertainty faced by school graduates, undergraduates, and transitioning professionals.
+**ClearPath** is an enterprise-grade AI-powered career counseling and roadmapping web application. It addresses the pervasive challenge of career uncertainty faced by school graduates, undergraduates, and transitioning professionals.
 
-Unlike simplistic static questionnaires, SahiChayan integrates:
+Unlike simplistic static questionnaires, ClearPath integrates:
 1. An **18-Trait Aptitude Matrix** evaluated across 4 cognitive domains.
 2. A **Multi-Variable Weighted Matching Algorithm** that scores user vectors against verified industry benchmarks.
 3. An **In-App Learning Center** featuring embedded YouTube video roadmaps, interactive milestone checklists, and career dossiers without disruptive external redirects.
@@ -252,7 +252,7 @@ git push -u origin main --force
 ---
 
 ## 🎓 Academic Minor Project Details
-* **Project Title**: SahiChayan (सही चयन) — AI-Driven Career Counseling & Milestone Roadmapping Platform
+* **Project Title**: ClearPath — Career Discovery, Aptitude & Milestone Roadmapping Platform
 * **Academic Semester**: Semester III
 * **Student Author**: Shrinivas
 * **Technologies Used**: React 18, Vite, Tailwind CSS, Supabase (PostgreSQL), Google Gemini AI, Node.js, Express.js.

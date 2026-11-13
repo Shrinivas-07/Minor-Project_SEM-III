@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Compass, MessageSquare, User, LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useAssessment } from '../../context/AssessmentContext';
+import ClearPathLogo from './ClearPathLogo';
 
 export default function Navbar() {
   const location = useLocation();
@@ -28,18 +29,8 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center text-white transition-colors group-hover:bg-brand-600">
-            <Compass className="w-5 h-5 text-white" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-lg tracking-tight text-slate-900 leading-none">
-              Sahi<span className="text-brand-600">Chayan</span>
-            </span>
-            <span className="text-[11px] font-medium text-slate-500 mt-0.5 leading-none">
-              Career Guidance Platform
-            </span>
-          </div>
+        <Link to="/" className="group">
+          <ClearPathLogo size="md" subtitle="Career Guidance Platform" />
         </Link>
 
         {/* Desktop Navigation Links */}

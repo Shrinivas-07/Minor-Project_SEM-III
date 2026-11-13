@@ -1,5 +1,5 @@
 // ==============================================================================
-// SAHICHAYAN.COM - Master Career Catalog (32+ Diverse High-Impact Careers)
+// CLEARPATH - Master Career Catalog (32+ Diverse High-Impact Careers)
 // With 3-tier resource architecture: YouTube In-App Hub, Course Sites, & General Knowledge
 // ==============================================================================
 

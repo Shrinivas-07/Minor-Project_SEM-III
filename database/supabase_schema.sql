@@ -1,5 +1,5 @@
 -- ==============================================================================
--- SAHICHAYAN.COM - Supabase Production Database Schema
+-- CLEARPATH - Supabase Production Database Schema
 -- Run this script in your Supabase SQL Editor:
 -- https://supabase.com/dashboard/project/_/sql
 -- ==============================================================================

@@ -1,5 +1,5 @@
 -- ==============================================================================
--- SAHICHAYAN.COM - Supabase Initial Seed Data
+-- CLEARPATH - Supabase Initial Seed Data
 -- ==============================================================================
 
 INSERT INTO public.career_catalog (id, name, category, description, average_salary_inr, average_salary_usd, growth_rate, skills, roadmap, resources, trait_weights)

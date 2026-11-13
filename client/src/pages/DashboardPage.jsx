@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { 
   Bookmark, Layers, Trash2, Edit3, CheckCircle2, ArrowRight, 
   ShieldCheck, MapPin, School, GraduationCap, Calendar, Share2, 
-  Check, Eye, EyeOff, X, Compass, Award, MessageSquare, Sliders
+  Check, Lock, X, Compass, Award, MessageSquare, Sliders
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useAssessment } from '../context/AssessmentContext';
@@ -30,7 +30,6 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState('saved'); // 'saved' | 'assessment' | 'security'
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -81,7 +80,7 @@ export default function DashboardPage() {
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  const username = (user?.email || 'student@sahichayan.com').split('@')[0];
+  const username = (user?.email || 'student@clearpath.com').split('@')[0];
 
   return (
     <div className="min-h-screen bg-slate-50 py-8 lg:py-10">
@@ -457,28 +456,34 @@ export default function DashboardPage() {
 
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <span className="text-[11px] font-medium text-slate-500 block">Stored Password (Account Record)</span>
-                  <span className="text-sm font-mono font-semibold text-slate-800">
-                    {showPassword ? (profile?.password || '••••••••') : '••••••••••••'}
-                  </span>
+                  <span className="text-[11px] font-medium text-slate-500 block">Password &amp; Security</span>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-sm font-mono tracking-widest text-slate-600">••••••••••••</span>
+                    <span className="text-xs text-slate-500">• Protected</span>
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-xs font-semibold text-slate-700 flex items-center gap-1.5 transition-colors w-fit cursor-pointer"
-                >
-                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                  <span>{showPassword ? 'Hide' : 'Show'}</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-xs font-semibold text-blue-700 w-fit">
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>Encrypted</span>
+                  </span>
+                  <Link
+                    to="/login"
+                    className="px-3 py-1 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-xs font-medium text-slate-700 transition-colors"
+                  >
+                    Reset Password
+                  </Link>
+                </div>
               </div>
 
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <span className="text-[11px] font-medium text-slate-500 block">Account Identifier</span>
-                  <span className="text-xs font-mono text-slate-700">{user?.id || 'Local Client Session'}</span>
+                  <span className="text-[11px] font-medium text-slate-500 block">Account Status</span>
+                  <span className="text-xs font-semibold text-slate-800">Active Student Profile • ClearPath Cloud Synced</span>
                 </div>
-                <span className="text-xs font-medium text-slate-600 bg-white px-2.5 py-1 rounded-md border border-slate-200 w-fit">
-                  Active Session
+                <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 w-fit inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Synchronized</span>
                 </span>
               </div>
             </div>

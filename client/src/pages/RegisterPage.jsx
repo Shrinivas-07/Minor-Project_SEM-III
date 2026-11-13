@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  Compass, ArrowRight, Lock, Mail, User, AlertCircle, 
+  ArrowRight, Lock, Mail, User, AlertCircle, 
   CheckCircle2, GraduationCap, School, Calendar, RotateCcw, ArrowLeft
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { DEGREE_CATEGORIES } from '../data/degreesData';
+import { ClearPathIcon } from '../components/common/ClearPathLogo';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -148,7 +149,7 @@ export default function RegisterPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-900 text-white mb-4 hover:bg-brand-600 transition-colors">
-            <Compass className="w-5 h-5" />
+            <ClearPathIcon className="w-5 h-5" />
           </Link>
           <div className="mb-2">
             <span className="inline-block px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-[11px] font-semibold text-slate-600">

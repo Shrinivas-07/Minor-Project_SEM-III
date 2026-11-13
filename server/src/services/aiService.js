@@ -49,7 +49,7 @@ Navigating this path requires balancing technical competence with strategic exec
 
     const careerContext = careerId ? await careerService.getCareerById(careerId) : null;
 
-    const systemPrompt = `You are "Sahi AI Mentor", an elite, empathetic, and highly knowledgeable career counselor for the Indian and global EdTech platform SahiChayan.Com.
+    const systemPrompt = `You are "ClearPath AI Mentor", an elite, empathetic, and highly knowledgeable career counselor for the Indian and global EdTech platform ClearPath.
 Your goal is to guide students, graduates, and professionals with realistic, actionable, and encouraging career advice.
 
 Current Career Context: ${careerContext ? `"${careerContext.name}" (${careerContext.category})` : 'General Career Discovery'}

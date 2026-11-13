@@ -62,17 +62,17 @@ export function AssessmentProvider({ children }) {
   const { user } = useAuth();
 
   const [scores, setScores] = useState(() => {
-    const saved = localStorage.getItem('sahichayan_scores');
+    const saved = localStorage.getItem('clearpath_scores') || localStorage.getItem('sahichayan_scores');
     return saved ? JSON.parse(saved) : initialScores;
   });
 
   const [assessmentResult, setAssessmentResult] = useState(() => {
-    const saved = localStorage.getItem('sahichayan_results');
+    const saved = localStorage.getItem('clearpath_results') || localStorage.getItem('sahichayan_results');
     return saved ? JSON.parse(saved) : null;
   });
 
   const [savedCareers, setSavedCareers] = useState(() => {
-    const saved = localStorage.getItem('sahichayan_saved_careers');
+    const saved = localStorage.getItem('clearpath_saved_careers') || localStorage.getItem('sahichayan_saved_careers');
     return saved ? JSON.parse(saved) : [];
   });
 
@@ -83,17 +83,17 @@ export function AssessmentProvider({ children }) {
 
   // Sync to local storage
   useEffect(() => {
-    localStorage.setItem('sahichayan_scores', JSON.stringify(scores));
+    localStorage.setItem('clearpath_scores', JSON.stringify(scores));
   }, [scores]);
 
   useEffect(() => {
     if (assessmentResult) {
-      localStorage.setItem('sahichayan_results', JSON.stringify(assessmentResult));
+      localStorage.setItem('clearpath_results', JSON.stringify(assessmentResult));
     }
   }, [assessmentResult]);
 
   useEffect(() => {
-    localStorage.setItem('sahichayan_saved_careers', JSON.stringify(savedCareers));
+    localStorage.setItem('clearpath_saved_careers', JSON.stringify(savedCareers));
   }, [savedCareers]);
 
   // ============================================================================
@@ -135,14 +135,14 @@ export function AssessmentProvider({ children }) {
                 if (!map.has(key)) map.set(key, c);
               });
               const merged = Array.from(map.values());
-              localStorage.setItem('sahichayan_saved_careers', JSON.stringify(merged));
+              localStorage.setItem('clearpath_saved_careers', JSON.stringify(merged));
               return merged;
             });
           } else {
             // Cloud has 0 items; if user has existing local bookmarks, push them up to cloud!
             const localSaved = (() => {
               try {
-                return JSON.parse(localStorage.getItem('sahichayan_saved_careers')) || [];
+                return JSON.parse(localStorage.getItem('clearpath_saved_careers') || localStorage.getItem('sahichayan_saved_careers')) || [];
               } catch {
                 return [];
               }
@@ -174,11 +174,11 @@ export function AssessmentProvider({ children }) {
           };
 
           setAssessmentResult(normalizedResult);
-          localStorage.setItem('sahichayan_results', JSON.stringify(normalizedResult));
+          localStorage.setItem('clearpath_results', JSON.stringify(normalizedResult));
 
           if (latest.trait_scores) {
             setScores(latest.trait_scores);
-            localStorage.setItem('sahichayan_scores', JSON.stringify(latest.trait_scores));
+            localStorage.setItem('clearpath_scores', JSON.stringify(latest.trait_scores));
           }
         }
       } catch (err) {

@@ -1,7 +1,7 @@
 {
-  "name": "sahichayan-server",
+  "name": "clearpath-server",
   "version": "2.0.0",
-  "description": "Enterprise-ready Backend API for SahiChayan AI Career Advisory Platform",
+  "description": "Enterprise-ready Backend API for ClearPath Career Advisory Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
