@@ -116,7 +116,7 @@ app.get('/api/health', async (req, res) => {
       supabase: supabaseStatus,
       geminiAi: {
         configured: Boolean(model),
-        model: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
+        model: process.env.GEMINI_MODEL || 'gemini-3.5-flash',
       },
     },
     memory: {
