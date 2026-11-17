@@ -119,13 +119,13 @@ export default function RoadmapModal() {
               </div>
             )}
 
-            {career.editorial?.theDailyReality && (
+            {(career.editorial?.dailyReality || career.editorial?.theDailyReality) && (
               <div className="pt-4 border-t border-slate-100">
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-1">
                   Aesop Editorial • The Daily Reality
                 </span>
                 <p className="text-xs text-stone-700 leading-relaxed italic bg-[#FAF8F5] p-3.5 rounded-xl border border-stone-200/80">
-                  "{career.editorial.theDailyReality}"
+                  "{career.editorial.dailyReality || career.editorial.theDailyReality}"
                 </p>
               </div>
             )}
