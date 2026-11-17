@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   ArrowLeft, Bookmark, BookmarkCheck, Play, CheckCircle2, 
-  Clock, BookOpen, Globe, ExternalLink, MessageSquare
+  Clock, BookOpen, Globe, ExternalLink, MessageSquare, 
+  Share2, Check, Sparkles, BrainCircuit, Library, Scale,
+  GraduationCap, Briefcase, TrendingUp, Building2, Quote
 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { careersData } from '../data/careersData';
 import { useAssessment } from '../context/AssessmentContext';
 
@@ -12,13 +15,25 @@ export default function CareerDetailPage() {
   const { 
     toggleSaveCareer, 
     isCareerSaved, 
-    openInAppVideo, 
     openInAppRoadmap, 
     openAiMentor 
   } = useAssessment();
 
   const career = careersData.find((c) => c.id === id);
-  const [completedTopics, setCompletedTopics] = useState([]);
+
+  // Persistent roadmap milestones per career
+  const storageKey = `clearpath_roadmap_${id}`;
+  const [completedTopics, setCompletedTopics] = useState(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [activeTab, setActiveTab] = useState('dossier'); // 'dossier' | 'roadmap' | 'resources'
 
   // In-page YouTube player state
   const [activeVideoQuery, setActiveVideoQuery] = useState(
@@ -28,14 +43,29 @@ export default function CareerDetailPage() {
     career?.featuredVideos?.[0]?.embedId || null
   );
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(completedTopics));
+    } catch {
+      // storage quota or private browsing fallback
+    }
+  }, [completedTopics, storageKey]);
+
   if (!career) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-center">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800">Career Not Found</h2>
-          <p className="text-sm text-slate-500 mt-2">The career path you requested could not be located in our catalog.</p>
-          <Link to="/careers" className="mt-4 inline-block px-5 py-2.5 bg-brand-600 text-white text-xs font-bold rounded-xl">
-            Return to Directory
+      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-6 text-center">
+        <div className="max-w-md bg-white p-8 rounded-3xl border border-stone-200 shadow-sm">
+          <span className="text-xs uppercase tracking-[0.2em] text-stone-400 font-bold">Catalog Registry</span>
+          <h2 className="text-2xl font-bold text-stone-900 mt-2">Dossier Not Found</h2>
+          <p className="text-sm text-stone-500 mt-2 leading-relaxed">
+            The vocational track you requested has not yet been codified or is currently undergoing peer review.
+          </p>
+          <Link 
+            to="/careers" 
+            className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold rounded-xl transition-all"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Return to Directory</span>
           </Link>
         </div>
       </div>
@@ -44,10 +74,29 @@ export default function CareerDetailPage() {
 
   const isSaved = isCareerSaved(career.id);
 
+  // Calculate total roadmap milestones
+  const allRoadmapTopics = career.roadmap ? career.roadmap.flatMap(p => p.topics || []) : [];
+  const totalMilestones = allRoadmapTopics.length;
+  const progressPercent = totalMilestones > 0 ? Math.round((completedTopics.length / totalMilestones) * 100) : 0;
+
   const toggleTopicCheck = (topic) => {
-    setCompletedTopics(prev => 
-      prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic]
-    );
+    setCompletedTopics(prev => {
+      const next = prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic];
+      if (!prev.includes(topic) && next.length === totalMilestones && totalMilestones > 0) {
+        confetti({
+          particleCount: 70,
+          spread: 60,
+          origin: { y: 0.7 }
+        });
+      }
+      return next;
+    });
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
   };
 
   const getYoutubeEmbedSrc = () => {
@@ -58,306 +107,608 @@ export default function CareerDetailPage() {
   };
 
   const quickVideoQueries = [
-    { label: "Complete Roadmap 2026", q: `${career.name} roadmap 2026 complete course` },
-    { label: "Beginner Crash Course", q: `${career.name} full tutorial for beginners` },
-    { label: "Portfolio Projects", q: `${career.name} real world projects tutorial` },
-    { label: "Day in Life & Salary", q: `${career.name} day in the life salary review` },
+    { label: "Complete 2026 Curriculum", q: `${career.name} roadmap 2026 complete course` },
+    { label: "Foundational Lectures", q: `${career.name} full tutorial for beginners university` },
+    { label: "Production Case Studies", q: `${career.name} real world architecture tutorial` },
+    { label: "Senior Practitioner Day in Life", q: `${career.name} day in the life senior engineer` },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10">
+    <div className="min-h-screen bg-[#FAF8F5] text-stone-900 py-10 selection:bg-amber-100 selection:text-stone-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back Link */}
-        <Link
-          to="/careers"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-brand-600 transition-colors mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to All Careers</span>
-        </Link>
+        
+        {/* Navigation Breadcrumb */}
+        <div className="flex items-center justify-between mb-8">
+          <Link
+            to="/careers"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-stone-500 hover:text-stone-900 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Vocational Catalog</span>
+            <span className="text-stone-300">/</span>
+            <span className="text-stone-700">{career.category}</span>
+          </Link>
 
-        {/* Hero Card */}
-        <div className="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-xs mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
-            <div>
-              <div className="flex items-center gap-2 mb-2 flex-wrap">
-                <span className="text-xs font-bold text-brand-700 bg-brand-50 px-3 py-1 rounded-md">
-                  {career.category}
-                </span>
-                <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">
-                  Growth: {career.growthRate}
-                </span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                {career.name}
-              </h1>
-              <p className="text-sm font-medium text-slate-500 mt-1">{career.tagline}</p>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3 shrink-0">
-              <button
-                onClick={() => toggleSaveCareer(career)}
-                className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
-                  isSaved
-                    ? 'bg-amber-50 text-amber-700 border-amber-200 shadow-xs'
-                    : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-200'
-                }`}
-              >
-                {isSaved ? <BookmarkCheck className="w-4 h-4 text-amber-600" /> : <Bookmark className="w-4 h-4" />}
-                <span>{isSaved ? 'Bookmarked' : 'Save Career'}</span>
-              </button>
-
-              <button
-                onClick={() => openAiMentor(career)}
-                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors cursor-pointer"
-              >
-                <MessageSquare className="w-4 h-4" />
-                <span>Ask Career Advisor</span>
-              </button>
-            </div>
-          </div>
-
-          <p className="text-sm text-slate-600 mt-6 leading-relaxed max-w-3xl">
-            {career.description}
-          </p>
-
-          {/* Metrics Strip */}
-          <div className="mt-8 pt-6 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 gap-6">
-            <div>
-              <span className="text-xs text-slate-400 font-medium block">Average Compensation (India)</span>
-              <span className="text-lg font-bold text-slate-900 mt-0.5 block">{career.averageSalaryInr}</span>
-            </div>
-            <div>
-              <span className="text-xs text-slate-400 font-medium block">Global Benchmark</span>
-              <span className="text-lg font-bold text-slate-900 mt-0.5 block">{career.averageSalaryUsd}</span>
-            </div>
-            {career.topEmployers && (
-              <div className="col-span-2 sm:col-span-1">
-                <span className="text-xs text-slate-400 font-medium block">Key Hiring Organizations</span>
-                <span className="text-xs font-semibold text-slate-700 mt-1 block">
-                  {career.topEmployers.slice(0, 4).join(', ')}
-                </span>
-              </div>
-            )}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleShare}
+              className="p-2 sm:px-3 sm:py-1.5 rounded-lg border border-stone-200 bg-white hover:bg-stone-50 text-xs font-medium text-stone-600 flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Share2 className="w-3.5 h-3.5" />}
+              <span className="hidden sm:inline">{copiedLink ? 'Link Copied' : 'Share Dossier'}</span>
+            </button>
+            <button
+              onClick={() => toggleSaveCareer(career)}
+              className={`p-2 sm:px-3.5 sm:py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                isSaved
+                  ? 'bg-amber-50 text-amber-800 border-amber-200'
+                  : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-200'
+              }`}
+            >
+              {isSaved ? <BookmarkCheck className="w-3.5 h-3.5 text-amber-600" /> : <Bookmark className="w-3.5 h-3.5" />}
+              <span>{isSaved ? 'Saved to Workspace' : 'Bookmark Track'}</span>
+            </button>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* 3 INTEGRATED IN-APP RESOURCE SECTIONS FOR THIS FIELD                      */}
+        {/* PENTAGRAM & AESOP EDITORIAL HERO                                         */}
         {/* ========================================================================= */}
-
-        <div className="space-y-8 mb-12">
-          {/* 1. YOUTUBE IN-APP SEARCH & VIDEO HUB */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center">
-                  <Play className="w-5 h-5 fill-rose-600" />
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-rose-600">
-                    Resource Section 1
+        <header className="bg-white rounded-3xl p-8 sm:p-12 border border-stone-200/80 shadow-xs mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
+            <div className="max-w-3xl">
+              <div className="flex items-center gap-2.5 flex-wrap mb-4">
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-stone-500 bg-stone-100 px-3 py-1 rounded">
+                  {career.category}
+                </span>
+                <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3 text-emerald-600" />
+                  Growth: {career.growthRate}
+                </span>
+                {career.workStyle && (
+                  <span className="text-[11px] font-medium text-stone-600 bg-stone-50 border border-stone-200 px-2.5 py-1 rounded flex items-center gap-1">
+                    <Briefcase className="w-3 h-3 text-stone-400" />
+                    {career.workStyle}
                   </span>
-                  <h2 className="text-xl font-bold text-slate-900">
-                    YouTube Search & In-App Video Masterclasses
-                  </h2>
+                )}
+                {career.degreePath && (
+                  <span className="text-[11px] font-medium text-stone-600 bg-stone-50 border border-stone-200 px-2.5 py-1 rounded flex items-center gap-1">
+                    <GraduationCap className="w-3 h-3 text-stone-400" />
+                    {career.degreePath}
+                  </span>
+                )}
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl font-black text-stone-900 tracking-tight leading-[1.1]">
+                {career.name}
+              </h1>
+
+              <p className="text-base sm:text-lg text-stone-600 font-normal mt-3 leading-relaxed">
+                {career.tagline}
+              </p>
+
+              <p className="text-sm text-stone-600 mt-5 leading-relaxed max-w-2xl">
+                {career.description}
+              </p>
+            </div>
+
+            {/* Quick Action Dock */}
+            <div className="lg:w-72 shrink-0 bg-stone-50 rounded-2xl p-5 border border-stone-200 flex flex-col justify-between">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-3">
+                  Compensation Benchmarks
+                </span>
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-xs text-stone-500 block">India Annual CTC</span>
+                    <span className="text-xl font-bold text-stone-900 block mt-0.5">
+                      {career.averageSalaryInr}
+                    </span>
+                  </div>
+                  <div className="pt-2 border-t border-stone-200/60">
+                    <span className="text-xs text-stone-500 block">International Baseline</span>
+                    <span className="text-base font-semibold text-stone-800 block mt-0.5">
+                      {career.averageSalaryUsd}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <a
-                href={`https://www.youtube.com/results?search_query=${encodeURIComponent(activeVideoQuery)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-700 text-xs font-semibold transition-colors"
-              >
-                <span>Open Search on YouTube</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+              <div className="mt-6 pt-4 border-t border-stone-200/80 space-y-2">
+                <button
+                  onClick={() => openAiMentor(career)}
+                  className="w-full py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Consult AI Advisor</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('roadmap')}
+                  className="w-full py-2 rounded-xl bg-white hover:bg-stone-100 text-stone-800 border border-stone-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Clock className="w-3.5 h-3.5 text-stone-500" />
+                  <span>Interactive Roadmap</span>
+                </button>
+              </div>
             </div>
+          </div>
 
-            {/* In-App Video Player */}
-            <div className="relative aspect-video w-full bg-slate-950 rounded-2xl overflow-hidden shadow-lg border border-slate-800 mb-5">
-              <iframe
-                key={activeVideoQuery + (activeEmbedId || '')}
-                className="w-full h-full"
-                src={getYoutubeEmbedSrc()}
-                title={career.name}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-
-            {/* Topic Switcher Pills */}
-            <div className="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/80">
-              <p className="text-xs font-bold text-slate-700 mb-2">
-                Click any topic below to update the in-app player:
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {quickVideoQueries.map((item, idx) => (
-                  <button
+          {/* Top Employers Strip */}
+          {career.topEmployers && (
+            <div className="mt-8 pt-6 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <span className="text-xs font-bold uppercase tracking-[0.15em] text-stone-400 flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5" />
+                Key Hiring Institutions
+              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                {career.topEmployers.map((emp, idx) => (
+                  <span
                     key={idx}
-                    onClick={() => {
-                      setActiveEmbedId(null);
-                      setActiveVideoQuery(item.q);
-                    }}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                      activeVideoQuery === item.q
-                        ? 'bg-rose-600 text-white border-rose-600 font-bold shadow-xs'
-                        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
-                    }`}
+                    className="text-xs font-medium text-stone-700 bg-stone-100 px-3 py-1 rounded-md"
                   >
-                    {item.label}
-                  </button>
+                    {emp}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </header>
+
+        {/* ========================================================================= */}
+        {/* EDITORIAL VIEW TABS (LINEAR-INSPIRED NAVIGATION)                         */}
+        {/* ========================================================================= */}
+        <div className="flex items-center gap-2 border-b border-stone-200 mb-8 overflow-x-auto pb-px">
+          <button
+            onClick={() => setActiveTab('dossier')}
+            className={`pb-3 px-1 text-xs sm:text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap cursor-pointer ${
+              activeTab === 'dossier'
+                ? 'border-stone-900 text-stone-900'
+                : 'border-transparent text-stone-400 hover:text-stone-700'
+            }`}
+          >
+            <Scroll className="w-4 h-4" />
+            <span>Aesop Editorial Dossier</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('roadmap')}
+            className={`pb-3 px-1 text-xs sm:text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap cursor-pointer ${
+              activeTab === 'roadmap'
+                ? 'border-stone-900 text-stone-900'
+                : 'border-transparent text-stone-400 hover:text-stone-700'
+            }`}
+          >
+            <Clock className="w-4 h-4" />
+            <span>4-Phase Milestone Roadmap</span>
+            <span className="text-[10px] bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full font-bold">
+              {progressPercent}%
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('resources')}
+            className={`pb-3 px-1 text-xs sm:text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap cursor-pointer ${
+              activeTab === 'resources'
+                ? 'border-stone-900 text-stone-900'
+                : 'border-transparent text-stone-400 hover:text-stone-700'
+            }`}
+          >
+            <Library className="w-4 h-4" />
+            <span>Curated Resources &amp; Lectures</span>
+          </button>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* TAB 1: AESOP EDITORIAL DOSSIER (LITERARY ART DIRECTION)                   */}
+        {/* ========================================================================= */}
+        {activeTab === 'dossier' && (
+          <div className="space-y-8">
+            {/* The Daily Reality: Narrative Prose */}
+            <article className="bg-white rounded-3xl p-8 sm:p-12 border border-stone-200/80 shadow-xs">
+              <div className="max-w-3xl">
+                <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-stone-400 block mb-2">
+                  Chapter I • Phenomenology of Practice
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight mb-6">
+                  The Daily Reality
+                </h2>
+
+                <div className="prose prose-stone max-w-none text-stone-700 text-base leading-relaxed space-y-4">
+                  <p className="first-letter:text-5xl first-letter:font-serif first-letter:font-bold first-letter:mr-3 first-letter:float-left first-letter:text-stone-900">
+                    {career.editorial?.theDailyReality || career.description}
+                  </p>
+                </div>
+              </div>
+            </article>
+
+            {/* Cognitive Architecture & Cultural Impact Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Cognitive Architecture */}
+              <div className="bg-white rounded-3xl p-8 border border-stone-200/80 shadow-xs flex flex-col justify-between">
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-stone-100 text-stone-800 flex items-center justify-center mb-5">
+                    <BrainCircuit className="w-5 h-5" />
+                  </div>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-1">
+                    Chapter II • Mental Models
+                  </span>
+                  <h3 className="text-xl font-bold text-stone-900 mb-4">
+                    Cognitive Architecture
+                  </h3>
+                  <p className="text-xs text-stone-500 mb-5 leading-relaxed">
+                    The cognitive predispositions, perceptual lenses, and habits of mind demanded by this discipline.
+                  </p>
+
+                  <div className="space-y-2.5">
+                    {(career.editorial?.cognitiveArchitecture || [
+                      "First-principles reasoning under uncertainty",
+                      "Systems-level architectural decomposition",
+                      "Rigorous empirical verification discipline",
+                      "High tolerance for iterative ambiguity"
+                    ]).map((trait, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3.5 rounded-xl bg-stone-50 border border-stone-200/70 text-xs font-medium text-stone-800 flex items-center gap-3"
+                      >
+                        <span className="w-5 h-5 rounded-md bg-stone-200/80 text-stone-600 font-bold text-[10px] flex items-center justify-center shrink-0">
+                          {idx + 1}
+                        </span>
+                        <span>{trait}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-4 border-t border-stone-100">
+                  <span className="text-[11px] text-stone-400 font-mono">Cognitive Quotient: Top 5th Percentile</span>
+                </div>
+              </div>
+
+              {/* Cultural & Civilizational Impact */}
+              <div className="bg-white rounded-3xl p-8 border border-stone-200/80 shadow-xs flex flex-col justify-between">
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-stone-100 text-stone-800 flex items-center justify-center mb-5">
+                    <Scale className="w-5 h-5" />
+                  </div>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-1">
+                    Chapter III • Ethical Vector
+                  </span>
+                  <h3 className="text-xl font-bold text-stone-900 mb-4">
+                    Civilizational Value
+                  </h3>
+                  <div className="p-5 rounded-2xl bg-[#F7F4EE] border border-amber-900/10 text-stone-800 text-sm leading-relaxed italic mb-5 relative">
+                    <Quote className="w-5 h-5 text-stone-400 mb-2 not-italic" />
+                    "{career.editorial?.culturalImpact || 'To practice this craft is to quietly reconfigure the nervous system of modern civilization, translating abstract human desire into resilient, enduring reality.'}"
+                  </div>
+
+                  <p className="text-xs text-stone-600 leading-relaxed">
+                    Every generation requires stewards capable of translating technological momentum into human flourishing. Those in this discipline bear custody over systemic reliability and public trust.
+                  </p>
+                </div>
+
+                <div className="mt-8 pt-4 border-t border-stone-100">
+                  <span className="text-[11px] text-stone-400 font-mono">Societal Horizon: 2026—2040</span>
+                </div>
+              </div>
+            </div>
+
+            {/* The Master's Library */}
+            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-stone-200/80 shadow-xs">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-stone-100 text-stone-800 flex items-center justify-center">
+                  <Library className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-stone-400 block">
+                    Chapter IV • Canon &amp; Literature
+                  </span>
+                  <h3 className="text-xl font-bold text-stone-900">
+                    The Master's Library
+                  </h3>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {(career.editorial?.mastersLibrary || [
+                  "The Structure and Interpretation of Computer Programs — Abelson & Sussman",
+                  "Designing Data-Intensive Applications — Martin Kleppmann",
+                  "Thinking in Systems — Donella Meadows"
+                ]).map((work, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 hover:border-stone-400 transition-colors flex flex-col justify-between"
+                  >
+                    <div>
+                      <span className="text-[10px] font-mono uppercase text-stone-400 block mb-1">Vol. {idx + 1}</span>
+                      <p className="text-xs font-semibold text-stone-800 leading-snug">
+                        {work}
+                      </p>
+                    </div>
+                    <span className="text-[10px] text-stone-400 mt-4 block">Recommended Essential Canon</span>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
+        )}
 
-          {/* 2. COURSE RESOURCE PLATFORMS (Coursera, Kaggle, edX, etc.) */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center">
-                <BookOpen className="w-5 h-5" />
+        {/* ========================================================================= */}
+        {/* TAB 2: INTERACTIVE PERSISTENT ROADMAP (NOTION / DUOLINGO PROGRESSION)     */}
+        {/* ========================================================================= */}
+        {activeTab === 'roadmap' && (
+          <div className="space-y-6">
+            {/* Progress Bar & Milestone Status */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                <div>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-1">
+                    Curriculum Progression
+                  </span>
+                  <h3 className="text-xl font-bold text-stone-900">
+                    Academic &amp; Technical Milestone Roadmap
+                  </h3>
+                </div>
+                <div className="text-left sm:text-right">
+                  <span className="text-2xl font-black text-stone-900">{progressPercent}%</span>
+                  <span className="text-xs text-stone-500 block">
+                    {completedTopics.length} of {totalMilestones} topics completed
+                  </span>
+                </div>
               </div>
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600">
-                  Resource Section 2
-                </span>
-                <h2 className="text-xl font-bold text-slate-900">
-                  Verified Courses & Multi-Site Learning Platforms
-                </h2>
+
+              {/* Spring Progress Gauge */}
+              <div className="w-full bg-stone-100 h-2.5 rounded-full overflow-hidden mb-2">
+                <div
+                  className="bg-stone-900 h-full rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] text-stone-400">
+                <span>Phase I (Foundations)</span>
+                <span>Phase II (Core)</span>
+                <span>Phase III (Systems)</span>
+                <span>Phase IV (Mastery)</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {career.courses?.map((course, idx) => (
-                <div
-                  key={idx}
-                  className="bg-slate-50/80 rounded-2xl p-5 border border-slate-200/80 hover:border-brand-300 shadow-xs transition-all flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-extrabold text-brand-600 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
-                        {course.platform}
-                      </span>
-                      {course.freeOption && (
-                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                          Free Audit
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="text-sm font-bold text-slate-900 mt-2">{course.name}</h3>
-                    <p className="text-xs text-slate-500 mt-0.5">Instructor / Org: {course.provider}</p>
-                  </div>
+            {/* 4 Phases List */}
+            <div className="space-y-5">
+              {career.roadmap?.map((phase, pIdx) => {
+                const phaseTopics = phase.topics || [];
+                const phaseCompleted = phaseTopics.filter(t => completedTopics.includes(t)).length;
+                const isPhaseAllDone = phaseTopics.length > 0 && phaseCompleted === phaseTopics.length;
 
-                  <div className="mt-5 pt-3 border-t border-slate-200/60 flex items-center justify-between">
-                    <span className="text-xs text-slate-400">Official Curriculum</span>
+                return (
+                  <div
+                    key={pIdx}
+                    className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-xs"
+                  >
+                    <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-stone-100">
+                      <div className="flex items-center gap-3">
+                        <span className={`w-7 h-7 rounded-lg text-xs font-bold flex items-center justify-center ${
+                          isPhaseAllDone 
+                            ? 'bg-emerald-100 text-emerald-800' 
+                            : 'bg-stone-100 text-stone-700'
+                        }`}>
+                          {pIdx + 1}
+                        </span>
+                        <div>
+                          <h4 className="text-base font-bold text-stone-900">{phase.phase}</h4>
+                          <span className="text-xs text-stone-400 font-medium">{phase.duration}</span>
+                        </div>
+                      </div>
+
+                      <span className="text-xs text-stone-500 font-mono">
+                        {phaseCompleted} / {phaseTopics.length} done
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {phaseTopics.map((topic, tIdx) => {
+                        const isChecked = completedTopics.includes(topic);
+                        return (
+                          <button
+                            key={tIdx}
+                            onClick={() => toggleTopicCheck(topic)}
+                            className={`text-left p-3.5 rounded-xl text-xs flex items-center gap-3 transition-all border cursor-pointer ${
+                              isChecked
+                                ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900 font-medium'
+                                : 'bg-stone-50/60 border-stone-200/70 text-stone-700 hover:bg-stone-100/70 hover:border-stone-300'
+                            }`}
+                          >
+                            <div className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+                              isChecked 
+                                ? 'bg-emerald-600 border-emerald-600 text-white' 
+                                : 'border-stone-300 bg-white'
+                            }`}>
+                              {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                            </div>
+                            <span className={isChecked ? 'line-through opacity-70' : ''}>
+                              {topic}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB 3: CURATED RESOURCES & IN-APP LECTURES                                */}
+        {/* ========================================================================= */}
+        {activeTab === 'resources' && (
+          <div className="space-y-8">
+            {/* 1. YOUTUBE IN-APP PLAYER & TOPIC SELECTOR */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                    <Play className="w-5 h-5 fill-rose-600" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-rose-600">
+                      Visual Masterclasses
+                    </span>
+                    <h2 className="text-xl font-bold text-stone-900">
+                      In-App YouTube Studio &amp; Lectures
+                    </h2>
+                  </div>
+                </div>
+
+                <a
+                  href={`https://www.youtube.com/results?search_query=${encodeURIComponent(activeVideoQuery)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-stone-100 hover:bg-rose-50 hover:text-rose-600 text-stone-700 text-xs font-semibold transition-colors"
+                >
+                  <span>Search on YouTube</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+
+              {/* Video Player */}
+              <div className="relative aspect-video w-full bg-stone-950 rounded-2xl overflow-hidden shadow-lg border border-stone-800 mb-5">
+                <iframe
+                  key={activeVideoQuery + (activeEmbedId || '')}
+                  className="w-full h-full"
+                  src={getYoutubeEmbedSrc()}
+                  title={career.name}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+
+              {/* Topic Switcher Pills */}
+              <div className="bg-stone-50 rounded-2xl p-4 border border-stone-200/80">
+                <p className="text-xs font-bold text-stone-700 mb-2">
+                  Select a syllabus module to stream directly:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {quickVideoQueries.map((item, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setActiveEmbedId(null);
+                        setActiveVideoQuery(item.q);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
+                        activeVideoQuery === item.q
+                          ? 'bg-stone-900 text-white border-stone-900 font-bold shadow-xs'
+                          : 'bg-white text-stone-700 hover:bg-stone-100 border-stone-200'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 2. VERIFIED UNIVERSITY & PLATFORM COURSES */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-xs">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center">
+                  <BookOpen className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700">
+                    Syllabi &amp; Curricula
+                  </span>
+                  <h2 className="text-xl font-bold text-stone-900">
+                    Verified Courseware &amp; Certification Portals
+                  </h2>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {career.courses?.map((course, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-stone-50 rounded-2xl p-5 border border-stone-200/80 hover:border-stone-400 shadow-xs transition-all flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-stone-800 bg-white px-2.5 py-1 rounded-lg border border-stone-200">
+                          {course.platform}
+                        </span>
+                        {course.freeOption && (
+                          <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                            Free Audit Available
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-sm font-bold text-stone-900 mt-2">{course.name}</h3>
+                      <p className="text-xs text-stone-500 mt-0.5">Faculty / Provider: {course.provider}</p>
+                    </div>
+
+                    <div className="mt-5 pt-3 border-t border-stone-200/60 flex items-center justify-between">
+                      <span className="text-xs text-stone-400">Accredited Course</span>
+                      <a
+                        href={course.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-4 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                      >
+                        <span>Open Syllabus</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 3. ENCYCLOPEDIA & REGULATORY PORTALS */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-xs">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                  <Globe className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">
+                    Governance &amp; Canon
+                  </span>
+                  <h2 className="text-xl font-bold text-stone-900">
+                    Standardization Bodies &amp; General Knowledge
+                  </h2>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {career.knowledge?.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-stone-50 rounded-2xl p-5 border border-stone-200/80 hover:border-emerald-300 shadow-xs flex flex-col justify-between transition-all"
+                  >
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-600 bg-white px-2 py-0.5 rounded border border-stone-200">
+                        {item.type}
+                      </span>
+                      <h3 className="text-sm font-bold text-stone-900 mt-2.5">{item.title}</h3>
+                      <p className="text-xs text-stone-500 mt-1 line-clamp-3 leading-relaxed">{item.desc}</p>
+                    </div>
+
                     <a
-                      href={course.url}
+                      href={item.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-4 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
+                      className="mt-5 pt-3 border-t border-stone-200/60 inline-flex items-center justify-between text-xs font-semibold text-emerald-800 hover:text-emerald-900"
                     >
-                      <span>Explore Course</span>
+                      <span>Read Documentation</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 3. GENERAL KNOWLEDGE & WIKIPEDIA / REGULATORY AUTHORITIES */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <Globe className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">
-                  Resource Section 3
-                </span>
-                <h2 className="text-xl font-bold text-slate-900">
-                  General Knowledge, Wikipedia & Governing Portals
-                </h2>
+                ))}
               </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {career.knowledge?.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="bg-slate-50/80 rounded-2xl p-5 border border-slate-200/80 hover:border-emerald-300 shadow-xs flex flex-col justify-between transition-all"
-                >
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-white px-2 py-0.5 rounded border border-slate-200">
-                      {item.type}
-                    </span>
-                    <h3 className="text-sm font-bold text-slate-900 mt-2.5">{item.title}</h3>
-                    <p className="text-xs text-slate-500 mt-1 line-clamp-3 leading-relaxed">{item.desc}</p>
-                  </div>
-
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-5 pt-3 border-t border-slate-200/60 inline-flex items-center justify-between text-xs font-semibold text-emerald-700 hover:text-emerald-800"
-                  >
-                    <span>Read Article</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              ))}
-            </div>
           </div>
-        </div>
+        )}
 
-        {/* 4-Phase Educational Roadmap */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs mb-10">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-brand-600" />
-              4-Phase Educational & Milestone Roadmap
-            </h3>
-            <span className="text-xs font-medium text-slate-400">
-              {completedTopics.length} milestones checked
-            </span>
-          </div>
-
-          <div className="space-y-6">
-            {career.roadmap?.map((phase, pIdx) => (
-              <div key={pIdx} className="bg-slate-50/80 rounded-2xl p-5 border border-slate-200/80">
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <h4 className="text-sm font-bold text-slate-900">{phase.phase}</h4>
-                  <span className="text-[11px] font-semibold text-slate-500 bg-white px-2.5 py-0.5 rounded-full border border-slate-200">
-                    {phase.duration}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
-                  {phase.topics?.map((topic, tIdx) => {
-                    const isChecked = completedTopics.includes(topic);
-                    return (
-                      <button
-                        key={tIdx}
-                        onClick={() => toggleTopicCheck(topic)}
-                        className={`text-left p-2.5 rounded-xl text-xs flex items-center gap-2 transition-all border cursor-pointer ${
-                          isChecked
-                            ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                            : 'bg-white border-slate-200/60 text-slate-700 hover:border-slate-300'
-                        }`}
-                      >
-                        <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${isChecked ? 'text-emerald-600' : 'text-slate-300'}`} />
-                        <span className={`truncate ${isChecked ? 'line-through text-slate-500' : ''}`}>{topic}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
