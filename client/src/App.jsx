@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { AssessmentProvider } from './context/AssessmentContext';
 
+import ErrorBoundary from './components/common/ErrorBoundary';
 import ScrollToTop from './components/common/ScrollToTop';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
@@ -34,20 +35,22 @@ export default function App() {
 
             {/* Main Application Routes */}
             <main className="flex-1">
-              <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/assessment" element={<AssessmentPage />} />
-                <Route path="/quiz" element={<Navigate to="/assessment" replace />} />
-                <Route path="/careers" element={<CareersPage />} />
-                <Route path="/career/:id" element={<CareerDetailPage />} />
-                <Route path="/resources" element={<ResourcesPage />} />
-                <Route path="/mentor" element={<MentorPage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/profile" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
+              <ErrorBoundary>
+                <Routes>
+                  <Route path="/" element={<LandingPage />} />
+                  <Route path="/assessment" element={<AssessmentPage />} />
+                  <Route path="/quiz" element={<Navigate to="/assessment" replace />} />
+                  <Route path="/careers" element={<CareersPage />} />
+                  <Route path="/career/:id" element={<CareerDetailPage />} />
+                  <Route path="/resources" element={<ResourcesPage />} />
+                  <Route path="/mentor" element={<MentorPage />} />
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/profile" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </ErrorBoundary>
             </main>
 
             {/* In-App Modals & Slide-overs */}

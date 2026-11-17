@@ -12,28 +12,43 @@ const AssessmentContext = createContext();
  */
 function hydrateCareer(career) {
   if (!career || typeof career !== 'object') return career;
-  const careerId = career.id || career.career_id;
-  const careerName = (career.name || career.career_name || '').toLowerCase();
+  const careerId = (career.id || career.career_id || '').toString().trim();
+  const careerName = (career.name || career.career_name || '').toLowerCase().trim();
+  
   const catalogMatch = careersData.find(
-    (c) => c.id === careerId || (careerName && c.name.toLowerCase() === careerName)
+    (c) =>
+      c.id === careerId ||
+      c.id.toLowerCase() === careerId.toLowerCase() ||
+      c.id.toLowerCase() === careerId.toLowerCase().replace(/-/g, '_') ||
+      c.id.toLowerCase().replace(/_/g, '-') === careerId.toLowerCase() ||
+      (careerName && c.name.toLowerCase() === careerName)
   );
+
   if (!catalogMatch) return career;
+
   return {
     ...catalogMatch,
     ...career,
-    id: careerId || catalogMatch.id,
-    name: career.name || career.career_name || catalogMatch.name,
+    id: catalogMatch.id, // ALWAYS canonicalize so /career/:id routing never fails
+    career_id: catalogMatch.id,
+    name: catalogMatch.name,
+    category: catalogMatch.category,
     skills: Array.isArray(career.skills) && career.skills.length >= catalogMatch.skills.length
       ? career.skills
       : catalogMatch.skills,
-    roadmap: Array.isArray(career.roadmap) && career.roadmap.length > 0 ? career.roadmap : catalogMatch.roadmap,
-    courses: Array.isArray(career.courses) && career.courses.length > 0 ? career.courses : catalogMatch.courses,
-    knowledge: Array.isArray(career.knowledge) && career.knowledge.length > 0 ? career.knowledge : catalogMatch.knowledge,
-    topEmployers: Array.isArray(career.topEmployers) && career.topEmployers.length > 0 ? career.topEmployers : catalogMatch.topEmployers,
-    featuredVideos: Array.isArray(career.featuredVideos) && career.featuredVideos.length > 0 ? career.featuredVideos : catalogMatch.featuredVideos,
-    youtubeSearchQuery: career.youtubeSearchQuery || catalogMatch.youtubeSearchQuery,
-    averageSalaryUsd: career.averageSalaryUsd || catalogMatch.averageSalaryUsd,
-    averageSalaryInr: career.averageSalaryInr || catalogMatch.averageSalaryInr,
+    roadmap: Array.isArray(catalogMatch.roadmap) && catalogMatch.roadmap.length > 0 ? catalogMatch.roadmap : career.roadmap,
+    courses: Array.isArray(catalogMatch.courses) && catalogMatch.courses.length > 0 ? catalogMatch.courses : career.courses,
+    knowledge: Array.isArray(catalogMatch.knowledge) && catalogMatch.knowledge.length > 0 ? catalogMatch.knowledge : career.knowledge,
+    editorial: catalogMatch.editorial || career.editorial,
+    degreePath: catalogMatch.degreePath || career.degreePath,
+    workStyle: catalogMatch.workStyle || career.workStyle,
+    topEmployers: Array.isArray(catalogMatch.topEmployers) && catalogMatch.topEmployers.length > 0 ? catalogMatch.topEmployers : career.topEmployers,
+    featuredVideos: Array.isArray(catalogMatch.featuredVideos) && catalogMatch.featuredVideos.length > 0 ? catalogMatch.featuredVideos : career.featuredVideos,
+    youtubeSearchQuery: catalogMatch.youtubeSearchQuery || career.youtubeSearchQuery,
+    averageSalaryUsd: catalogMatch.averageSalaryUsd || career.averageSalaryUsd,
+    averageSalaryInr: catalogMatch.averageSalaryInr || career.averageSalaryInr,
+    growthRate: catalogMatch.growthRate || career.growthRate,
+    matchScore: career.matchScore !== undefined ? career.matchScore : (career.match_score !== undefined ? career.match_score : 85),
   };
 }
 

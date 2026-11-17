@@ -188,7 +188,10 @@ export default function RoadmapModal() {
                 {career.courses.map((course, idx) => (
                   <div
                     key={idx}
-                    className="bg-white rounded-xl p-4 border border-slate-200 shadow-card flex flex-col justify-between gap-3"
+                    onClick={() => {
+                      if (course.url) window.open(course.url, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="bg-white rounded-xl p-4 border border-slate-200 hover:border-brand-300 shadow-card flex flex-col justify-between gap-3 cursor-pointer group transition-all"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-1.5">
@@ -201,13 +204,14 @@ export default function RoadmapModal() {
                           </span>
                         )}
                       </div>
-                      <h4 className="text-sm font-bold text-slate-900">{course.name}</h4>
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-brand-600 transition-colors">{course.name}</h4>
                       <p className="text-xs text-slate-500 mt-0.5">Provider: {course.provider}</p>
                     </div>
                     <a
                       href={course.url}
                       target="_blank"
                       rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                       className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700 w-fit"
                     >
                       <span>Open Course</span>
@@ -228,25 +232,31 @@ export default function RoadmapModal() {
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 {career.knowledge.map((item, idx) => (
-                  <a
+                  <div
                     key={idx}
-                    href={item.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="bg-white rounded-xl p-4 border border-slate-200 hover:border-slate-300 shadow-card flex flex-col justify-between gap-2 transition-colors"
+                    onClick={() => {
+                      if (item.url) window.open(item.url, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="bg-white rounded-xl p-4 border border-slate-200 hover:border-slate-300 shadow-card flex flex-col justify-between gap-2 transition-colors cursor-pointer group"
                   >
                     <div>
                       <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
                         {item.type}
                       </span>
-                      <h4 className="text-xs font-bold text-slate-900 mt-2">{item.title}</h4>
+                      <h4 className="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition-colors mt-2">{item.title}</h4>
                       <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">{item.desc}</p>
                     </div>
-                    <span className="text-[11px] font-semibold text-brand-600 inline-flex items-center gap-1 mt-1">
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-[11px] font-semibold text-brand-600 inline-flex items-center gap-1 mt-1"
+                    >
                       <span>Read Resource</span>
                       <ExternalLink className="w-3 h-3" />
-                    </span>
-                  </a>
+                    </a>
+                  </div>
                 ))}
               </div>
             </div>

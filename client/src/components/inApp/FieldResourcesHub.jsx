@@ -51,7 +51,10 @@ export default function FieldResourcesHub() {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200"
+      onClick={closeInAppVideo}
+    >
       <div 
         className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
@@ -218,7 +221,10 @@ export default function FieldResourcesHub() {
                 {coursesList.map((course, idx) => (
                   <div
                     key={idx}
-                    className="bg-white rounded-2xl p-5 border border-slate-200/80 hover:border-brand-300 shadow-xs hover:shadow-soft transition-all flex flex-col justify-between"
+                    onClick={() => {
+                      if (course.url) window.open(course.url, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="bg-white rounded-2xl p-5 border border-slate-200/80 hover:border-brand-300 shadow-xs hover:shadow-soft transition-all flex flex-col justify-between cursor-pointer group"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-2">
@@ -231,7 +237,7 @@ export default function FieldResourcesHub() {
                           </span>
                         )}
                       </div>
-                      <h4 className="text-sm font-bold text-slate-900 mt-1">{course.name}</h4>
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-brand-600 transition-colors mt-1">{course.name}</h4>
                       <p className="text-xs text-slate-500 mt-1">Provider: {course.provider}</p>
                     </div>
 
@@ -241,7 +247,8 @@ export default function FieldResourcesHub() {
                         href={course.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-4 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
+                        onClick={(e) => e.stopPropagation()}
+                        className="px-4 py-1.5 rounded-xl bg-brand-600 group-hover:bg-brand-500 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
                       >
                         <span>Start Course</span>
                         <ExternalLink className="w-3.5 h-3.5" />
