@@ -223,7 +223,7 @@ export default function CareersPage() {
               >
                 <Icon className={`w-5 h-5 ${isSelected ? 'text-brand-600' : 'text-slate-400'}`} />
                 <span className="text-[11px] leading-tight text-center">{meta.label}</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
                   isSelected ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-500'
                 }`}>
                   {count}
@@ -327,7 +327,7 @@ export default function CareersPage() {
                         {career.category}
                       </span>
                       <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                        {career.growthRate.split('(')[0].trim()}
+                        {(career.growthRate || '15%').split('(')[0].trim()}
                       </span>
                     </div>
 
@@ -343,7 +343,7 @@ export default function CareersPage() {
 
                     {/* Skill Badges */}
                     <div className="flex flex-wrap gap-1.5 mt-4">
-                      {career.skills.slice(0, 4).map((skill, sIdx) => (
+                      {(career.skills || []).slice(0, 4).map((skill, sIdx) => (
                         <span key={sIdx} className="text-[11px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
                           {skill}
                         </span>
@@ -448,7 +448,7 @@ export default function CareersPage() {
                           {career.averageSalaryUsd}
                         </td>
                         <td className="py-3 px-4 text-emerald-700 font-medium">
-                          {career.growthRate.split('(')[0].trim()}
+                          {(career.growthRate || '15%').split('(')[0].trim()}
                         </td>
                         <td className="py-3 px-4 text-right">
                           <div className="inline-flex items-center gap-1.5">
