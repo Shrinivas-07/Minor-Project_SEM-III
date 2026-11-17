@@ -407,7 +407,7 @@ export default function CareerDetailPage() {
 
                 <div className="prose prose-stone max-w-none text-stone-700 text-base leading-relaxed space-y-4">
                   <p className="first-letter:text-5xl first-letter:font-serif first-letter:font-bold first-letter:mr-3 first-letter:float-left first-letter:text-stone-900">
-                    {career.editorial?.theDailyReality || career.description}
+                    {career.editorial?.dailyReality || career.editorial?.theDailyReality || career.description}
                   </p>
                 </div>
               </div>
@@ -432,22 +432,30 @@ export default function CareerDetailPage() {
                   </p>
 
                   <div className="space-y-2.5">
-                    {(career.editorial?.cognitiveArchitecture || [
-                      "First-principles reasoning under uncertainty",
-                      "Systems-level architectural decomposition",
-                      "Rigorous empirical verification discipline",
-                      "High tolerance for iterative ambiguity"
-                    ]).map((trait, idx) => (
-                      <div
-                        key={idx}
-                        className="p-3.5 rounded-xl bg-stone-50 border border-stone-200/70 text-xs font-medium text-stone-800 flex items-center gap-3"
-                      >
-                        <span className="w-5 h-5 rounded-md bg-stone-200/80 text-stone-600 font-bold text-[10px] flex items-center justify-center shrink-0">
-                          {idx + 1}
-                        </span>
-                        <span>{trait}</span>
-                      </div>
-                    ))}
+                    {(() => {
+                      const cognitiveList = Array.isArray(career.editorial?.cognitiveArchitecture)
+                        ? career.editorial.cognitiveArchitecture
+                        : career.editorial?.cognitiveDemands
+                          ? career.editorial.cognitiveDemands.split(',').map(s => s.trim()).filter(Boolean)
+                          : [
+                              "First-principles reasoning under uncertainty",
+                              "Systems-level architectural decomposition",
+                              "Rigorous empirical verification discipline",
+                              "High tolerance for iterative ambiguity"
+                            ];
+
+                      return cognitiveList.map((trait, idx) => (
+                        <div
+                          key={idx}
+                          className="p-3.5 rounded-xl bg-stone-50 border border-stone-200/70 text-xs font-medium text-stone-800 flex items-center gap-3"
+                        >
+                          <span className="w-5 h-5 rounded-md bg-stone-200/80 text-stone-600 font-bold text-[10px] flex items-center justify-center shrink-0">
+                            {idx + 1}
+                          </span>
+                          <span>{typeof trait === 'object' ? (trait.trait || trait.name || JSON.stringify(trait)) : trait}</span>
+                        </div>
+                      ));
+                    })()}
                   </div>
                 </div>
 
@@ -501,24 +509,40 @@ export default function CareerDetailPage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {(career.editorial?.mastersLibrary || [
-                  "The Structure and Interpretation of Computer Programs — Abelson & Sussman",
-                  "Designing Data-Intensive Applications — Martin Kleppmann",
-                  "Thinking in Systems — Donella Meadows"
-                ]).map((work, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 hover:border-stone-400 transition-colors flex flex-col justify-between"
-                  >
-                    <div>
-                      <span className="text-[10px] font-mono uppercase text-stone-400 block mb-1">Vol. {idx + 1}</span>
-                      <p className="text-xs font-semibold text-stone-800 leading-snug">
-                        {work}
-                      </p>
+                {(Array.isArray(career.editorial?.mastersLibrary) ? career.editorial.mastersLibrary : [
+                  { title: "The Structure and Interpretation of Computer Programs", author: "Abelson & Sussman", desc: "Foundational conceptual architecture of computing." },
+                  { title: "Designing Data-Intensive Applications", author: "Martin Kleppmann", desc: "Fundamental principles of reliable, scalable distributed systems." },
+                  { title: "Thinking in Systems", author: "Donella Meadows", desc: "Systems-level mental models and feedback loops." }
+                ]).map((work, idx) => {
+                  const bookTitle = typeof work === 'object' ? (work.title || work.name || 'Seminal Work') : work;
+                  const bookAuthor = typeof work === 'object' ? work.author : null;
+                  const bookDesc = typeof work === 'object' ? work.desc : null;
+
+                  return (
+                    <div
+                      key={idx}
+                      className="p-5 rounded-2xl bg-stone-50 border border-stone-200/80 hover:border-stone-400 transition-colors flex flex-col justify-between"
+                    >
+                      <div>
+                        <span className="text-[10px] font-mono uppercase text-stone-400 block mb-1">Vol. {idx + 1}</span>
+                        <h4 className="text-xs font-bold text-stone-900 leading-snug">
+                          {bookTitle}
+                        </h4>
+                        {bookAuthor && (
+                          <p className="text-[11px] font-medium text-stone-600 mt-1">
+                            By {bookAuthor}
+                          </p>
+                        )}
+                        {bookDesc && (
+                          <p className="text-[11px] text-stone-500 mt-2 leading-relaxed line-clamp-3">
+                            {bookDesc}
+                          </p>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-stone-400 mt-4 block">Recommended Essential Canon</span>
                     </div>
-                    <span className="text-[10px] text-stone-400 mt-4 block">Recommended Essential Canon</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
