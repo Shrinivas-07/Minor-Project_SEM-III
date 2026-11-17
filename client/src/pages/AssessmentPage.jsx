@@ -96,7 +96,7 @@ export default function AssessmentPage() {
           {/* Duolingo-Grade Animated Progress Track */}
           <div className="mt-5">
             <div className="flex justify-between items-center text-xs font-semibold text-slate-600 mb-1.5">
-              <span>Stage {activeTab + 1}: {traitCategories[activeTab].name}</span>
+              <span>Stage {activeTab + 1}: {traitCategories[activeTab]?.name || 'Competency Vector'}</span>
               <span className="text-brand-600 font-bold font-mono">{progressPercent}% Unlocked</span>
             </div>
             <div className="w-full h-3 bg-slate-200/80 rounded-full overflow-hidden p-0.5 border border-slate-200">
@@ -306,11 +306,11 @@ export default function AssessmentPage() {
 
             {/* Results Cards List */}
             <div className="space-y-4">
-              {assessmentResult.topCareers.map((career, idx) => {
+              {(assessmentResult.topCareers || []).map((career, idx) => {
                 const isSaved = isCareerSaved(career.id);
                 return (
                   <div
-                    key={career.id}
+                    key={career.id || idx}
                     className="bg-white rounded-3xl p-6 border border-slate-200 hover:border-brand-300 shadow-xs hover:shadow-soft transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-6 apple-hover"
                   >
                     {/* Left: Rank & Metadata */}
@@ -355,7 +355,7 @@ export default function AssessmentPage() {
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                         <button
                           onClick={() => toggleSaveCareer(career)}
                           className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
@@ -371,17 +371,26 @@ export default function AssessmentPage() {
                         <button
                           onClick={() => openInAppRoadmap(career)}
                           className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+                          title="Open Roadmaps & Course Syllabus"
                         >
                           <Layers className="w-3.5 h-3.5" />
-                          <span>Roadmap</span>
+                          <span>Roadmap &amp; Courses</span>
                         </button>
+
+                        <Link
+                          to={`/career/${career.id}`}
+                          className="px-3.5 py-2 bg-stone-900 hover:bg-stone-800 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                        >
+                          <span>Full Guide</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
 
                         <button
                           onClick={() => openAiMentor(career)}
-                          className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                          className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors cursor-pointer"
+                          title="Ask Advisor"
                         >
-                          <MessageSquare className="w-3.5 h-3.5" />
-                          <span>Advisor</span>
+                          <MessageSquare className="w-4 h-4" />
                         </button>
                       </div>
                     </div>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Bookmark, BookmarkCheck, Play, CheckCircle2, 
   Clock, BookOpen, Globe, ExternalLink, MessageSquare, 
   Share2, Check, Sparkles, BrainCircuit, Library, Scale,
-  GraduationCap, Briefcase, TrendingUp, Building2, Quote
+  GraduationCap, Briefcase, TrendingUp, Building2, Quote,
+  Scroll, Compass, Search
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { careersData } from '../data/careersData';
@@ -12,17 +13,65 @@ import { useAssessment } from '../context/AssessmentContext';
 
 export default function CareerDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { 
     toggleSaveCareer, 
     isCareerSaved, 
     openInAppRoadmap, 
-    openAiMentor 
+    openAiMentor,
+    savedCareers,
+    assessmentResult 
   } = useAssessment();
 
-  const career = careersData.find((c) => c.id === id);
+  // Multi-strategy robust career lookup
+  const cleanId = (id || '').trim();
+  const lowerId = cleanId.toLowerCase();
+  const decodedId = decodeURIComponent(cleanId).toLowerCase();
+
+  let career = careersData.find((c) => 
+    c.id === cleanId ||
+    c.id.toLowerCase() === lowerId ||
+    c.id.toLowerCase() === lowerId.replace(/-/g, '_') ||
+    c.id.toLowerCase().replace(/_/g, '-') === lowerId ||
+    c.name.toLowerCase() === decodedId
+  );
+
+  // Fallback 1: check savedCareers if id was a DB id/UUID
+  if (!career && savedCareers && Array.isArray(savedCareers)) {
+    const savedMatch = savedCareers.find(s => 
+      s.id === cleanId || 
+      s.career_id === cleanId || 
+      (s.name && s.name.toLowerCase() === decodedId)
+    );
+    if (savedMatch) {
+      const matchName = (savedMatch.name || savedMatch.career_name || '').toLowerCase();
+      career = careersData.find(c => 
+        c.id === savedMatch.career_id || 
+        c.id === savedMatch.id || 
+        c.name.toLowerCase() === matchName
+      );
+    }
+  }
+
+  // Fallback 2: check assessmentResult topCareers
+  if (!career && assessmentResult?.topCareers && Array.isArray(assessmentResult.topCareers)) {
+    const assessMatch = assessmentResult.topCareers.find(a => 
+      a.id === cleanId || 
+      a.career_id === cleanId || 
+      (a.name && a.name.toLowerCase() === decodedId)
+    );
+    if (assessMatch) {
+      const aName = (assessMatch.name || assessMatch.career_name || '').toLowerCase();
+      career = careersData.find(c => 
+        c.id === assessMatch.career_id || 
+        c.id === assessMatch.id || 
+        c.name.toLowerCase() === aName
+      );
+    }
+  }
 
   // Persistent roadmap milestones per career
-  const storageKey = `clearpath_roadmap_${id}`;
+  const storageKey = career ? `clearpath_roadmap_${career.id}` : `clearpath_roadmap_${cleanId}`;
   const [completedTopics, setCompletedTopics] = useState(() => {
     try {
       const saved = localStorage.getItem(storageKey);
@@ -43,30 +92,68 @@ export default function CareerDetailPage() {
     career?.featuredVideos?.[0]?.embedId || null
   );
 
+  // Sync state whenever career.id changes (handles back/forward browser navigation)
   useEffect(() => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(completedTopics));
-    } catch {
-      // storage quota or private browsing fallback
+    if (career) {
+      setActiveVideoQuery(career.youtubeSearchQuery || `${career.name} roadmap course tutorial`);
+      setActiveEmbedId(career?.featuredVideos?.[0]?.embedId || null);
+      try {
+        const saved = localStorage.getItem(`clearpath_roadmap_${career.id}`);
+        setCompletedTopics(saved ? JSON.parse(saved) : []);
+      } catch {
+        setCompletedTopics([]);
+      }
     }
-  }, [completedTopics, storageKey]);
+  }, [career?.id]);
+
+  useEffect(() => {
+    if (career) {
+      try {
+        localStorage.setItem(`clearpath_roadmap_${career.id}`, JSON.stringify(completedTopics));
+      } catch {
+        // storage quota fallback
+      }
+    }
+  }, [completedTopics, career?.id]);
 
   if (!career) {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-6 text-center">
-        <div className="max-w-md bg-white p-8 rounded-3xl border border-stone-200 shadow-sm">
-          <span className="text-xs uppercase tracking-[0.2em] text-stone-400 font-bold">Catalog Registry</span>
-          <h2 className="text-2xl font-bold text-stone-900 mt-2">Dossier Not Found</h2>
+        <div className="max-w-lg bg-white p-8 rounded-3xl border border-stone-200 shadow-sm">
+          <span className="text-xs uppercase tracking-[0.2em] text-stone-400 font-bold">Vocational Registry</span>
+          <h2 className="text-2xl font-bold text-stone-900 mt-2">Dossier Under Compilation</h2>
           <p className="text-sm text-stone-500 mt-2 leading-relaxed">
-            The vocational track you requested has not yet been codified or is currently undergoing peer review.
+            The career pathway <strong className="text-stone-800">"{cleanId}"</strong> could not be directly matched. Please explore our 42 master pathways below:
           </p>
-          <Link 
-            to="/careers" 
-            className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold rounded-xl transition-all"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Return to Directory</span>
-          </Link>
+          
+          <div className="mt-5 space-y-2 text-left max-h-48 overflow-y-auto pr-1">
+            {careersData.slice(0, 5).map((c) => (
+              <button
+                key={c.id}
+                onClick={() => navigate(`/career/${c.id}`)}
+                className="w-full p-2.5 rounded-xl border border-stone-200 hover:border-stone-400 bg-stone-50 hover:bg-white text-xs font-semibold text-stone-800 flex items-center justify-between transition-colors cursor-pointer"
+              >
+                <span>{c.name}</span>
+                <span className="text-stone-400 text-[10px]">{c.category}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <Link 
+              to="/careers" 
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold rounded-xl transition-all"
+            >
+              <Compass className="w-4 h-4" />
+              <span>Browse All Careers</span>
+            </Link>
+            <Link 
+              to="/assessment" 
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold rounded-xl transition-all"
+            >
+              <span>Take Assessment</span>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -168,7 +255,7 @@ export default function CareerDetailPage() {
                 {career.workStyle && (
                   <span className="text-[11px] font-medium text-stone-600 bg-stone-50 border border-stone-200 px-2.5 py-1 rounded flex items-center gap-1">
                     <Briefcase className="w-3 h-3 text-stone-400" />
-                    {career.workStyle}
+                    {Array.isArray(career.workStyle) ? career.workStyle.join(' • ') : career.workStyle}
                   </span>
                 )}
                 {career.degreePath && (
@@ -629,7 +716,10 @@ export default function CareerDetailPage() {
                 {career.courses?.map((course, idx) => (
                   <div
                     key={idx}
-                    className="bg-stone-50 rounded-2xl p-5 border border-stone-200/80 hover:border-stone-400 shadow-xs transition-all flex flex-col justify-between"
+                    onClick={() => {
+                      if (course.url) window.open(course.url, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="bg-stone-50 rounded-2xl p-5 border border-stone-200/80 hover:border-stone-400 hover:bg-stone-100/60 shadow-xs transition-all flex flex-col justify-between cursor-pointer group"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-2">
@@ -642,7 +732,9 @@ export default function CareerDetailPage() {
                           </span>
                         )}
                       </div>
-                      <h3 className="text-sm font-bold text-stone-900 mt-2">{course.name}</h3>
+                      <h3 className="text-sm font-bold text-stone-900 group-hover:text-amber-800 transition-colors mt-2">
+                        {course.name}
+                      </h3>
                       <p className="text-xs text-stone-500 mt-0.5">Faculty / Provider: {course.provider}</p>
                     </div>
 
@@ -652,7 +744,8 @@ export default function CareerDetailPage() {
                         href={course.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-4 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                        className="px-4 py-1.5 rounded-xl bg-stone-900 group-hover:bg-stone-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
                       >
                         <span>Open Syllabus</span>
                         <ExternalLink className="w-3.5 h-3.5" />
@@ -683,13 +776,18 @@ export default function CareerDetailPage() {
                 {career.knowledge?.map((item, idx) => (
                   <div
                     key={idx}
-                    className="bg-stone-50 rounded-2xl p-5 border border-stone-200/80 hover:border-emerald-300 shadow-xs flex flex-col justify-between transition-all"
+                    onClick={() => {
+                      if (item.url) window.open(item.url, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="bg-stone-50 rounded-2xl p-5 border border-stone-200/80 hover:border-emerald-300 hover:bg-stone-100/60 shadow-xs flex flex-col justify-between transition-all cursor-pointer group"
                   >
                     <div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-stone-600 bg-white px-2 py-0.5 rounded border border-stone-200">
                         {item.type}
                       </span>
-                      <h3 className="text-sm font-bold text-stone-900 mt-2.5">{item.title}</h3>
+                      <h3 className="text-sm font-bold text-stone-900 group-hover:text-emerald-800 transition-colors mt-2.5">
+                        {item.title}
+                      </h3>
                       <p className="text-xs text-stone-500 mt-1 line-clamp-3 leading-relaxed">{item.desc}</p>
                     </div>
 
@@ -697,6 +795,7 @@ export default function CareerDetailPage() {
                       href={item.url}
                       target="_blank"
                       rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                       className="mt-5 pt-3 border-t border-stone-200/60 inline-flex items-center justify-between text-xs font-semibold text-emerald-800 hover:text-emerald-900"
                     >
                       <span>Read Documentation</span>
