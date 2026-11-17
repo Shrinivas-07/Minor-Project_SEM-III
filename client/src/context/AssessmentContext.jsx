@@ -77,18 +77,39 @@ export function AssessmentProvider({ children }) {
   const { user } = useAuth();
 
   const [scores, setScores] = useState(() => {
-    const saved = localStorage.getItem('clearpath_scores') || localStorage.getItem('sahichayan_scores');
-    return saved ? JSON.parse(saved) : initialScores;
+    try {
+      const saved = localStorage.getItem('clearpath_scores') || localStorage.getItem('sahichayan_scores');
+      return saved ? JSON.parse(saved) : initialScores;
+    } catch {
+      return initialScores;
+    }
   });
 
   const [assessmentResult, setAssessmentResult] = useState(() => {
-    const saved = localStorage.getItem('clearpath_results') || localStorage.getItem('sahichayan_results');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('clearpath_results') || localStorage.getItem('sahichayan_results');
+      const parsed = saved ? JSON.parse(saved) : null;
+      if (parsed && typeof parsed === 'object') {
+        const rawTop = Array.isArray(parsed.topCareers) ? parsed.topCareers : (Array.isArray(parsed.top_careers) ? parsed.top_careers : []);
+        return {
+          ...parsed,
+          topCareers: rawTop.map(hydrateCareer),
+        };
+      }
+      return null;
+    } catch {
+      return null;
+    }
   });
 
   const [savedCareers, setSavedCareers] = useState(() => {
-    const saved = localStorage.getItem('clearpath_saved_careers') || localStorage.getItem('sahichayan_saved_careers');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('clearpath_saved_careers') || localStorage.getItem('sahichayan_saved_careers');
+      const parsed = saved ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed.filter(c => c && typeof c === 'object') : [];
+    } catch {
+      return [];
+    }
   });
 
   const [activeVideoModal, setActiveVideoModal] = useState({ isOpen: false, video: null });
@@ -96,19 +117,26 @@ export function AssessmentProvider({ children }) {
   const [isAiMentorOpen, setIsAiMentorOpen] = useState(false);
   const [mentorCareerContext, setMentorCareerContext] = useState(null);
 
-  // Sync to local storage
+  // Sync to local storage safely
   useEffect(() => {
-    localStorage.setItem('clearpath_scores', JSON.stringify(scores));
+    try {
+      localStorage.setItem('clearpath_scores', JSON.stringify(scores));
+    } catch {}
   }, [scores]);
 
   useEffect(() => {
     if (assessmentResult) {
-      localStorage.setItem('clearpath_results', JSON.stringify(assessmentResult));
+      try {
+        localStorage.setItem('clearpath_results', JSON.stringify(assessmentResult));
+      } catch {}
     }
   }, [assessmentResult]);
 
   useEffect(() => {
-    localStorage.setItem('clearpath_saved_careers', JSON.stringify(savedCareers));
+    try {
+      const safe = Array.isArray(savedCareers) ? savedCareers.filter(c => c && typeof c === 'object') : [];
+      localStorage.setItem('clearpath_saved_careers', JSON.stringify(safe));
+    } catch {}
   }, [savedCareers]);
 
   // ============================================================================
@@ -128,36 +156,45 @@ export function AssessmentProvider({ children }) {
         const savedRes = await api.getSavedCareers(user.id);
         if (isMounted && savedRes?.success && Array.isArray(savedRes.data)) {
           if (savedRes.data.length > 0) {
-            const normalized = savedRes.data.map((item) => ({
-              id: item.career_id || item.id,
-              career_id: item.career_id || item.id,
-              name: item.career_name || item.name,
-              career_name: item.career_name || item.name,
-              category: item.category || 'General',
-              averageSalaryInr: item.average_salary_inr || item.averageSalaryInr || 'Competitive',
-              growthRate: item.growth_rate || item.growthRate || 'High Demand',
-              matchScore: item.match_score || item.matchScore || 0,
-              status: item.status || 'Exploring',
-              savedAt: item.saved_at || item.savedAt || new Date().toISOString(),
-            }));
+            const normalized = savedRes.data
+              .filter(item => item && typeof item === 'object')
+              .map((item) => ({
+                id: item.career_id || item.id,
+                career_id: item.career_id || item.id,
+                name: item.career_name || item.name,
+                career_name: item.career_name || item.name,
+                category: item.category || 'General',
+                averageSalaryInr: item.average_salary_inr || item.averageSalaryInr || 'Competitive',
+                growthRate: item.growth_rate || item.growthRate || 'High Demand',
+                matchScore: item.match_score || item.matchScore || 0,
+                status: item.status || 'Exploring',
+                savedAt: item.saved_at || item.savedAt || new Date().toISOString(),
+              }));
 
             // Merge cloud data with any local bookmarks so nothing is ever lost on refresh
             setSavedCareers((prev) => {
               const map = new Map();
-              normalized.forEach((c) => map.set(c.id, c));
-              prev.forEach((c) => {
-                const key = c.id || c.career_id;
-                if (!map.has(key)) map.set(key, c);
+              normalized.forEach((c) => {
+                if (c && (c.id || c.career_id)) map.set(c.id || c.career_id, c);
+              });
+              (Array.isArray(prev) ? prev : []).forEach((c) => {
+                if (c && (c.id || c.career_id)) {
+                  const key = c.id || c.career_id;
+                  if (!map.has(key)) map.set(key, c);
+                }
               });
               const merged = Array.from(map.values());
-              localStorage.setItem('clearpath_saved_careers', JSON.stringify(merged));
+              try {
+                localStorage.setItem('clearpath_saved_careers', JSON.stringify(merged));
+              } catch {}
               return merged;
             });
           } else {
             // Cloud has 0 items; if user has existing local bookmarks, push them up to cloud!
             const localSaved = (() => {
               try {
-                return JSON.parse(localStorage.getItem('clearpath_saved_careers') || localStorage.getItem('sahichayan_saved_careers')) || [];
+                const parsed = JSON.parse(localStorage.getItem('clearpath_saved_careers') || localStorage.getItem('sahichayan_saved_careers'));
+                return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
               } catch {
                 return [];
               }
@@ -165,13 +202,15 @@ export function AssessmentProvider({ children }) {
 
             if (localSaved.length > 0) {
               localSaved.forEach((c) => {
-                api.toggleSaveCareer({
-                  userId: user.id,
-                  careerId: c.id || c.career_id,
-                  careerName: c.name || c.career_name,
-                  category: c.category,
-                  matchScore: c.matchScore || 0,
-                }).catch(() => {});
+                if (c && (c.id || c.career_id)) {
+                  api.toggleSaveCareer({
+                    userId: user.id,
+                    careerId: c.id || c.career_id,
+                    careerName: c.name || c.career_name,
+                    category: c.category,
+                    matchScore: c.matchScore || 0,
+                  }).catch(() => {});
+                }
               });
             }
           }
@@ -181,19 +220,35 @@ export function AssessmentProvider({ children }) {
         const assessRes = await api.getUserAssessments(user.id);
         if (isMounted && assessRes?.success && Array.isArray(assessRes.data) && assessRes.data.length > 0) {
           const latest = assessRes.data[0];
+          let rawTop = latest.top_careers || latest.topCareers || [];
+          if (typeof rawTop === 'string') {
+            try { rawTop = JSON.parse(rawTop); } catch { rawTop = []; }
+          }
+          if (!Array.isArray(rawTop)) rawTop = [];
+
           const normalizedResult = {
-            topCareers: (latest.top_careers || latest.topCareers || []).map(hydrateCareer),
+            topCareers: rawTop.map(hydrateCareer),
             dominantTrait: latest.dominant_trait || latest.dominantTrait || 'Balanced',
             averageScore: latest.average_score || latest.averageScore || 5,
             completedAt: latest.completed_at || latest.completedAt || new Date().toISOString(),
           };
 
           setAssessmentResult(normalizedResult);
-          localStorage.setItem('clearpath_results', JSON.stringify(normalizedResult));
+          try {
+            localStorage.setItem('clearpath_results', JSON.stringify(normalizedResult));
+          } catch {}
 
           if (latest.trait_scores) {
-            setScores(latest.trait_scores);
-            localStorage.setItem('clearpath_scores', JSON.stringify(latest.trait_scores));
+            let traitScores = latest.trait_scores;
+            if (typeof traitScores === 'string') {
+              try { traitScores = JSON.parse(traitScores); } catch { traitScores = null; }
+            }
+            if (traitScores && typeof traitScores === 'object') {
+              setScores(traitScores);
+              try {
+                localStorage.setItem('clearpath_scores', JSON.stringify(traitScores));
+              } catch {}
+            }
           }
         }
       } catch (err) {
@@ -219,9 +274,10 @@ export function AssessmentProvider({ children }) {
   const runAssessment = async () => {
     const res = await api.calculateAssessment(scores, user?.id);
     if (res.success && res.data) {
+      const rawTop = Array.isArray(res.data.topCareers) ? res.data.topCareers : (Array.isArray(res.data.top_careers) ? res.data.top_careers : []);
       const hydratedResult = {
         ...res.data,
-        topCareers: (res.data.topCareers || []).map(hydrateCareer),
+        topCareers: rawTop.map(hydrateCareer),
       };
       setAssessmentResult(hydratedResult);
       return hydratedResult;
@@ -230,28 +286,35 @@ export function AssessmentProvider({ children }) {
   };
 
   const toggleSaveCareer = async (career) => {
+    if (!career) return;
     const careerKey = career.id || career.career_id;
-    const exists = savedCareers.some((c) => (c.id || c.career_id) === careerKey);
+    if (!careerKey) return;
+
+    const list = Array.isArray(savedCareers) ? savedCareers.filter(c => c && typeof c === 'object') : [];
+    const exists = list.some((c) => (c.id || c.career_id) === careerKey);
 
     let next;
     if (exists) {
-      next = savedCareers.filter((c) => (c.id || c.career_id) !== careerKey);
+      next = list.filter((c) => (c.id || c.career_id) !== careerKey);
     } else {
       next = [
         {
           id: careerKey,
           career_id: careerKey,
           name: career.name || career.career_name,
-          category: career.category,
+          category: career.category || 'General',
           averageSalaryInr: career.averageSalaryInr || career.average_salary_inr || 'Competitive',
           growthRate: career.growthRate || career.growth_rate || 'High Demand',
           savedAt: new Date().toISOString(),
           status: 'Exploring',
         },
-        ...savedCareers,
+        ...list,
       ];
     }
     setSavedCareers(next);
+    try {
+      localStorage.setItem('clearpath_saved_careers', JSON.stringify(next));
+    } catch {}
 
     // Sync to cloud database if user is authenticated
     if (user && user.id) {
@@ -270,7 +333,8 @@ export function AssessmentProvider({ children }) {
   };
 
   const isCareerSaved = (careerId) => {
-    return savedCareers.some((c) => c.id === careerId || c.career_id === careerId);
+    if (!careerId || !Array.isArray(savedCareers)) return false;
+    return savedCareers.some((c) => c && (c.id === careerId || c.career_id === careerId));
   };
 
   // Open the unified 3-tier in-app resource hub

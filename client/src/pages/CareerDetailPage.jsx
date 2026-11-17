@@ -26,7 +26,12 @@ export default function CareerDetailPage() {
   // Multi-strategy robust career lookup
   const cleanId = (id || '').trim();
   const lowerId = cleanId.toLowerCase();
-  const decodedId = decodeURIComponent(cleanId).toLowerCase();
+  let decodedId = lowerId;
+  try {
+    decodedId = decodeURIComponent(cleanId).toLowerCase();
+  } catch {
+    decodedId = lowerId;
+  }
 
   let career = careersData.find((c) => 
     c.id === cleanId ||
@@ -321,7 +326,7 @@ export default function CareerDetailPage() {
           </div>
 
           {/* Top Employers Strip */}
-          {career.topEmployers && (
+          {Array.isArray(career.topEmployers) && career.topEmployers.length > 0 && (
             <div className="mt-8 pt-6 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <span className="text-xs font-bold uppercase tracking-[0.15em] text-stone-400 flex items-center gap-1.5">
                 <Building2 className="w-3.5 h-3.5" />
